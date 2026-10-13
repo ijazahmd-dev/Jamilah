@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Change Email - Jamilah</title>
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Flaticon & Swiper -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <!-- Bootstrap 5.3 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Core Theme Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-hover: #066c65;
+      --zy-primary-subtle: #e8f5f4;
+      --zy-primary-border: #b2dedb;
+      --zy-dark: #1e293b;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-card-bg: #ffffff;
+      --zy-surface: #f8fafc;
+    }
+
+    body {
+      background-color: #f6f8fa;
+      color: var(--zy-dark);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* Sidebar Styling */
+    .account-sidebar {
+      position: sticky;
+      top: 24px;
+      background: var(--zy-card-bg);
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--zy-border);
+    }
+
+    .user-mini-badge {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 20px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .user-mini-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .account-sidebar nav,
+    .account-sidebar .account-nav,
+    .account-sidebar .nav {
+      display: flex !important;
+      flex-direction: column !important;
+      height: auto !important;
+      width: 100% !important;
+      gap: 4px !important;
+      align-items: stretch !important;
+      justify-content: flex-start !important;
+    }
+
+    .account-sidebar .nav-link {
+      color: #334155;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      transition: all 0.25s ease;
+      display: flex !important;
+      align-items: center !important;
+      font-weight: 500;
+      font-size: 0.95rem;
+      width: 100% !important;
+      text-align: left !important;
+      text-decoration: none !important;
+    }
+
+    .account-sidebar .nav-link i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      width: 22px;
+      text-align: center;
+      color: var(--zy-muted);
+      transition: color 0.25s ease;
+    }
+
+    .account-sidebar .nav-link:hover {
+      background-color: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+    }
+
+    .account-sidebar .nav-link:hover i {
+      color: var(--zy-primary);
+    }
+
+    .account-sidebar .nav-link.active {
+      background-color: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.3);
+    }
+
+    .account-sidebar .nav-link.active i {
+      color: #ffffff;
+    }
+
+    .account-sidebar .logout-link {
+      color: #dc2626 !important;
+      margin-top: 10px;
+      border-top: 1px solid var(--zy-border);
+      padding-top: 14px;
+    }
+
+    .account-sidebar .logout-link:hover {
+      background-color: #fef2f2 !important;
+      color: #b91c1c !important;
+    }
+
+    /* Page Container Card */
+    .content-box {
+      background: var(--zy-card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--zy-border);
+      padding: 36px;
+      margin-bottom: 24px;
+      max-width: 650px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1.5px solid #cbd5e1;
+      font-size: 0.95rem;
+      color: #1e293b;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--zy-primary);
+      box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.12);
+      outline: none;
+    }
+
+    .btn-send-otp {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.25);
+    }
+
+    .btn-send-otp:hover {
+      background: var(--zy-primary-hover);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(8, 129, 120, 0.35);
+    }
+
+    @media (max-width: 991px) {
+      .account-sidebar {
+        position: static;
+        margin-bottom: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== BREADCRUMB ===============-->
+  <section class="breadcrumb">
+    <ul class="breadcrumb__list flex container">
+      <li><a href="{% url 'home' %}" class="breadcrumb__link">Home</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><a href="{% url 'user_profile' %}" class="breadcrumb__link">My Profile</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><span class="breadcrumb__link" style="color: var(--zy-primary); font-weight: 600;">Change Email</span></li>
+    </ul>
+  </section>
+
+  <!--=============== MAIN CONTAINER ===============-->
+  <div class="container my-4 pb-5">
+    <div class="row g-4">
+      <!-- Account Sidebar -->
+      <div class="col-lg-3">
+        <div class="account-sidebar">
+          <div class="user-mini-badge">
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-mini-avatar">
+            {% else %}
+              <div class="user-mini-avatar">
+                {{ user.first_name|default:user.username|slice:":1"|upper }}
+              </div>
+            {% endif %}
+            <div class="overflow-hidden">
+              <div class="fw-bold text-truncate" style="font-size: 0.95rem;">
+                {{ user.get_full_name|default:user.username }}
+              </div>
+              <small class="text-muted d-block text-truncate">@{{ user.username }}</small>
+            </div>
+          </div>
+
+          <nav class="account-nav d-flex flex-column w-100">
+            <a class="nav-link active" href="{% url 'user_profile' %}">
+              <i class="bi bi-person-fill"></i> My Profile
+            </a>
+            <a class="nav-link" href="{% url 'addresses' %}">
+              <i class="bi bi-geo-alt"></i> My Addresses
+            </a>
+            <a class="nav-link" href="{% url 'user_orders' %}">
+              <i class="bi bi-bag-check"></i> My Orders
+            </a>
+            <a class="nav-link" href="{% url 'wallet_view' %}">
+              <i class="bi bi-wallet2"></i> My Wallet
+            </a>
+            <a class="nav-link" href="{% url 'view_coupons' %}">
+              <i class="bi bi-ticket-perforated"></i> Coupons
+            </a>
+            <a class="nav-link" href="{% url 'wishlist' %}">
+              <i class="bi bi-heart"></i> My Wishlist
+            </a>
+            <a class="nav-link logout-link" href="{% url 'userlogout' %}">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Main Column -->
+      <div class="col-lg-9">
+        <div class="content-box">
+          <div class="mb-4 pb-3 border-bottom">
+            <h4 class="fw-bold mb-1"><i class="bi bi-envelope-check-fill me-2" style="color: var(--zy-primary);"></i> Update Email Address</h4>
+            <p class="text-muted small mb-0">We will send a 6-digit verification code (OTP) to your new email to verify ownership.</p>
+          </div>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <div class="mb-3 p-3 bg-light rounded-3 border">
+            <div class="small text-muted mb-1">Current Registered Email:</div>
+            <div class="fw-bold text-dark">{{ user.email|default:"None set" }}</div>
+          </div>
+
+          <form id="changeEmailForm" method="POST" action="{% url 'change_email' %}" novalidate>
+            {% csrf_token %}
+            <div class="mb-4">
+              <label for="new_email" class="form-label">New Email Address <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-envelope"></i></span>
+                <input type="email" name="new_email" class="form-control border-start-0 ps-0" id="new_email" required placeholder="name@example.com">
+              </div>
+              <div id="new_email_error" class="text-danger small mt-1" style="display:none;"></div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+              <button type="submit" class="btn-send-otp">
+                <i class="bi bi-send-fill"></i> Send OTP Verification Code
+              </button>
+              <a href="{% url 'user_profile' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('changeEmailForm');
+      const emailInput = document.getElementById('new_email');
+      const errDiv = document.getElementById('new_email_error');
+
+      form.addEventListener('submit', function (e) {
+        const val = emailInput.value.trim();
+        emailInput.value = val;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!val) {
+          e.preventDefault();
+          errDiv.textContent = 'Email address cannot be empty or only spaces.';
+          errDiv.style.display = 'block';
+          emailInput.classList.add('is-invalid');
+        } else if (val.length > 100) {
+          e.preventDefault();
+          errDiv.textContent = 'Email address cannot exceed 100 characters.';
+          errDiv.style.display = 'block';
+          emailInput.classList.add('is-invalid');
+        } else if (!emailRegex.test(val)) {
+          e.preventDefault();
+          errDiv.textContent = 'Please enter a valid email address (e.g. name@example.com).';
+          errDiv.style.display = 'block';
+          emailInput.classList.add('is-invalid');
+        } else {
+          errDiv.textContent = '';
+          errDiv.style.display = 'none';
+          emailInput.classList.remove('is-invalid');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1040 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Edit Product - Jamilah Admin</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066c65;
+            --brand-dark: #1e293b;
+            --brand-light: #f8fafc;
+            --brand-border: #e2e8f0;
+            --brand-radius: 14px;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #334155;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .container-fluid.page-body-wrapper {
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-panel {
+            background-color: transparent;
+            padding: 24px;
+        }
+
+        .content-wrapper {
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Top Header & Breadcrumb */
+        .page-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .breadcrumb-nav a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .breadcrumb-nav a:hover {
+            color: var(--brand-primary-hover);
+            text-decoration: underline;
+        }
+
+        /* Card Form */
+        .card-custom {
+            background-color: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .card-custom-header {
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--brand-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-custom-header h4 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-custom-body {
+            padding: 28px;
+        }
+
+        .form-section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 1.5px solid var(--brand-border);
+            padding: 10px 16px;
+            font-size: 0.925rem;
+            background: #ffffff;
+            color: #1e293b;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.12);
+        }
+
+        .input-group-text {
+            background-color: #f8fafc;
+            border: 1.5px solid var(--brand-border);
+            border-right: none;
+            border-radius: 12px 0 0 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .input-group .form-control {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Existing and New Images */
+        .image-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .image-card {
+            background: #ffffff;
+            border: 1px solid var(--brand-border);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .image-card.marked-delete {
+            opacity: 0.45;
+            filter: grayscale(1);
+            border-color: #ef4444;
+        }
+
+        .image-card-thumb {
+            width: 100%;
+            height: 120px;
+            background: #f1f5f9;
+            overflow: hidden;
+        }
+
+        .image-card-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-card-action {
+            padding: 6px;
+            text-align: center;
+            background: #f8fafc;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .btn-toggle-delete-img {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #ef4444;
+            padding: 3px 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            width: 100%;
+        }
+
+        .btn-toggle-delete-img:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+
+        .btn-toggle-delete-img.restore {
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .btn-toggle-delete-img.restore:hover {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        /* Image Studio Drop Zone */
+        .upload-dropzone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 24px 16px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-dropzone:hover {
+            border-color: var(--brand-primary);
+            background: #f0fdfa;
+        }
+
+        .upload-dropzone-icon {
+            font-size: 2rem;
+            color: var(--brand-primary);
+            margin-bottom: 6px;
+        }
+
+        .upload-dropzone-title {
+            font-size: 0.925rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+
+        .upload-dropzone-sub {
+            font-size: 0.775rem;
+            color: #64748b;
+            margin-bottom: 0;
+        }
+
+        /* Cropped New Images Gallery */
+        .cropped-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .cropped-item {
+            background: #ffffff;
+            border: 1px solid var(--brand-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        .cropped-item-thumb {
+            width: 100%;
+            height: 120px;
+            background: #f1f5f9;
+            overflow: hidden;
+        }
+
+        .cropped-item-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cropped-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: rgba(8, 129, 120, 0.85);
+            backdrop-filter: blur(4px);
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .cropped-item-actions {
+            padding: 6px;
+            display: flex;
+            gap: 4px;
+            background: #ffffff;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .btn-remove-crop {
+            background-color: #fef2f2;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-radius: 6px;
+            padding: 3px 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .btn-remove-crop:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+
+        /* Cropper Modal Studio */
+        .cropper-modal-dialog {
+            max-width: 820px;
+        }
+
+        .cropper-workspace {
+            width: 100%;
+            height: 420px;
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cropper-workspace img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+
+        .cropper-toolbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 14px 18px;
+            background: #f8fafc;
+            border: 1px solid var(--brand-border);
+            border-radius: 12px;
+            margin-top: 14px;
+        }
+
+        .cropper-tool-group {
+            display: flex;
+            gap: 4px;
+            background: #ffffff;
+            padding: 3px;
+            border-radius: 10px;
+            border: 1px solid var(--brand-border);
+        }
+
+        .cropper-tool-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .cropper-tool-btn:hover {
+            background: #f1f5f9;
+            color: var(--brand-primary);
+        }
+
+        .cropper-tool-btn.active {
+            background: var(--brand-primary);
+            color: #ffffff;
+        }
+
+        /* Buttons */
+        .btn-submit-product {
+            background: linear-gradient(135deg, #088178 0%, #055e57 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(8, 129, 120, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-submit-product:hover {
+            background: linear-gradient(135deg, #066c65 0%, #044b45 100%);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(8, 129, 120, 0.35);
+        }
+
+        .btn-cancel-product {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid var(--brand-border);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel-product:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        /* Toast Container */
+        .admin-toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100500;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            pointer-events: none;
+        }
+
+        .admin-toast {
+            pointer-events: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 16px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            animation: toastSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-toast.closing {
+            animation: toastSlideOut 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideIn {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastSlideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(110%); opacity: 0; }
+        }
+
+        .admin-toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .admin-toast--success .admin-toast-icon {
+            background-color: #ecfdf5;
+            color: #10b981;
+        }
+
+        .admin-toast--error .admin-toast-icon {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+
+        .admin-toast-body {
+            flex-grow: 1;
+            padding-right: 8px;
+        }
+
+        .admin-toast-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 2px;
+            line-height: 1.25;
+        }
+
+        .admin-toast-message {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .admin-toast-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.25rem;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast notifications -->
+    <div class="admin-toast-container" id="adminToastContainer">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="admin-toast {% if message.tags == 'error' %}admin-toast--error{% else %}admin-toast--success{% endif %}" role="alert">
+                <div class="admin-toast-icon">
+                    {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill"></i>{% else %}<i class="bi bi-check-circle-fill"></i>{% endif %}
+                </div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">{% if message.tags == 'error' %}Notice{% else %}Success{% endif %}</h6>
+                    <p class="admin-toast-message">{{ message }}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="closeToast(this.closest('.admin-toast'))">&times;</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <!-- Header & Breadcrumb -->
+                    <div class="page-header-bar">
+                        <div>
+                            <div class="breadcrumb-nav mb-2">
+                                <a href="{% url 'product_management' %}"><i class="bi bi-arrow-left me-1"></i> Products</a>
+                                <span>/</span>
+                                <span class="text-dark fw-semibold">Edit Product #{{ product.id }}</span>
+                            </div>
+                            <h3 class="fw-bold text-dark m-0">Edit Product: {{ product.name }}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Main Form Card -->
+                    <div class="card-custom">
+                        <div class="card-custom-header">
+                            <h4><i class="bi bi-pencil-square text-primary"></i> Product Details & Imagery</h4>
+                            <span class="badge bg-light text-dark px-3 py-2 border rounded-pill">Product ID #{{ product.id }}</span>
+                        </div>
+                        <div class="card-custom-body">
+                            <form id="editProductForm" method="POST" action="{% url 'edit_product' product.id %}">
+                                {% csrf_token %}
+
+                                <div class="row g-4">
+                                    <!-- Left Column: Details -->
+                                    <div class="col-lg-7">
+                                        <div class="form-section-title">
+                                            <i class="bi bi-card-text text-primary"></i> General Information
+                                        </div>
+
+                                        <!-- Product Name -->
+                                        <div class="mb-3">
+                                            <label for="product_name" class="form-label">Product Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="product_name" name="product_name"
+                                                value="{{ form_data.product_name|default:product.name }}" required maxlength="100">
+                                            <div class="d-flex justify-content-between mt-1">
+                                                <small class="text-muted">Enter product title</small>
+                                                <small class="text-muted" id="nameCharCount">0/100</small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category & Price -->
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-md-6">
+                                                <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="category" name="category" required>
+                                                    <option value="" disabled>Select Category</option>
+                                                    {% for cat in categories %}
+                                                    <option value="{{ cat.id }}" {% if form_data.category == cat.id|stringformat:"s" or product.category.id == cat.id %}selected{% endif %}>
+                                                        {{ cat.category_name }}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">₹</span>
+                                                    <input type="number" step="0.01" min="1" max="1000000" class="form-control" id="price" name="price"
+                                                        value="{{ form_data.price|default:product.price }}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Description -->
+                                        <div class="mb-3">
+                                            <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" id="description" name="description" rows="5"
+                                                required maxlength="3000">{{ form_data.description|default:product.description }}</textarea>
+                                            <div class="d-flex justify-content-between mt-1">
+                                                <small class="text-muted">Minimum 5 characters</small>
+                                                <small class="text-muted" id="descCharCount">0/3000</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right Column: Current Gallery & Add New via Studio -->
+                                    <div class="col-lg-5">
+                                        <div class="form-section-title">
+                                            <i class="bi bi-images text-primary"></i> Current Images
+                                        </div>
+
+                                        <!-- Existing Images Grid -->
+                                        <div class="image-card-grid" id="existingImagesGrid">
+                                            {% for img in product.images.all %}
+                                            <div class="image-card" id="img-card-{{ img.id }}">
+                                                <div class="image-card-thumb">
+                                                    <img src="{{ img.image.url }}" alt="Product Image">
+                                                </div>
+                                                <div class="image-card-action">
+                                                    <button type="button" class="btn-toggle-delete-img" data-img-id="{{ img.id }}">
+                                                        <i class="bi bi-trash3"></i> Remove
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {% empty %}
+                                            <p class="text-muted small">No images uploaded yet.</p>
+                                            {% endfor %}
+                                        </div>
+                                        <div id="deletedImagesInputs"></div>
+
+                                        <!-- Add More Images Studio Dropzone -->
+                                        <div class="form-section-title mt-4">
+                                            <i class="bi bi-cloud-plus text-primary"></i> Add More Images
+                                        </div>
+                                        <div class="upload-dropzone" id="btnBrowseImages">
+                                            <div class="upload-dropzone-icon">
+                                                <i class="bi bi-crop"></i>
+                                            </div>
+                                            <div class="upload-dropzone-title">Upload & Crop New Image</div>
+                                            <p class="upload-dropzone-sub">
+                                                Click to open Cropping Studio<br>
+                                                <span class="text-muted">JPG, PNG, WEBP up to 5MB</span>
+                                            </p>
+                                        </div>
+                                        <input type="file" id="hiddenFileInput" accept="image/*" style="display: none;">
+
+                                        <!-- Newly Cropped Items -->
+                                        <div class="cropped-gallery" id="croppedGalleryContainer"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
+                                    <a href="{% url 'product_management' %}" class="btn-cancel-product">
+                                        Cancel
+                                    </a>
+                                    <button type="submit" class="btn-submit-product" id="btnSubmitForm">
+                                        <i class="bi bi-check2-circle fs-5"></i> Update Product
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: IMAGE CROPPING STUDIO
+    ======================================================== -->
+    <div class="modal fade" id="cropperModal" tabindex="-1" aria-labelledby="cropperModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered cropper-modal-dialog">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-white border-bottom px-4 py-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 bg-light rounded-3 text-primary">
+                            <i class="bi bi-crop fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold mb-0" id="cropperModalLabel">Image Cropping Studio</h5>
+                            <small class="text-muted" id="cropFileName">Adjust framing, zoom, orientation and ratio</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-light">
+                    <!-- Workspace -->
+                    <div class="cropper-workspace shadow-sm">
+                        <img id="cropperSourceImage" src="" alt="Image to crop">
+                    </div>
+
+                    <!-- Toolbar -->
+                    <div class="cropper-toolbar">
+                        <!-- Rotate & Flip -->
+                        <div class="cropper-tool-group">
+                            <button type="button" class="cropper-tool-btn" id="btnRotateCCW" title="Rotate 90° Left">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+                            <button type="button" class="cropper-tool-btn" id="btnRotateCW" title="Rotate 90° Right">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                            <button type="button" class="cropper-tool-btn" id="btnFlipH" title="Flip Horizontal">
+                                <i class="bi bi-symmetry-vertical"></i>
+                            </button>
+                            <button type="button" class="cropper-tool-btn" id="btnFlipV" title="Flip Vertical">
+                                <i class="bi bi-symmetry-horizontal"></i>
+                            </button>
+                        </div>
+
+                        <!-- Zoom & Reset -->
+                        <div class="cropper-tool-group">
+                            <button type="button" class="cropper-tool-btn" id="btnZoomIn" title="Zoom In">
+                                <i class="bi bi-zoom-in"></i>
+                            </button>
+                            <button type="button" class="cropper-tool-btn" id="btnZoomOut" title="Zoom Out">
+                                <i class="bi bi-zoom-out"></i>
+                            </button>
+                            <button type="button" class="cropper-tool-btn" id="btnCropReset" title="Reset Image">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </button>
+                        </div>
+
+                        <!-- Aspect Ratio -->
+                        <div class="cropper-tool-group">
+                            <button type="button" class="cropper-tool-btn active" id="btnAspect1" data-aspect="1" title="Square (1:1)">
+                                <i class="bi bi-square"></i>
+                            </button>
+                            <button type="button" class="cropper-tool-btn" id="btnAspect43" data-aspect="1.333" title="Landscape (4:3)">
+                                <i class="bi bi-aspect-ratio"></i>
+                            </button>
+                            <button type="button" class="cropper-tool-btn" id="btnAspectFree" data-aspect="NaN" title="Free Form">
+                                <i class="bi bi-bounding-box"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-white px-4 py-3 border-top d-flex justify-content-between">
+                    <button type="button" class="btn btn-light rounded-3 px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn-submit-product px-4" id="btnApplyCrop">
+                        <i class="bi bi-check-lg me-1"></i> Apply & Attach Image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS & Cropper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <script>
+        // Character count indicators
+        const nameInput = document.getElementById('product_name');
+        const nameCharCount = document.getElementById('nameCharCount');
+        nameInput.addEventListener('input', () => {
+            nameCharCount.textContent = `${nameInput.value.length}/100`;
+        });
+        nameCharCount.textContent = `${nameInput.value.length}/100`;
+
+        const descInput = document.getElementById('description');
+        const descCharCount = document.getElementById('descCharCount');
+        descInput.addEventListener('input', () => {
+            descCharCount.textContent = `${descInput.value.length}/3000`;
+        });
+        descCharCount.textContent = `${descInput.value.length}/3000`;
+
+        function showToast(type, title, message) {
+            const container = document.getElementById('adminToastContainer');
+            const iconClass = type === 'error' ? 'bi-x-circle-fill' : 'bi-check-circle-fill';
+            const toast = document.createElement('div');
+            toast.className = `admin-toast admin-toast--${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <div class="admin-toast-icon"><i class="bi ${iconClass}"></i></div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">${title}</h6>
+                    <p class="admin-toast-message">${message}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="closeToast(this.closest('.admin-toast'))">&times;</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => closeToast(toast), 4500);
+        }
+
+        function closeToast(el) {
+            if (!el) return;
+            el.classList.add('closing');
+            setTimeout(() => el.remove(), 350);
+        }
+
+        // Toggle delete for existing images
+        const deletedImagesContainer = document.getElementById('deletedImagesInputs');
+        document.querySelectorAll('.btn-toggle-delete-img').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const imgId = this.getAttribute('data-img-id');
+                const card = document.getElementById(`img-card-${imgId}`);
+                const isMarked = card.classList.contains('marked-delete');
+
+                if (isMarked) {
+                    card.classList.remove('marked-delete');
+                    this.classList.remove('restore');
+                    this.innerHTML = `<i class="bi bi-trash3"></i> Remove`;
+                    const existingInput = deletedImagesContainer.querySelector(`input[value="${imgId}"]`);
+                    if (existingInput) existingInput.remove();
+                } else {
+                    card.classList.add('marked-delete');
+                    this.classList.add('restore');
+                    this.innerHTML = `<i class="bi bi-arrow-counterclockwise"></i> Keep`;
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'delete_images[]';
+                    hiddenInput.value = imgId;
+                    deletedImagesContainer.appendChild(hiddenInput);
+                }
+            });
+        });
+
+        // Cropping Studio for new images
+        const hiddenFileInput = document.getElementById('hiddenFileInput');
+        const btnBrowseImages = document.getElementById('btnBrowseImages');
+        const cropperModalEl = document.getElementById('cropperModal');
+        const cropperModal = new bootstrap.Modal(cropperModalEl);
+        const cropperSourceImage = document.getElementById('cropperSourceImage');
+        const galleryContainer = document.getElementById('croppedGalleryContainer');
+
+        let cropper = null;
+
+        btnBrowseImages.addEventListener('click', () => {
+            hiddenFileInput.click();
+        });
+
+        hiddenFileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast('error', 'Invalid File', 'Please select an image file (PNG, JPG, WEBP).');
+                this.value = '';
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('error', 'File Too Large', 'Please select an image smaller than 5MB.');
+                this.value = '';
+                return;
+            }
+
+            document.getElementById('cropFileName').textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                openCropperStudio(e.target.result);
+            };
+            reader.readAsDataURL(file);
+            this.value = '';
+        });
+
+        function openCropperStudio(src) {
+            cropperSourceImage.src = src;
+            cropperModal.show();
+
+            cropperModalEl.addEventListener('shown.bs.modal', function onShown() {
+                cropperModalEl.removeEventListener('shown.bs.modal', onShown);
+                if (cropper) cropper.destroy();
+
+                cropper = new Cropper(cropperSourceImage, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 0.95,
+                    responsive: true,
+                    restore: true,
+                    checkCrossOrigin: false,
+                    zoomable: true,
+                    rotatable: true,
+                    scalable: true
+                });
+            });
+        }
+
+        // Toolbar controls
+        document.getElementById('btnRotateCCW').addEventListener('click', () => cropper && cropper.rotate(-90));
+        document.getElementById('btnRotateCW').addEventListener('click', () => cropper && cropper.rotate(90));
+        let scaleX = 1;
+        document.getElementById('btnFlipH').addEventListener('click', () => {
+            if (!cropper) return;
+            scaleX = -scaleX;
+            cropper.scaleX(scaleX);
+        });
+        let scaleY = 1;
+        document.getElementById('btnFlipV').addEventListener('click', () => {
+            if (!cropper) return;
+            scaleY = -scaleY;
+            cropper.scaleY(scaleY);
+        });
+        document.getElementById('btnZoomIn').addEventListener('click', () => cropper && cropper.zoom(0.1));
+        document.getElementById('btnZoomOut').addEventListener('click', () => cropper && cropper.zoom(-0.1));
+        document.getElementById('btnCropReset').addEventListener('click', () => {
+            if (!cropper) return;
+            cropper.reset();
+            scaleX = 1;
+            scaleY = 1;
+        });
+
+        const aspectBtns = [document.getElementById('btnAspect1'), document.getElementById('btnAspect43'), document.getElementById('btnAspectFree')];
+        aspectBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                aspectBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const ratio = parseFloat(this.getAttribute('data-aspect'));
+                if (cropper) cropper.setAspectRatio(isNaN(ratio) ? NaN : ratio);
+            });
+        });
+
+        // Apply crop & add to newly added images gallery
+        document.getElementById('btnApplyCrop').addEventListener('click', () => {
+            if (!cropper) return;
+
+            const canvas = cropper.getCroppedCanvas({
+                maxWidth: 1600,
+                maxHeight: 1600,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+
+            if (!canvas) {
+                showToast('error', 'Crop Failed', 'Could not process crop.');
+                return;
+            }
+
+            const croppedBase64 = canvas.toDataURL('image/jpeg', 0.92);
+
+            const item = document.createElement('div');
+            item.className = 'cropped-item';
+            item.innerHTML = `
+                <div class="cropped-item-thumb">
+                    <span class="cropped-badge">New</span>
+                    <img src="${croppedBase64}" alt="New Image">
+                </div>
+                <div class="cropped-item-actions">
+                    <button type="button" class="btn-remove-crop">
+                        <i class="bi bi-trash3"></i> Remove
+                    </button>
+                </div>
+                <input type="hidden" name="product_images[]" value="${croppedBase64}">
+            `;
+
+            item.querySelector('.btn-remove-crop').addEventListener('click', () => {
+                item.remove();
+            });
+
+            galleryContainer.appendChild(item);
+            cropperModal.hide();
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        });
+
+        // Form Submission Client Validation
+        document.getElementById('editProductForm').addEventListener('submit', function (e) {
+            const name = nameInput.value.trim();
+            const desc = descInput.value.trim();
+            const cat = document.getElementById('category').value;
+            const price = parseFloat(document.getElementById('price').value);
+
+            if (!name || name.length < 2 || name.length > 100) {
+                e.preventDefault();
+                showToast('error', 'Validation Error', 'Product name must be between 2 and 100 characters.');
+                nameInput.focus();
+                return;
+            }
+
+            if (!cat) {
+                e.preventDefault();
+                showToast('error', 'Validation Error', 'Please select a product category.');
+                document.getElementById('category').focus();
+                return;
+            }
+
+            if (isNaN(price) || price <= 0 || price > 1000000) {
+                e.preventDefault();
+                showToast('error', 'Validation Error', 'Please enter a valid price between ₹1 and ₹1,000,000.');
+                document.getElementById('price').focus();
+                return;
+            }
+
+            if (!desc || desc.length < 5 || desc.length > 3000) {
+                e.preventDefault();
+                showToast('error', 'Validation Error', 'Description must be between 5 and 3000 characters.');
+                descInput.focus();
+                return;
+            }
+
+            const submitBtn = document.getElementById('btnSubmitForm');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Updating...`;
+        });
+    </script>
+</body>
+
+</html>

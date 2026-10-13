@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us - Jamilah | Dedicated Customer Concierge</title>
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+
+  <!-- Base Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-hover: #06665f;
+      --zy-primary-subtle: #f0fdf9;
+      --zy-primary-border: #a7f3d0;
+      --zy-dark: #0f172a;
+      --zy-slate: #334155;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-surface: #ffffff;
+      --zy-bg: #f8fafc;
+      --zy-gold: #f59e0b;
+      --zy-radius-sm: 8px;
+      --zy-radius-md: 14px;
+      --zy-radius-lg: 20px;
+      --zy-shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.04);
+      --zy-shadow-md: 0 10px 30px -4px rgba(15, 23, 42, 0.08);
+      --zy-shadow-lg: 0 20px 40px -8px rgba(15, 23, 42, 0.12);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--zy-bg);
+      color: var(--zy-slate);
+      line-height: 1.7;
+    }
+
+    /* Breadcrumbs */
+    .zy-breadcrumb-bar {
+      background: var(--zy-surface);
+      border-bottom: 1px solid var(--zy-border);
+      padding: 14px 0;
+      font-size: 0.88rem;
+    }
+
+    .zy-breadcrumb-bar a {
+      color: var(--zy-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .zy-breadcrumb-bar a:hover {
+      color: var(--zy-primary);
+    }
+
+    .zy-breadcrumb-bar .sep {
+      margin: 0 10px;
+      color: #cbd5e1;
+    }
+
+    .zy-breadcrumb-bar .current {
+      color: var(--zy-dark);
+      font-weight: 600;
+    }
+
+    /* Hero Banner */
+    .contact-hero-section {
+      background: linear-gradient(135deg, #094d48 0%, #088178 50%, #0d9488 100%);
+      color: #ffffff;
+      padding: 70px 0 90px;
+      text-align: center;
+      position: relative;
+    }
+
+    .contact-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .contact-hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .contact-hero-subtitle {
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    /* Quick Action Cards (4-Grid) */
+    .quick-channels-strip {
+      margin-top: -45px;
+      position: relative;
+      z-index: 10;
+      margin-bottom: 60px;
+    }
+
+    .quick-channel-card {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      padding: 26px 20px;
+      text-align: center;
+      box-shadow: var(--zy-shadow-md);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+    }
+
+    .quick-channel-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--zy-shadow-lg);
+      border-color: var(--zy-primary-border);
+    }
+
+    .channel-icon-circle {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      border: 1px solid var(--zy-primary-border);
+      transition: transform 0.2s;
+    }
+
+    .quick-channel-card:hover .channel-icon-circle {
+      transform: scale(1.08);
+    }
+
+    .channel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 4px;
+    }
+
+    .channel-value {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--zy-primary);
+      text-decoration: none;
+      margin-bottom: 6px;
+      word-break: break-all;
+    }
+
+    .channel-subtext {
+      font-size: 0.78rem;
+      color: var(--zy-muted);
+      margin-top: auto;
+    }
+
+    /* Main Grid */
+    .contact-body-wrap {
+      padding-bottom: 70px;
+    }
+
+    .contact-form-card {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      padding: 45px;
+      box-shadow: var(--zy-shadow-md);
+      height: 100%;
+    }
+
+    .form-header-block {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .form-header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 6px;
+    }
+
+    .form-floating-custom {
+      position: relative;
+      margin-bottom: 22px;
+    }
+
+    .form-label-custom {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .input-field-wrapper {
+      position: relative;
+    }
+
+    .input-field-wrapper .form-control {
+      padding: 14px 18px 14px 44px;
+      border-radius: var(--zy-radius-md);
+      border: 2px solid var(--zy-border);
+      background-color: #f8fafc;
+      font-size: 0.95rem;
+      color: var(--zy-dark);
+      transition: all 0.25s ease;
+      height: auto;
+    }
+
+    .input-field-wrapper textarea.form-control {
+      padding-left: 44px;
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .input-field-wrapper .form-control:focus {
+      border-color: var(--zy-primary);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.12);
+      outline: none;
+    }
+
+    .input-field-icon {
+      position: absolute;
+      left: 16px;
+      top: 17px;
+      color: var(--zy-muted);
+      font-size: 1.1rem;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .input-field-wrapper .form-control:focus ~ .input-field-icon {
+      color: var(--zy-primary);
+    }
+
+    .field-error-hint {
+      color: #ef4444;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .btn-submit-contact {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: 2px solid var(--zy-primary);
+      border-radius: var(--zy-radius-md);
+      padding: 15px 36px;
+      font-weight: 700;
+      font-size: 1rem;
+      width: 100%;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(8, 129, 120, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .btn-submit-contact:hover {
+      background: var(--zy-primary-hover);
+      border-color: var(--zy-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(8, 129, 120, 0.4);
+      color: #ffffff;
+    }
+
+    /* Location & Map Card (Right Column) */
+    .location-info-card {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      padding: 35px;
+      box-shadow: var(--zy-shadow-md);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .map-frame-box {
+      width: 100%;
+      height: 240px;
+      border-radius: var(--zy-radius-md);
+      overflow: hidden;
+      border: 1px solid var(--zy-border);
+      margin-bottom: 26px;
+    }
+
+    .map-frame-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .atelier-detail-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .detail-icon-pill {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      border: 1px solid var(--zy-primary-border);
+    }
+
+    .detail-heading {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 3px;
+    }
+
+    .detail-text {
+      font-size: 0.88rem;
+      color: var(--zy-muted);
+      line-height: 1.5;
+      margin-bottom: 0;
+    }
+
+    /* Store Hours Box */
+    .hours-table-box {
+      background: #f8fafc;
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+
+    .hour-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      padding: 4px 0;
+    }
+
+    .hour-row:not(:last-child) {
+      border-bottom: 1px dashed var(--zy-border);
+    }
+
+    /* Social Strip */
+    .social-links-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--zy-border);
+    }
+
+    .social-btn-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: var(--zy-slate);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--zy-border);
+    }
+
+    .social-btn-circle:hover {
+      background: var(--zy-primary);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(8, 129, 120, 0.3);
+    }
+
+    /* FAQ Accordion Section */
+    .faq-section-wrap {
+      background: #ffffff;
+      border-top: 1px solid var(--zy-border);
+      padding: 70px 0;
+    }
+
+    .accordion-custom .accordion-item {
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-md) !important;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: var(--zy-shadow-sm);
+    }
+
+    .accordion-custom .accordion-button {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      padding: 20px 24px;
+      background: #ffffff;
+      box-shadow: none;
+    }
+
+    .accordion-custom .accordion-button:not(.collapsed) {
+      color: var(--zy-primary);
+      background: var(--zy-primary-subtle);
+    }
+
+    .accordion-custom .accordion-button::after {
+      background-size: 1.1rem;
+    }
+
+    .accordion-custom .accordion-body {
+      padding: 20px 24px;
+      color: var(--zy-slate);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      background: #ffffff;
+    }
+
+    @media (max-width: 991px) {
+      .contact-hero-title {
+        font-size: 2.3rem;
+      }
+      .contact-form-card, .location-info-card {
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== BREADCRUMB ===============-->
+  <nav class="zy-breadcrumb-bar" aria-label="breadcrumb">
+    <div class="container">
+      <div class="d-flex align-items-center">
+        <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+        <span class="sep">/</span>
+        <span class="current">Contact Us</span>
+      </div>
+    </div>
+  </nav>
+
+  <!--=============== HERO SECTION ===============-->
+  <section class="contact-hero-section">
+    <div class="container">
+      <div class="contact-hero-badge">
+        <i class="bi bi-chat-heart-fill"></i> DEDICATED CUSTOMER CONCIERGE
+      </div>
+      <h1 class="contact-hero-title">We're Here To Help You</h1>
+      <p class="contact-hero-subtitle">
+        Have questions regarding sizing, custom bridal & prayer sets, or tracking your delivery? Our friendly atelier concierge is at your service.
+      </p>
+    </div>
+  </section>
+
+  <!--=============== QUICK CHANNELS 4-GRID ===============-->
+  <div class="container quick-channels-strip">
+    <div class="row g-3">
+      <!-- 1. Phone -->
+      <div class="col-6 col-lg-3">
+        <div class="quick-channel-card">
+          <div class="channel-icon-circle">
+            <i class="bi bi-telephone-fill"></i>
+          </div>
+          <div class="channel-title">Call Us Directly</div>
+          <a href="tel:+917306856010" class="channel-value">+91 73068 56010</a>
+          <div class="channel-subtext">Mon - Sat: 9:00 AM - 7:00 PM IST</div>
+        </div>
+      </div>
+
+      <!-- 2. Email -->
+      <div class="col-6 col-lg-3">
+        <div class="quick-channel-card">
+          <div class="channel-icon-circle">
+            <i class="bi bi-envelope-fill"></i>
+          </div>
+          <div class="channel-title">Email Concierge</div>
+          <a href="mailto:urbanedge458@gmail.com" class="channel-value">urbanedge458@gmail.com</a>
+          <div class="channel-subtext">Replies within 24 business hours</div>
+        </div>
+      </div>
+
+      <!-- 3. WhatsApp -->
+      <div class="col-6 col-lg-3">
+        <div class="quick-channel-card">
+          <div class="channel-icon-circle" style="color: #10b981; background: #ecfdf5; border-color: #a7f3d0;">
+            <i class="bi bi-whatsapp"></i>
+          </div>
+          <div class="channel-title">WhatsApp Chat</div>
+          <a href="https://wa.me/917306856010" target="_blank" class="channel-value" style="color: #059669;">Instant Chat <i class="bi bi-arrow-up-right"></i></a>
+          <div class="channel-subtext">Fastest response for order help</div>
+        </div>
+      </div>
+
+      <!-- 4. Atelier -->
+      <div class="col-6 col-lg-3">
+        <div class="quick-channel-card">
+          <div class="channel-icon-circle">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+          <div class="channel-title">Calicut Atelier</div>
+          <span class="channel-value text-dark" style="font-size: 0.85rem;">NH 66, Kakkanchery</span>
+          <div class="channel-subtext">Kozhikode, Kerala 673634</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== MAIN CONTACT ROW ===============-->
+  <main class="contact-body-wrap">
+    <div class="container">
+      <div class="row g-5">
+
+        <!-- LEFT COLUMN: INTERACTIVE CONTACT FORM -->
+        <div class="col-lg-7">
+          <div class="contact-form-card">
+            <div class="form-header-block">
+              <span class="text-primary fw-bold text-uppercase small letter-spacing-1">ONLINE INQUIRY</span>
+              <h2 class="form-header-title">Send Us a Message</h2>
+              <p class="text-muted small mb-0">Fill out the form below and our stylist team will respond promptly.</p>
+            </div>
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger rounded-3 mb-4">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <form id="contactForm" method="post" novalidate>
+              {% csrf_token %}
+
+              <!-- Full Name Field -->
+              <div class="form-floating-custom">
+                <label for="{{ form.name.id_for_label }}" class="form-label-custom">
+                  <span>Your Full Name <span class="text-danger">*</span></span>
+                </label>
+                <div class="input-field-wrapper">
+                  {{ form.name }}
+                  <i class="bi bi-person input-field-icon"></i>
+                </div>
+                <div id="contact_name_error" class="field-error-hint"></div>
+                {% if form.name.errors %}
+                  <div class="text-danger small mt-1">{{ form.name.errors }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Email Field -->
+              <div class="form-floating-custom">
+                <label for="{{ form.email.id_for_label }}" class="form-label-custom">
+                  <span>Email Address <span class="text-danger">*</span></span>
+                  <span class="text-muted fw-normal small">For receiving order updates</span>
+                </label>
+                <div class="input-field-wrapper">
+                  {{ form.email }}
+                  <i class="bi bi-envelope input-field-icon"></i>
+                </div>
+                <div id="contact_email_error" class="field-error-hint"></div>
+                {% if form.email.errors %}
+                  <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Subject Field -->
+              <div class="form-floating-custom">
+                <label for="{{ form.subject.id_for_label }}" class="form-label-custom">
+                  <span>Subject / Inquiry Reason <span class="text-danger">*</span></span>
+                </label>
+                <div class="input-field-wrapper">
+                  {{ form.subject }}
+                  <i class="bi bi-chat-left-text input-field-icon"></i>
+                </div>
+                <div id="contact_subject_error" class="field-error-hint"></div>
+                {% if form.subject.errors %}
+                  <div class="text-danger small mt-1">{{ form.subject.errors }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Message Field -->
+              <div class="form-floating-custom">
+                <label for="{{ form.message.id_for_label }}" class="form-label-custom">
+                  <span>Your Message <span class="text-danger">*</span></span>
+                  <span class="text-muted fw-normal small">Minimum 10 characters</span>
+                </label>
+                <div class="input-field-wrapper">
+                  {{ form.message }}
+                  <i class="bi bi-pencil input-field-icon" style="top: 20px;"></i>
+                </div>
+                <div id="contact_message_error" class="field-error-hint"></div>
+                {% if form.message.errors %}
+                  <div class="text-danger small mt-1">{{ form.message.errors }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Submit Button -->
+              <div class="mt-4">
+                <button type="submit" class="btn-submit-contact" id="btnSubmitContact">
+                  <i class="bi bi-send-fill"></i>
+                  <span id="btnSubmitText">Send Inquiry</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: LOCATION, MAP & HOURS -->
+        <div class="col-lg-5">
+          <div class="location-info-card">
+            <!-- Embedded Google Map -->
+            <div class="map-frame-box">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d1957.2284556961483!2d75.8911019887852!3d11.153766528802837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m3!3m2!1d11.154450599999999!2d75.8932865!4m5!1s0x3ba651e7be8bdc59%3A0x46bc32ee0e97aff7!2s5V2V%2BP8R%20KINFRA%20Standard%20Design%20Factory%2C%20Kinfra%20Rd%2C%20Kakkanchery%2C%20Chelambra%20P.O%2C%20Kerala%20673634!3m2!1d11.151859199999999!2d75.89327469999999!5e0!3m2!1sen!2sin!4v1740410982038!5m2!1sen!2sin" 
+                title="Jamilah Atelier Map"
+                allowfullscreen="" 
+                loading="lazy">
+              </iframe>
+            </div>
+
+            <h4 class="fw-bold text-dark mb-4">Visit Our Atelier</h4>
+
+            <!-- Address Item -->
+            <div class="atelier-detail-item">
+              <div class="detail-icon-pill">
+                <i class="bi bi-geo-alt-fill"></i>
+              </div>
+              <div>
+                <div class="detail-heading">Jamilah Design Atelier & HQ</div>
+                <p class="detail-text">
+                  National Highway 66 near Calicut University<br>
+                  Kakkanchery, Chelambra PO, Thenhipalam<br>
+                  Kerala, India — 673634
+                </p>
+              </div>
+            </div>
+
+            <!-- Phone Item -->
+            <div class="atelier-detail-item">
+              <div class="detail-icon-pill">
+                <i class="bi bi-headset"></i>
+              </div>
+              <div>
+                <div class="detail-heading">Phone & WhatsApp Support</div>
+                <p class="detail-text">
+                  +91 73068 56010<br>
+                  <span class="text-muted small">Standard carrier charges apply</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Visiting Hours Table -->
+            <div class="hours-table-box">
+              <div class="d-flex align-items-center gap-2 mb-2 text-dark fw-bold small">
+                <i class="bi bi-clock-fill text-primary"></i> Working Hours (IST)
+              </div>
+              <div class="hour-row">
+                <span class="text-muted">Monday – Friday:</span>
+                <strong class="text-dark">9:00 AM – 7:00 PM</strong>
+              </div>
+              <div class="hour-row">
+                <span class="text-muted">Saturday:</span>
+                <strong class="text-dark">10:00 AM – 6:00 PM</strong>
+              </div>
+              <div class="hour-row">
+                <span class="text-muted">Sunday:</span>
+                <span class="text-primary fw-semibold">Online Concierge Only</span>
+              </div>
+            </div>
+
+            <!-- Social Media Strip -->
+            <div class="social-links-strip">
+              <span class="fw-bold text-dark small me-auto">Connect With Us:</span>
+              <a href="https://instagram.com" target="_blank" class="social-btn-circle" title="Instagram">
+                <i class="bi bi-instagram"></i>
+              </a>
+              <a href="https://facebook.com" target="_blank" class="social-btn-circle" title="Facebook">
+                <i class="bi bi-facebook"></i>
+              </a>
+              <a href="https://twitter.com" target="_blank" class="social-btn-circle" title="Twitter / X">
+                <i class="bi bi-twitter-x"></i>
+              </a>
+              <a href="https://wa.me/917306856010" target="_blank" class="social-btn-circle" title="WhatsApp">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!--=============== FREQUENTLY ASKED QUESTIONS (FAQ) ===============-->
+  <section class="faq-section-wrap">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="section-kicker text-primary fw-bold text-uppercase small letter-spacing-1">HELP & GUIDANCE</span>
+        <h2 class="font-serif fw-bold text-dark fs-2 mb-2">Frequently Asked Questions</h2>
+        <p class="text-muted mx-auto" style="max-width: 550px;">
+          Quick answers to our most common inquiries regarding orders, shipping, and fabric care.
+        </p>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-9">
+          <div class="accordion accordion-custom" id="contactFaqAccordion">
+            <!-- FAQ 1 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="faqOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  How soon will my prayer dress or modest order be dispatched?
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="faqOne" data-bs-parent="#contactFaqAccordion">
+                <div class="accordion-body">
+                  Orders placed before 2:00 PM are processed same day. Standard delivery takes <strong>2 to 4 business days</strong> within metro areas and 3 to 5 business days nationwide. You will receive an SMS and email tracking link immediately upon courier handoff.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="faqTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  What is your return and size exchange policy?
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="faqTwo" data-bs-parent="#contactFaqAccordion">
+                <div class="accordion-body">
+                  We offer a hassle-free <strong>7-day return and exchange window</strong> from the date of delivery. If the size does not fit or you wish to choose another color, simply initiate a request from your Order Details dashboard. Our courier will handle reverse pickup from your doorstep.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="faqThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Can I pay via Cash on Delivery (COD)?
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="faqThree" data-bs-parent="#contactFaqAccordion">
+                <div class="accordion-body">
+                  Yes, Cash on Delivery is available for all orders up to <strong>₹1,000</strong>. For orders above ₹1,000, we accept secure payments via Razorpay (UPI, Credit/Debit cards, Net Banking) and Jamilah Wallet.
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="faqFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                  Do you accept bulk orders or custom bridal prayer sets?
+                </button>
+              </h2>
+              <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="faqFour" data-bs-parent="#contactFaqAccordion">
+                <div class="accordion-body">
+                  Yes! We cater to customized bridal trousseau prayer sets, Umrah & Hajj groups, and corporate gifting. Please send us an inquiry via the form above or reach us on WhatsApp at <strong>+91 73068 56010</strong> for dedicated styling assistance.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- External JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <!-- Form Validation Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('contactForm');
+      const nameInput = document.getElementById('{{ form.name.id_for_label }}');
+      const emailInput = document.getElementById('{{ form.email.id_for_label }}');
+      const subjectInput = document.getElementById('{{ form.subject.id_for_label }}');
+      const messageInput = document.getElementById('{{ form.message.id_for_label }}');
+
+      const nameErr = document.getElementById('contact_name_error');
+      const emailErr = document.getElementById('contact_email_error');
+      const subjectErr = document.getElementById('contact_subject_error');
+      const messageErr = document.getElementById('contact_message_error');
+      const submitBtn = document.getElementById('btnSubmitContact');
+      const submitText = document.getElementById('btnSubmitText');
+
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        let valid = true;
+        [nameErr, emailErr, subjectErr, messageErr].forEach(el => {
+          if (el) { el.style.display = 'none'; el.textContent = ''; }
+        });
+
+        const nameVal = nameInput ? nameInput.value.trim() : '';
+        if (nameInput) nameInput.value = nameVal;
+
+        if (!nameVal) {
+          nameErr.textContent = 'Full Name is required and cannot be empty.';
+          nameErr.style.display = 'block';
+          valid = false;
+        } else if (nameVal.length < 2) {
+          nameErr.textContent = 'Name must be at least 2 characters long.';
+          nameErr.style.display = 'block';
+          valid = false;
+        } else if (!/^[A-Za-z\s]+$/.test(nameVal)) {
+          nameErr.textContent = 'Name can only contain alphabets and spaces.';
+          nameErr.style.display = 'block';
+          valid = false;
+        }
+
+        const emailVal = emailInput ? emailInput.value.trim() : '';
+        if (emailInput) emailInput.value = emailVal;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailVal) {
+          emailErr.textContent = 'Email address is required.';
+          emailErr.style.display = 'block';
+          valid = false;
+        } else if (!emailRegex.test(emailVal)) {
+          emailErr.textContent = 'Please enter a valid email address.';
+          emailErr.style.display = 'block';
+          valid = false;
+        }
+
+        const subjectVal = subjectInput ? subjectInput.value.trim() : '';
+        if (subjectInput) subjectInput.value = subjectVal;
+
+        if (!subjectVal) {
+          subjectErr.textContent = 'Subject is required.';
+          subjectErr.style.display = 'block';
+          valid = false;
+        } else if (subjectVal.length < 3) {
+          subjectErr.textContent = 'Subject must be at least 3 characters long.';
+          subjectErr.style.display = 'block';
+          valid = false;
+        }
+
+        const messageVal = messageInput ? messageInput.value.trim() : '';
+        if (messageInput) messageInput.value = messageVal;
+
+        if (!messageVal) {
+          messageErr.textContent = 'Message is required.';
+          messageErr.style.display = 'block';
+          valid = false;
+        } else if (messageVal.length < 10) {
+          messageErr.textContent = 'Message must be at least 10 characters long.';
+          messageErr.style.display = 'block';
+          valid = false;
+        }
+
+        if (!valid) {
+          e.preventDefault();
+        } else if (submitBtn && submitText) {
+          submitBtn.disabled = true;
+          submitText.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Sending Message...';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

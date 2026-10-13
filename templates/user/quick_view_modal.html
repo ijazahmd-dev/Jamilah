@@ -1,0 +1,1093 @@
+{% load static %}
+
+<!-- Quick View Modal Styles -->
+<style>
+  .qv-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .qv-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .qv-modal-container {
+    position: relative;
+    background: #ffffff;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .qv-modal-overlay.active .qv-modal-container {
+    transform: scale(1) translateY(0);
+  }
+
+  .qv-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    color: #475569;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .qv-modal-close:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+    transform: rotate(90deg);
+  }
+
+  /* Loading & Error States */
+  .qv-loading, .qv-error {
+    padding: 4rem 2rem;
+    text-align: center;
+    width: 100%;
+    color: #475569;
+  }
+
+  .qv-spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid #e2e8f0;
+    border-top-color: var(--first-color, #088178);
+    border-radius: 50%;
+    animation: qvSpin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  @keyframes qvSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  .qv-error i {
+    font-size: 2.5rem;
+    color: #ef4444;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  /* Modal Body */
+  .qv-modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    overflow-y: auto;
+    max-height: calc(90vh - 20px);
+    padding: 2rem;
+    gap: 2rem;
+  }
+
+  /* Gallery Column */
+  .qv-gallery-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .qv-main-image-wrap {
+    position: relative;
+    background: #f8fafc;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+  }
+
+  .qv-main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.2s ease, transform 0.3s ease;
+  }
+
+  .qv-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #ff4d6d;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.3rem 0.65rem;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(255, 77, 109, 0.4);
+  }
+
+  .qv-thumbnails-strip {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .qv-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    overflow: hidden;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: #f8fafc;
+    padding: 2px;
+    transition: all 0.2s ease;
+  }
+
+  .qv-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .qv-thumb:hover {
+    border-color: #94a3b8;
+  }
+
+  .qv-thumb.active {
+    border-color: var(--first-color, #088178);
+    box-shadow: 0 0 0 2px rgba(8, 129, 120, 0.2);
+  }
+
+  /* Info Column */
+  .qv-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .qv-category {
+    font-size: 0.8rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .qv-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .qv-rating-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .qv-stars {
+    color: #fbbf24;
+    font-size: 1.05rem;
+    display: inline-flex;
+    letter-spacing: 1px;
+  }
+
+  .qv-star.empty {
+    color: #cbd5e1;
+  }
+
+  .qv-review-count {
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+
+  /* Price */
+  .qv-price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0.2rem 0;
+  }
+
+  .qv-new-price {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--first-color, #088178);
+  }
+
+  .qv-old-price {
+    font-size: 1.05rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+  }
+
+  /* Stock badge */
+  .qv-stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: fit-content;
+  }
+
+  .qv-stock-badge.in-stock {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .qv-stock-badge.out-of-stock {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .qv-description {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.55;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Variants */
+  .qv-variants-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .qv-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .qv-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  .qv-selected-val {
+    color: var(--first-color, #088178);
+    font-weight: 700;
+  }
+
+  .qv-chips-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .qv-chip {
+    padding: 0.45rem 0.9rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1e293b;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .qv-chip:hover:not(.disabled) {
+    border-color: var(--first-color, #088178);
+    color: var(--first-color, #088178);
+  }
+
+  .qv-chip.active {
+    border-color: var(--first-color, #088178);
+    background: var(--first-color, #088178);
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(8, 129, 120, 0.25);
+  }
+
+  .qv-chip.disabled {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+
+  /* Quantity & Stock row */
+  .qv-qty-stock-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-top: 0.3rem;
+  }
+
+  .qv-qty-control {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .qv-qty-stepper {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
+    border-radius: 25px;
+    padding: 3px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .qv-qty-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+  }
+
+  .qv-qty-btn:hover {
+    background: var(--first-color, #088178);
+    color: #ffffff;
+  }
+
+  .qv-qty-stepper input {
+    width: 38px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    outline: none;
+  }
+
+  .qv-stock-hint {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  /* Inline Alert */
+  .qv-alert {
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    display: none;
+    animation: qvFadeIn 0.3s ease;
+  }
+
+  .qv-alert.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+
+  .qv-alert.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+  }
+
+  @keyframes qvFadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Actions row */
+  .qv-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .qv-btn-cart {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--first-color, #088178);
+    color: #ffffff;
+    border: none;
+    padding: 0.85rem 1.5rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(8, 129, 120, 0.25);
+  }
+
+  .qv-btn-cart:hover:not(:disabled) {
+    background: #06665f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(8, 129, 120, 0.35);
+  }
+
+  .qv-btn-cart:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+    transform: none;
+  }
+
+  .qv-btn-wishlist {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    border: 1.5px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .qv-btn-wishlist:hover {
+    border-color: #f43f5e;
+    color: #f43f5e;
+    background: #fff1f2;
+    transform: translateY(-2px);
+  }
+
+  .qv-btn-wishlist.active {
+    border-color: #f43f5e;
+    background: #f43f5e;
+    color: #ffffff;
+  }
+
+  .qv-footer-links {
+    margin-top: 0.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .qv-detail-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--first-color, #088178);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .qv-detail-link:hover {
+    color: #06665f;
+    gap: 0.6rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .qv-modal-body {
+      grid-template-columns: 1fr;
+      padding: 1.5rem;
+      gap: 1.25rem;
+    }
+
+    .qv-modal-container {
+      max-height: 94vh;
+      margin: 0.5rem;
+    }
+
+    .qv-main-image-wrap {
+      max-height: 280px;
+    }
+
+    .qv-title {
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
+<!-- Quick View Modal Container -->
+<div id="quickViewModal" class="qv-modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="qvTitle">
+  <div class="qv-modal-container">
+    <button type="button" class="qv-modal-close" onclick="closeQuickView()" aria-label="Close Preview">&times;</button>
+
+    <!-- Loading State -->
+    <div id="qvLoading" class="qv-loading">
+      <div class="qv-spinner"></div>
+      <p>Loading product preview...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="qvError" class="qv-error" style="display: none;">
+      <i class="fi fi-rs-exclamation"></i>
+      <p id="qvErrorMessage">Failed to load product details.</p>
+      <button type="button" class="btn btn--sm" onclick="closeQuickView()" style="margin-top: 1rem;">Close</button>
+    </div>
+
+    <!-- Content State -->
+    <div id="qvContent" class="qv-modal-body" style="display: none;">
+      <!-- Left: Images -->
+      <div class="qv-gallery-col">
+        <div class="qv-main-image-wrap">
+          <img id="qvMainImage" src="" alt="Product Preview" class="qv-main-image" />
+          <span id="qvBadgeOffer" class="qv-badge" style="display: none;"></span>
+        </div>
+        <div id="qvThumbnails" class="qv-thumbnails-strip"></div>
+      </div>
+
+      <!-- Right: Product Info & Actions -->
+      <div class="qv-info-col">
+        <span id="qvCategory" class="qv-category"></span>
+        <h2 id="qvTitle" class="qv-title"></h2>
+
+        <div class="qv-rating-wrap">
+          <div id="qvRatingStars" class="qv-stars"></div>
+          <span id="qvReviewCount" class="qv-review-count"></span>
+        </div>
+
+        <div class="qv-price-wrap">
+          <span id="qvOfferPrice" class="qv-new-price"></span>
+          <span id="qvOldPrice" class="qv-old-price" style="display: none;"></span>
+          <span id="qvRegularPrice" class="qv-new-price" style="display: none;"></span>
+        </div>
+
+        <div id="qvStockBadge" class="qv-stock-badge"></div>
+
+        <p id="qvDescription" class="qv-description"></p>
+
+        <!-- Variants -->
+        <div class="qv-variants-wrap">
+          <!-- Color -->
+          <div id="qvColorGroup" class="qv-form-group">
+            <label class="qv-label">Color: <span id="qvSelectedColorText" class="qv-selected-val"></span></label>
+            <div id="qvColorOptions" class="qv-chips-list"></div>
+          </div>
+
+          <!-- Size -->
+          <div id="qvSizeGroup" class="qv-form-group">
+            <label class="qv-label">Size: <span id="qvSelectedSizeText" class="qv-selected-val"></span></label>
+            <div id="qvSizeOptions" class="qv-chips-list"></div>
+          </div>
+        </div>
+
+        <!-- Quantity & Stock Info -->
+        <div class="qv-qty-stock-row">
+          <div class="qv-qty-control">
+            <label class="qv-label">Quantity:</label>
+            <div class="qv-qty-stepper">
+              <button type="button" class="qv-qty-btn" onclick="changeQvQty(-1)" aria-label="Decrease quantity">-</button>
+              <input type="number" id="qvQuantityInput" value="1" min="1" max="5" readonly />
+              <button type="button" class="qv-qty-btn" onclick="changeQvQty(1)" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+          <span id="qvVariantStockHint" class="qv-stock-hint"></span>
+        </div>
+
+        <!-- Inline Alert Message -->
+        <div id="qvAlertMessage" class="qv-alert"></div>
+
+        <!-- Actions -->
+        <div class="qv-actions-row">
+          <button type="button" id="qvAddToCartBtn" class="qv-btn-cart" onclick="quickViewAddToCart()">
+            <i class="fi fi-rs-shopping-bag"></i> Add to Cart
+          </button>
+          <button type="button" id="qvWishlistBtn" class="qv-btn-wishlist" onclick="quickViewAddToWishlist()" title="Add to Wishlist" aria-label="Add to Wishlist">
+            <i class="fi fi-rs-heart"></i>
+          </button>
+        </div>
+
+        <div class="qv-footer-links">
+          <a id="qvFullDetailsLink" href="#" class="qv-detail-link">
+            View Full Product Details <i class="fi fi-rs-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick View Modal Script -->
+<script>
+  let qvCurrentProduct = null;
+  let qvSelectedColor = '';
+  let qvSelectedSize = '';
+  let qvMaxQty = 1;
+
+  function getQvCSRFToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    if (meta && meta.content) return meta.content;
+    const input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    if (input && input.value) return input.value;
+    return '{{ csrf_token }}';
+  }
+
+  function openQuickView(productId, event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    const modal = document.getElementById('quickViewModal');
+    const loading = document.getElementById('qvLoading');
+    const errorBox = document.getElementById('qvError');
+    const content = document.getElementById('qvContent');
+    const alertBox = document.getElementById('qvAlertMessage');
+
+    if (!modal) return;
+
+    // Reset view
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    loading.style.display = 'block';
+    errorBox.style.display = 'none';
+    content.style.display = 'none';
+    if (alertBox) alertBox.style.display = 'none';
+
+    fetch(`/products/quick-view/${productId}/`, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Could not load product preview.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success && data.product) {
+          qvCurrentProduct = data.product;
+          populateQuickView(data.product);
+          loading.style.display = 'none';
+          content.style.display = 'grid';
+        } else {
+          throw new Error(data.error || 'Failed to load product details.');
+        }
+      })
+      .catch(err => {
+        console.error('Quick View Error:', err);
+        loading.style.display = 'none';
+        document.getElementById('qvErrorMessage').textContent = err.message || 'Failed to load product details.';
+        errorBox.style.display = 'block';
+      });
+  }
+
+  function closeQuickView() {
+    const modal = document.getElementById('quickViewModal');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+    document.body.style.overflow = '';
+    qvCurrentProduct = null;
+  }
+
+  function populateQuickView(product) {
+    // Images
+    const mainImg = document.getElementById('qvMainImage');
+    mainImg.src = product.images[0] || '/static/images/default-product.jpg';
+    mainImg.alt = product.name;
+
+    const offerBadge = document.getElementById('qvBadgeOffer');
+    if (product.has_offer && product.best_offer_percentage > 0) {
+      offerBadge.textContent = `${product.best_offer_percentage}% OFF`;
+      offerBadge.style.display = 'block';
+    } else {
+      offerBadge.style.display = 'none';
+    }
+
+    // Thumbnails
+    const thumbsStrip = document.getElementById('qvThumbnails');
+    thumbsStrip.innerHTML = '';
+    if (product.images.length > 1) {
+      thumbsStrip.style.display = 'flex';
+      product.images.forEach((imgUrl, idx) => {
+        const thumb = document.createElement('div');
+        thumb.className = `qv-thumb ${idx === 0 ? 'active' : ''}`;
+        thumb.innerHTML = `<img src="${imgUrl}" alt="${product.name} ${idx + 1}" />`;
+        thumb.onclick = () => {
+          document.querySelectorAll('.qv-thumb').forEach(t => t.classList.remove('active'));
+          thumb.classList.add('active');
+          mainImg.src = imgUrl;
+        };
+        thumbsStrip.appendChild(thumb);
+      });
+    } else {
+      thumbsStrip.style.display = 'none';
+    }
+
+    // Texts
+    document.getElementById('qvCategory').textContent = product.category || 'General';
+    document.getElementById('qvTitle').textContent = product.name;
+    document.getElementById('qvDescription').textContent = product.description;
+
+    // Rating
+    const starsContainer = document.getElementById('qvRatingStars');
+    starsContainer.innerHTML = '';
+    const ratingInt = Math.round(product.average_rating || 0);
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement('span');
+      star.className = `qv-star ${i <= ratingInt ? 'filled' : 'empty'}`;
+      star.innerHTML = '&#9733;';
+      starsContainer.appendChild(star);
+    }
+    document.getElementById('qvReviewCount').textContent = `(${product.review_count} reviews)`;
+
+    // Price
+    const offerPriceEl = document.getElementById('qvOfferPrice');
+    const oldPriceEl = document.getElementById('qvOldPrice');
+    const regularPriceEl = document.getElementById('qvRegularPrice');
+
+    if (product.has_offer && product.best_offer_price) {
+      offerPriceEl.textContent = `₹${product.best_offer_price}`;
+      offerPriceEl.style.display = 'inline';
+      oldPriceEl.textContent = `₹${product.price}`;
+      oldPriceEl.style.display = 'inline';
+      regularPriceEl.style.display = 'none';
+    } else {
+      offerPriceEl.style.display = 'none';
+      oldPriceEl.style.display = 'none';
+      regularPriceEl.textContent = `₹${product.price}`;
+      regularPriceEl.style.display = 'inline';
+    }
+
+    // Detail Link
+    document.getElementById('qvFullDetailsLink').href = product.detail_url;
+
+    // Reset Quantity
+    document.getElementById('qvQuantityInput').value = '1';
+
+    // Populate Variants (Color & Size)
+    setupQvVariants(product);
+  }
+
+  function setupQvVariants(product) {
+    const colorGroup = document.getElementById('qvColorGroup');
+    const colorOptions = document.getElementById('qvColorOptions');
+    const sizeGroup = document.getElementById('qvSizeGroup');
+
+    colorOptions.innerHTML = '';
+    qvSelectedColor = '';
+    qvSelectedSize = '';
+
+    const colors = product.unique_colors || [];
+
+    if (colors.length > 0) {
+      colorGroup.style.display = 'flex';
+      qvSelectedColor = colors[0];
+      document.getElementById('qvSelectedColorText').textContent = qvSelectedColor;
+
+      colors.forEach(col => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = `qv-chip ${col === qvSelectedColor ? 'active' : ''}`;
+        chip.textContent = col;
+        chip.onclick = () => selectQvColor(col);
+        colorOptions.appendChild(chip);
+      });
+    } else {
+      colorGroup.style.display = 'none';
+    }
+
+    renderQvSizes();
+  }
+
+  function selectQvColor(color) {
+    qvSelectedColor = color;
+    document.getElementById('qvSelectedColorText').textContent = color;
+
+    document.querySelectorAll('#qvColorOptions .qv-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.trim() === color);
+    });
+
+    renderQvSizes();
+  }
+
+  function renderQvSizes() {
+    if (!qvCurrentProduct) return;
+
+    const sizeGroup = document.getElementById('qvSizeGroup');
+    const sizeOptions = document.getElementById('qvSizeOptions');
+    sizeOptions.innerHTML = '';
+
+    let availableSizes = [];
+    if (qvSelectedColor && qvCurrentProduct.color_size_dict) {
+      availableSizes = qvCurrentProduct.color_size_dict[qvSelectedColor] || [];
+    } else {
+      availableSizes = qvCurrentProduct.all_sizes || [];
+    }
+
+    if (availableSizes.length > 0) {
+      sizeGroup.style.display = 'flex';
+
+      // Keep previously selected size if available, otherwise default to first available
+      if (!availableSizes.includes(qvSelectedSize)) {
+        qvSelectedSize = availableSizes[0];
+      }
+      document.getElementById('qvSelectedSizeText').textContent = qvSelectedSize;
+
+      availableSizes.forEach(sz => {
+        // Find variant for stock check
+        const variant = qvCurrentProduct.variants.find(v => {
+          const matchColor = qvSelectedColor ? v.color.toLowerCase() === qvSelectedColor.toLowerCase() : true;
+          return matchColor && v.size.toLowerCase() === sz.toLowerCase();
+        });
+
+        const isOutOfStock = variant ? variant.stock <= 0 : true;
+
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = `qv-chip ${sz === qvSelectedSize ? 'active' : ''} ${isOutOfStock ? 'disabled' : ''}`;
+        chip.textContent = sz;
+        if (!isOutOfStock) {
+          chip.onclick = () => selectQvSize(sz);
+        }
+        sizeOptions.appendChild(chip);
+      });
+    } else {
+      sizeGroup.style.display = 'none';
+      qvSelectedSize = '';
+    }
+
+    updateQvStockStatus();
+  }
+
+  function selectQvSize(size) {
+    qvSelectedSize = size;
+    document.getElementById('qvSelectedSizeText').textContent = size;
+
+    document.querySelectorAll('#qvSizeOptions .qv-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.trim() === size);
+    });
+
+    updateQvStockStatus();
+  }
+
+  function updateQvStockStatus() {
+    if (!qvCurrentProduct) return;
+
+    let matchingVariant = null;
+    if (qvSelectedColor && qvSelectedSize) {
+      matchingVariant = qvCurrentProduct.variants.find(v => 
+        v.color.toLowerCase() === qvSelectedColor.toLowerCase() && 
+        v.size.toLowerCase() === qvSelectedSize.toLowerCase()
+      );
+    } else if (qvSelectedSize) {
+      matchingVariant = qvCurrentProduct.variants.find(v => 
+        v.size.toLowerCase() === qvSelectedSize.toLowerCase()
+      );
+    } else if (qvSelectedColor) {
+      matchingVariant = qvCurrentProduct.variants.find(v => 
+        v.color.toLowerCase() === qvSelectedColor.toLowerCase()
+      );
+    } else {
+      matchingVariant = qvCurrentProduct.variants[0] || null;
+    }
+
+    const stock = matchingVariant ? matchingVariant.stock : qvCurrentProduct.total_stock;
+    const stockBadge = document.getElementById('qvStockBadge');
+    const stockHint = document.getElementById('qvVariantStockHint');
+    const cartBtn = document.getElementById('qvAddToCartBtn');
+    const qtyInput = document.getElementById('qvQuantityInput');
+
+    if (stock > 0) {
+      stockBadge.className = 'qv-stock-badge in-stock';
+      stockBadge.innerHTML = `<i class="fi fi-rs-check"></i> In Stock`;
+      stockHint.textContent = `${stock} unit${stock > 1 ? 's' : ''} available`;
+      cartBtn.disabled = false;
+      cartBtn.innerHTML = `<i class="fi fi-rs-shopping-bag"></i> Add to Cart`;
+      qvMaxQty = Math.min(5, stock);
+      if (parseInt(qtyInput.value) > qvMaxQty || parseInt(qtyInput.value) < 1) {
+        qtyInput.value = '1';
+      }
+    } else {
+      stockBadge.className = 'qv-stock-badge out-of-stock';
+      stockBadge.innerHTML = `<i class="fi fi-rs-cross"></i> Out of Stock`;
+      stockHint.textContent = `Currently unavailable in this variant`;
+      cartBtn.disabled = true;
+      cartBtn.innerHTML = `Out of Stock`;
+      qvMaxQty = 0;
+      qtyInput.value = '1';
+    }
+  }
+
+  function changeQvQty(delta) {
+    if (qvMaxQty <= 0) return;
+    const qtyInput = document.getElementById('qvQuantityInput');
+    let current = parseInt(qtyInput.value) || 1;
+    let next = current + delta;
+    if (next < 1) next = 1;
+    if (next > qvMaxQty) next = qvMaxQty;
+    qtyInput.value = next;
+  }
+
+  function showQvAlert(message, type) {
+    const alertBox = document.getElementById('qvAlertMessage');
+    alertBox.textContent = message;
+    alertBox.className = `qv-alert ${type}`;
+    alertBox.style.display = 'block';
+
+    setTimeout(() => {
+      alertBox.style.display = 'none';
+    }, 3500);
+  }
+
+  function quickViewAddToCart() {
+    if (!qvCurrentProduct) return;
+
+    const cartBtn = document.getElementById('qvAddToCartBtn');
+    const quantity = parseInt(document.getElementById('qvQuantityInput').value) || 1;
+
+    cartBtn.disabled = true;
+    const originalText = cartBtn.innerHTML;
+    cartBtn.innerHTML = `<span class="qv-spinner" style="width: 18px; height: 18px; margin: 0; display: inline-block; vertical-align: middle;"></span> Adding...`;
+
+    const bodyData = new URLSearchParams({
+      'product_id': qvCurrentProduct.id,
+      'color': qvSelectedColor || '',
+      'size': qvSelectedSize || '',
+      'quantity': quantity
+    });
+
+    fetch("{% url 'add_to_cart' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getQvCSRFToken(),
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: bodyData
+    })
+      .then(response => {
+        if (response.redirected && response.url.includes('/login/')) {
+          window.location.href = response.url;
+          return;
+        }
+        return response.json();
+      })
+      .then(data => {
+        cartBtn.disabled = false;
+        cartBtn.innerHTML = originalText;
+
+        if (!data) return;
+
+        if (data.success) {
+          showQvAlert(data.message || 'Item added to cart successfully!', 'success');
+          if (typeof showNotification === 'function') {
+            showNotification(data.message || 'Item added to cart!', 'success');
+          }
+        } else {
+          showQvAlert(data.error || 'Could not add item to cart.', 'error');
+          if (typeof showNotification === 'function') {
+            showNotification(data.error || 'Could not add item to cart.', 'error');
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
+        cartBtn.disabled = false;
+        cartBtn.innerHTML = originalText;
+        showQvAlert('An unexpected error occurred. Please try again.', 'error');
+      });
+  }
+
+  function quickViewAddToWishlist() {
+    if (!qvCurrentProduct) return;
+
+    const wishlistBtn = document.getElementById('qvWishlistBtn');
+    wishlistBtn.classList.add('active');
+
+    fetch(`/wishlist/add/${qvCurrentProduct.id}/`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getQvCSRFToken()
+      }
+    })
+      .then(response => {
+        if (response.redirected && response.url.includes('/login/')) {
+          window.location.href = response.url;
+          return;
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!data) return;
+
+        if (data.status === 'success' || data.success) {
+          showQvAlert(data.message || 'Added to wishlist!', 'success');
+          if (typeof showNotification === 'function') {
+            showNotification(data.message || 'Added to wishlist!', 'success');
+          }
+        } else {
+          showQvAlert(data.message || 'Product already in wishlist', 'error');
+          if (typeof showNotification === 'function') {
+            showNotification(data.message || 'Product already in wishlist', 'error');
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error adding to wishlist:', error);
+        showQvAlert('Error adding product to wishlist.', 'error');
+      });
+  }
+
+  // Backdrop and Escape key to close modal
+  document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('quickViewModal');
+    if (modal) {
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          closeQuickView();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeQuickView();
+      }
+    });
+  });
+</script>

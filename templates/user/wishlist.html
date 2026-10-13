@@ -1,0 +1,1718 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token }}">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit (matching cart & shop) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Flaticon, Bootstrap Icons & FontAwesome (identical to Cart page) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <title>My Wishlist — Jamilah | Modest Couture &amp; Prayer Wear</title>
+
+  <style>
+    :root {
+      --primary: #088178;
+      --primary-dark: #06665f;
+      --primary-light: #e6f4f2;
+      --primary-glow: rgba(8, 129, 120, 0.15);
+      --accent-coral: #ef4444;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --shadow-teal: 0 8px 20px rgba(8, 129, 120, 0.2);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f6f8fa;
+      color: var(--slate-800);
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Wishlist Page Container */
+    .wishlist-page-wrapper {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 4rem;
+    }
+
+    /* Modern Stepper Navigation (Cart-Matching) */
+    .checkout-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--slate-200);
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--slate-400);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .step-item:hover {
+      color: var(--primary);
+    }
+
+    .step-item.active {
+      color: var(--primary);
+    }
+
+    .step-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--slate-100);
+      color: var(--slate-500);
+      transition: all 0.2s ease;
+    }
+
+    .step-item.active .step-circle {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .step-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--slate-200);
+    }
+
+    /* Top Page Header */
+    .cart-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .cart-title-group h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0 0 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .cart-count-pill {
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+    }
+
+    .cart-subtitle {
+      color: var(--slate-500);
+      font-size: 0.92rem;
+      margin: 0;
+    }
+
+    .cart-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-top-move-all {
+      background: var(--primary);
+      color: white;
+      border: 1px solid var(--primary);
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-top-move-all:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .btn-clear-cart {
+      background: transparent;
+      color: var(--slate-500);
+      border: 1px solid var(--slate-300);
+      padding: 0.55rem 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear-cart:hover {
+      background: #fee2e2;
+      color: var(--accent-coral);
+      border-color: #fca5a5;
+    }
+
+    /* Stock Readiness & Savings Tracker (Cart-Matching Highlight Card) */
+    .free-shipping-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.75rem;
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .free-shipping-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .free-shipping-msg {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--slate-800);
+    }
+
+    .free-shipping-msg i {
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .free-shipping-msg.unlocked i {
+      color: var(--accent-emerald);
+    }
+
+    .shipping-bar-container {
+      width: 100%;
+      height: 8px;
+      background: var(--slate-100);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .shipping-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #088178 0%, #10b981 100%);
+      border-radius: 10px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Filter & Search Toolbar */
+    .wishlist-toolbar {
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--slate-200);
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab-pill {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--slate-600);
+      background: var(--slate-100);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .filter-tab-pill:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .filter-tab-pill.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(8, 129, 120, 0.25);
+    }
+
+    .filter-search-sort-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input-wrap input {
+      font-size: 0.82rem;
+      border: 1px solid var(--slate-200);
+      border-radius: 20px;
+      padding: 0.38rem 1rem 0.38rem 2.2rem;
+      background: var(--slate-50);
+      color: var(--slate-800);
+      outline: none;
+      width: 180px;
+      transition: all 0.2s ease;
+    }
+
+    .search-input-wrap input:focus {
+      background: white;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      width: 220px;
+    }
+
+    .search-input-wrap i {
+      position: absolute;
+      left: 0.8rem;
+      color: var(--slate-400);
+      font-size: 0.8rem;
+      pointer-events: none;
+    }
+
+    .sort-select {
+      font-size: 0.82rem;
+      border: 1px solid var(--slate-200);
+      border-radius: 20px;
+      padding: 0.38rem 1rem;
+      background: var(--slate-50);
+      color: var(--slate-700);
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+
+    .sort-select:focus {
+      border-color: var(--primary);
+      background: white;
+    }
+
+    /* Wishlist Main Grid (Cart-Matching 1fr 380px) */
+    .cart-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* Wishlist Items Column */
+    .cart-items-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Wishlist Item Card */
+    .cart-item-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--slate-200);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-columns: 105px 1fr auto;
+      gap: 1.5rem;
+      align-items: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+      position: relative;
+    }
+
+    .cart-item-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
+    }
+
+    .cart-item-card.removing {
+      opacity: 0;
+      transform: scale(0.96) translateY(-10px);
+    }
+
+    /* Product Thumbnail */
+    .cart-item-img-wrap {
+      width: 105px;
+      height: 115px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--slate-100);
+      position: relative;
+      flex-shrink: 0;
+      border: 1px solid var(--slate-200);
+    }
+
+    .cart-item-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .cart-item-card:hover .cart-item-img {
+      transform: scale(1.05);
+    }
+
+    .discount-badge-corner {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: var(--accent-coral);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Product Details */
+    .cart-item-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .item-category-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--slate-400);
+    }
+
+    .cart-item-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin: 0;
+      line-height: 1.35;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .cart-item-title:hover {
+      color: var(--primary);
+    }
+
+    .cart-variant-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .variant-tag {
+      font-size: 0.76rem;
+      font-weight: 600;
+      background: var(--slate-100);
+      color: var(--slate-600);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid var(--slate-200);
+    }
+
+    .stock-status-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      width: fit-content;
+    }
+
+    .stock-status-pill.in-stock {
+      background: #ecfdf5;
+      color: var(--accent-emerald);
+      border: 1px solid #a7f3d0;
+    }
+
+    .stock-status-pill.out-of-stock {
+      background: #fef2f2;
+      color: var(--accent-coral);
+      border: 1px solid #fecaca;
+    }
+
+    /* Price Section */
+    .cart-price-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+      flex-wrap: wrap;
+    }
+
+    .unit-offer-price {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .unit-listed-price {
+      font-size: 0.88rem;
+      color: var(--slate-400);
+      text-decoration: line-through;
+      font-weight: 500;
+    }
+
+    .unit-savings-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: #ecfdf5;
+      color: #065f46;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #a7f3d0;
+    }
+
+    /* Right Controls: Price & Action Buttons */
+    .cart-item-actions-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.85rem;
+      min-width: 160px;
+    }
+
+    .cart-item-subtotal-block {
+      text-align: right;
+    }
+
+    .subtotal-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--slate-400);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .item-subtotal-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Item Move to Cart CTA Button */
+    .btn-item-move-cart {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.65rem 1.15rem;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(8, 129, 120, 0.2);
+      width: 100%;
+      text-decoration: none;
+    }
+
+    .btn-item-move-cart:hover:not(:disabled) {
+      background: var(--primary-dark);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(8, 129, 120, 0.25);
+    }
+
+    .btn-item-move-cart:disabled {
+      background: var(--slate-200);
+      color: var(--slate-400);
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Secondary Action Icon Buttons */
+    .item-row-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--slate-200);
+      background: white;
+      color: var(--slate-500);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .action-icon-btn:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+      color: var(--slate-800);
+    }
+
+    .action-icon-btn.remove-btn:hover {
+      color: var(--accent-coral);
+      border-color: #fecdd3;
+      background: #fef2f2;
+    }
+
+    /* Bottom Cart Actions */
+    .cart-bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--slate-200);
+    }
+
+    .btn-continue-shopping {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-md);
+      transition: background 0.2s ease;
+    }
+
+    .btn-continue-shopping:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-view-cart-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--slate-700);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-md);
+      background: white;
+      border: 1px solid var(--slate-200);
+      transition: all 0.2s ease;
+    }
+
+    .btn-view-cart-link:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--slate-50);
+    }
+
+    /* Right Column: Sticky Summary Card (Cart-Matching) */
+    .cart-summary-sticky {
+      position: sticky;
+      top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-md);
+      padding: 1.75rem;
+    }
+
+    .summary-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0 0 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .summary-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      color: var(--slate-600);
+    }
+
+    .summary-row.discount-row {
+      color: var(--accent-emerald);
+      font-weight: 700;
+    }
+
+    .summary-divider {
+      height: 1px;
+      background: var(--slate-200);
+      margin: 1rem 0;
+    }
+
+    /* Total Row */
+    .summary-total-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-total-label {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .summary-total-value {
+      font-size: 1.65rem;
+      font-weight: 900;
+      color: var(--slate-900);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .tax-note {
+      font-size: 0.75rem;
+      color: var(--slate-400);
+      text-align: right;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Savings Callout Box */
+    .savings-callout-box {
+      background: #ecfdf5;
+      border: 1px dashed var(--accent-emerald);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: #065f46;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .savings-callout-box i {
+      font-size: 1.15rem;
+      color: var(--accent-emerald);
+    }
+
+    /* Checkout & Move All CTA */
+    .btn-checkout-cta {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 1rem 1.5rem;
+      font-size: 1.02rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      box-shadow: var(--shadow-teal);
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .btn-checkout-cta:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(8, 129, 120, 0.3);
+      color: white;
+    }
+
+    .btn-checkout-cta.disabled,
+    .btn-checkout-cta:disabled {
+      background: var(--slate-200);
+      color: var(--slate-400);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+      pointer-events: none;
+    }
+
+    /* Coupon Teaser */
+    .coupon-teaser-box {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--slate-200);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .coupon-teaser-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: #fef3c7;
+      color: #d97706;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .coupon-teaser-content {
+      flex: 1;
+    }
+
+    .coupon-teaser-content h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin: 0 0 2px;
+    }
+
+    .coupon-teaser-content p {
+      font-size: 0.8rem;
+      color: var(--slate-500);
+      margin: 0;
+    }
+
+    .coupon-teaser-link {
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 4px;
+    }
+
+    .coupon-teaser-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Trust Badges */
+    .trust-badges-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      text-align: center;
+      padding-top: 0.5rem;
+    }
+
+    .trust-badge-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--slate-500);
+    }
+
+    .trust-badge-item i {
+      font-size: 1rem;
+      color: var(--slate-400);
+    }
+
+    /* Empty Wishlist State */
+    .empty-cart-container {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
+      padding: 4rem 2rem;
+      text-align: center;
+      max-width: 620px;
+      margin: 2rem auto;
+    }
+
+    .empty-cart-icon-wrap {
+      width: 90px;
+      height: 90px;
+      background: #fdf2f8;
+      color: #db2777;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.75rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    .empty-cart-title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0 0 0.5rem;
+    }
+
+    .empty-cart-desc {
+      color: var(--slate-500);
+      font-size: 0.95rem;
+      max-width: 440px;
+      margin: 0 auto 2rem;
+      line-height: 1.5;
+    }
+
+    .empty-cart-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-shop-now {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      box-shadow: var(--shadow-teal);
+      transition: all 0.2s ease;
+    }
+
+    .btn-shop-now:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      color: white;
+    }
+
+    .btn-view-wishlist {
+      background: var(--slate-100);
+      color: var(--slate-700);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-view-wishlist:hover {
+      background: var(--slate-200);
+      color: var(--slate-900);
+    }
+
+    /* Pagination */
+    .wishlist-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .wishlist-pagination .page-pill {
+      min-width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid var(--slate-200);
+      color: var(--slate-700);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .wishlist-pagination .page-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .wishlist-pagination .page-pill.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .cart-grid {
+        grid-template-columns: 1fr;
+      }
+      .cart-summary-sticky {
+        position: static;
+      }
+      .checkout-stepper {
+        gap: 0.5rem;
+        padding: 0.75rem;
+      }
+      .step-divider {
+        width: 20px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .cart-item-card {
+        grid-template-columns: 85px 1fr;
+        gap: 1rem;
+      }
+      .cart-item-actions-group {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--slate-100);
+        padding-top: 0.85rem;
+        margin-top: 0.25rem;
+        width: 100%;
+      }
+      .cart-item-subtotal-block {
+        text-align: left;
+      }
+      .btn-item-move-cart {
+        width: auto;
+      }
+      .wishlist-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-search-sort-group {
+        justify-content: space-between;
+      }
+      .search-input-wrap input {
+        width: 100%;
+      }
+      .search-input-wrap input:focus {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <main class="wishlist-page-wrapper">
+
+    <!-- Stepper Navigation (Matching Cart Page Flow) -->
+    <div class="checkout-stepper">
+      <div class="step-item active">
+        <div class="step-circle"><i class="fas fa-heart"></i></div>
+        <span>1. Saved Wishlist</span>
+      </div>
+      <div class="step-divider"></div>
+      <a href="{% url 'cart_view' %}" class="step-item">
+        <div class="step-circle"><i class="fas fa-shopping-bag"></i></div>
+        <span>2. Shopping Bag</span>
+      </a>
+      <div class="step-divider"></div>
+      <div class="step-item">
+        <div class="step-circle"><i class="fas fa-map-marker-alt"></i></div>
+        <span>3. Checkout</span>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step-item">
+        <div class="step-circle"><i class="fas fa-check"></i></div>
+        <span>4. Order Success</span>
+      </div>
+    </div>
+
+    {% if total_items_count > 0 or search_query or stock_filter != 'all' %}
+      <!-- Top Title & Action Bar -->
+      <div class="cart-header-row">
+        <div class="cart-title-group">
+          <h1>
+            Your Saved Wishlist
+            <span class="cart-count-pill" id="wishlistCountBadge">{{ total_items_count }} item{{ total_items_count|pluralize }}</span>
+          </h1>
+          <p class="cart-subtitle">Review, track offer discounts, and move your curated modest pieces into your bag.</p>
+        </div>
+        <div class="cart-top-actions">
+          {% if in_stock_count > 0 %}
+          <button type="button" class="btn-top-move-all" onclick="confirmMoveAllToCart()">
+            <i class="fas fa-cart-plus"></i> Move All In-Stock to Bag
+          </button>
+          {% endif %}
+
+          {% if total_items_count > 0 %}
+          <button type="button" class="btn-clear-cart" onclick="confirmClearWishlist()">
+            <i class="far fa-trash-alt"></i> Clear Wishlist
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Stock Readiness & Savings Tracker (Cart-Matching Highlight Card) -->
+      <div class="free-shipping-card" id="wishlistTrackerCard">
+        <div class="free-shipping-info">
+          <div class="free-shipping-msg {% if in_stock_count > 0 %}unlocked{% endif %}">
+            {% if in_stock_count > 0 %}
+              <i class="fas fa-check-circle"></i>
+              <span><strong>{{ in_stock_count }} item{{ in_stock_count|pluralize }}</strong> ready in stock! You have unlocked <strong>₹{{ total_savings_value|floatformat:2 }}</strong> in active store &amp; product savings.</span>
+            {% else %}
+              <i class="fas fa-exclamation-circle text-warning"></i>
+              <span>Your saved items are currently out of stock. We are restocking soon!</span>
+            {% endif %}
+          </div>
+          <span class="variant-tag fw-bold text-dark">
+            {{ in_stock_count }} of {{ total_items_count }} Available
+          </span>
+        </div>
+        <div class="shipping-bar-container">
+          <div class="shipping-bar-fill" style="width: {% if total_items_count > 0 %}{% widthratio in_stock_count total_items_count 100 %}{% else %}0{% endif %}%;"></div>
+        </div>
+      </div>
+
+      <!-- Controls Toolbar: Filter Tabs, Search & Sort -->
+      <div class="wishlist-toolbar">
+        <!-- Filter Tabs -->
+        <div class="filter-tabs-group">
+          <a href="?stock=all{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" class="filter-tab-pill {% if stock_filter == 'all' or not stock_filter %}active{% endif %}">
+            All ({{ total_items_count }})
+          </a>
+          <a href="?stock=in_stock{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" class="filter-tab-pill {% if stock_filter == 'in_stock' %}active{% endif %}">
+            <i class="fas fa-check-circle text-success me-1"></i> In Stock ({{ in_stock_count }})
+          </a>
+          <a href="?stock=out_of_stock{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" class="filter-tab-pill {% if stock_filter == 'out_of_stock' %}active{% endif %}">
+            <i class="fas fa-times-circle text-danger me-1"></i> Out of Stock ({{ out_of_stock_count }})
+          </a>
+        </div>
+
+        <!-- Search & Sort Controls -->
+        <form method="get" action="{% url 'wishlist' %}" class="filter-search-sort-group" id="filterForm">
+          <input type="hidden" name="stock" value="{{ stock_filter }}">
+
+          <div class="search-input-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Search saved items..." />
+          </div>
+
+          <select name="sort" class="sort-select" onchange="document.getElementById('filterForm').submit()">
+            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Recently Added</option>
+            <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
+          </select>
+
+          {% if search_query %}
+          <a href="{% url 'wishlist' %}?stock={{ stock_filter }}&sort={{ sort_by }}" class="action-icon-btn remove-btn" title="Clear Search">
+            <i class="fas fa-times"></i>
+          </a>
+          {% endif %}
+        </form>
+      </div>
+
+      <!-- Main Wishlist Grid (Cart-Matching 2-Column) -->
+      {% if wishlist_items %}
+      <div class="cart-grid">
+
+        <!-- Left Column: Item Cards -->
+        <div class="cart-items-column" id="wishlistItemsContainer">
+          {% for item in wishlist_items %}
+          <div class="cart-item-card" id="wishlist-item-{{ item.id }}" data-item-id="{{ item.id }}">
+
+            <!-- Thumbnail -->
+            <div class="cart-item-img-wrap">
+              <a href="{% url 'product_details' item.product.id %}">
+                {% if item.first_image_url %}
+                  <img src="{{ item.first_image_url }}" alt="{{ item.product.name }}" class="cart-item-img" />
+                {% else %}
+                  <img src="{% static 'images/default-product.jpg' %}" alt="{{ item.product.name }}" class="cart-item-img" />
+                {% endif %}
+              </a>
+              {% if item.has_discount %}
+                <span class="discount-badge-corner">{{ item.discount_percentage }}% OFF</span>
+              {% endif %}
+            </div>
+
+            <!-- Details -->
+            <div class="cart-item-details">
+              {% if item.product.category %}
+                <span class="item-category-tag">
+                  {{ item.product.category.category_name }}
+                </span>
+              {% endif %}
+
+              <a href="{% url 'product_details' item.product.id %}" class="cart-item-title">
+                {{ item.product.name }}
+              </a>
+
+              <!-- Variant options -->
+              <div class="cart-variant-pills">
+                {% if item.variant_colors %}
+                  <span class="variant-tag">
+                    <i class="fas fa-palette"></i> {{ item.variant_colors|join:", " }}
+                  </span>
+                {% endif %}
+                {% if item.variant_sizes %}
+                  <span class="variant-tag">
+                    <i class="fas fa-ruler"></i> Size: {{ item.variant_sizes|join:", " }}
+                  </span>
+                {% endif %}
+              </div>
+
+              <!-- Stock Status -->
+              {% if item.is_in_stock %}
+                <span class="stock-status-pill in-stock">
+                  <i class="fas fa-check-circle"></i> In Stock ({{ item.total_stock }} available)
+                </span>
+              {% else %}
+                <span class="stock-status-pill out-of-stock">
+                  <i class="fas fa-times-circle"></i> Out of Stock
+                </span>
+              {% endif %}
+
+              <!-- Price Section -->
+              <div class="cart-price-group">
+                <span class="unit-offer-price">₹{{ item.final_price|floatformat:2 }}</span>
+                {% if item.has_discount %}
+                  <span class="unit-listed-price">₹{{ item.product.price|floatformat:2 }}</span>
+                  <span class="unit-savings-tag">Save ₹{{ item.savings|floatformat:2 }}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Right Controls: Subtotal & Actions -->
+            <div class="cart-item-actions-group">
+              <div class="cart-item-subtotal-block">
+                <div class="subtotal-label">Unit Price</div>
+                <div class="item-subtotal-val">₹{{ item.final_price|floatformat:2 }}</div>
+              </div>
+
+              <!-- Move to Bag Primary Button -->
+              {% if item.is_in_stock %}
+                <button type="button" class="btn-item-move-cart btn-move-cart-action" data-item-id="{{ item.id }}" data-item-name="{{ item.product.name|escapejs }}" onclick="moveToCart('{{ item.id }}', '{{ item.product.name|escapejs }}', this)">
+                  <i class="fas fa-shopping-bag"></i> Move to Bag
+                </button>
+              {% else %}
+                <button type="button" class="btn-item-move-cart" disabled title="Currently out of stock">
+                  <i class="fas fa-ban"></i> Out of Stock
+                </button>
+              {% endif %}
+
+              <!-- Secondary Row Buttons -->
+              <div class="item-row-buttons">
+                <a href="{% url 'product_details' item.product.id %}" class="action-icon-btn" title="View Product Details">
+                  <i class="far fa-eye"></i>
+                </a>
+                <button type="button" class="action-icon-btn remove-btn" title="Remove from Wishlist" onclick="confirmRemoveWishlistItem('{{ item.id }}', '{{ item.product.name|escapejs }}')">
+                  <i class="far fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+          {% endfor %}
+
+          <!-- Pagination -->
+          {% if wishlist_items.has_other_pages %}
+          <div class="wishlist-pagination">
+            {% if wishlist_items.has_previous %}
+              <a href="?page={{ wishlist_items.previous_page_number }}&stock={{ stock_filter }}&sort={{ sort_by }}{% if search_query %}&q={{ search_query }}{% endif %}" class="page-pill" title="Previous Page">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            {% endif %}
+
+            <span class="page-pill active">
+              {{ wishlist_items.number }} / {{ wishlist_items.paginator.num_pages }}
+            </span>
+
+            {% if wishlist_items.has_next %}
+              <a href="?page={{ wishlist_items.next_page_number }}&stock={{ stock_filter }}&sort={{ sort_by }}{% if search_query %}&q={{ search_query }}{% endif %}" class="page-pill" title="Next Page">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <!-- Bottom Navigation Bar -->
+          <div class="cart-bottom-bar">
+            <a href="{% url 'all_products' %}" class="btn-continue-shopping">
+              <i class="fas fa-arrow-left"></i> Continue Shopping
+            </a>
+            <a href="{% url 'cart_view' %}" class="btn-view-cart-link">
+              <i class="fas fa-shopping-bag"></i> View Shopping Bag
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column: Sticky Summary Card (Cart-Matching) -->
+        <div class="cart-summary-sticky">
+          <div class="summary-card">
+            <div class="summary-title">
+              <span>Wishlist Summary</span>
+              <span class="variant-tag" id="summaryUnitsTag">{{ total_items_count }} item{{ total_items_count|pluralize }}</span>
+            </div>
+
+            <div class="summary-rows">
+              <div class="summary-row">
+                <span>Saved Items</span>
+                <span id="summaryTotalItems">{{ total_items_count }}</span>
+              </div>
+
+              <div class="summary-row">
+                <span>In Stock &amp; Ready</span>
+                <span class="text-success fw-bold" id="summaryInStock">{{ in_stock_count }}</span>
+              </div>
+
+              {% if out_of_stock_count > 0 %}
+              <div class="summary-row">
+                <span>Out of Stock</span>
+                <span class="text-danger fw-bold">{{ out_of_stock_count }}</span>
+              </div>
+              {% endif %}
+
+              <div class="summary-row">
+                <span>Estimated Value</span>
+                <span id="summaryValue">₹{{ total_wishlist_value|floatformat:2 }}</span>
+              </div>
+
+              {% if total_savings_value > 0 %}
+              <div class="summary-row discount-row">
+                <span>Active Store Savings</span>
+                <span>-₹{{ total_savings_value|floatformat:2 }}</span>
+              </div>
+              {% endif %}
+            </div>
+
+            {% if total_savings_value > 0 %}
+            <div class="savings-callout-box">
+              <i class="fas fa-badge-percent"></i>
+              <span>You save <strong>₹{{ total_savings_value|floatformat:2 }}</strong> on these saved items!</span>
+            </div>
+            {% endif %}
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-total-row">
+              <span class="summary-total-label">Grand Total</span>
+              <span class="summary-total-value">₹{{ total_wishlist_value|floatformat:2 }}</span>
+            </div>
+            <div class="tax-note">All taxes included in listed price</div>
+
+            <!-- Proceed CTA: Move All In-Stock -->
+            {% if in_stock_count > 0 %}
+              <form method="post" action="{% url 'move_all_to_cart' %}" id="moveAllForm">
+                {% csrf_token %}
+                <button type="submit" class="btn-checkout-cta">
+                  <i class="fas fa-cart-plus"></i> Move All In-Stock to Bag
+                </button>
+              </form>
+            {% else %}
+              <button type="button" class="btn-checkout-cta disabled" disabled>
+                <i class="fas fa-ban"></i> No In-Stock Items to Move
+              </button>
+            {% endif %}
+
+            <!-- View Shopping Bag Link -->
+            <a href="{% url 'cart_view' %}" class="btn-view-cart-link justify-content-center w-100 mt-2 py-2">
+              <i class="fas fa-shopping-bag"></i> View Shopping Bag
+            </a>
+
+            <!-- Trust Badges (Identical to Cart Page) -->
+            <div class="trust-badges-grid mt-4">
+              <div class="trust-badge-item">
+                <i class="fas fa-lock"></i>
+                <span>SSL Encrypted</span>
+              </div>
+              <div class="trust-badge-item">
+                <i class="fas fa-truck"></i>
+                <span>Fast Dispatch</span>
+              </div>
+              <div class="trust-badge-item">
+                <i class="fas fa-undo"></i>
+                <span>Easy Returns</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coupon Hint Widget (Identical to Cart Page) -->
+          <div class="coupon-teaser-box">
+            <div class="coupon-teaser-icon">
+              <i class="fas fa-ticket-alt"></i>
+            </div>
+            <div class="coupon-teaser-content">
+              <h4>Have a Promo Code?</h4>
+              <p>Explore our active coupons and apply vouchers on checkout.</p>
+              <a href="{% url 'view_coupons' %}" class="coupon-teaser-link">
+                View Available Coupons <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      {% else %}
+      <!-- Empty Filter State -->
+      <div class="empty-cart-container">
+        <div class="empty-cart-icon-wrap">
+          <i class="fas fa-search"></i>
+        </div>
+        <h2 class="empty-cart-title">No Matching Items Found</h2>
+        <p class="empty-cart-desc">
+          No saved items match your active search or filter selection. Try adjusting your query or filters.
+        </p>
+        <div class="empty-cart-actions">
+          <a href="{% url 'wishlist' %}" class="btn-shop-now">
+            <i class="fas fa-redo me-2"></i> Reset Filters
+          </a>
+          <a href="{% url 'all_products' %}" class="btn-view-wishlist">
+            <i class="fas fa-compass me-2"></i> Explore Shop
+          </a>
+        </div>
+      </div>
+      {% endif %}
+
+    {% else %}
+      <!-- Empty Wishlist State (Matching Empty Cart View) -->
+      <div class="empty-cart-container" id="emptyWishlistView">
+        <div class="empty-cart-icon-wrap">
+          <i class="far fa-heart"></i>
+        </div>
+        <h2 class="empty-cart-title">Your Wishlist is Empty</h2>
+        <p class="empty-cart-desc">
+          Looks like you haven't saved any modest couture pieces to your wishlist yet. Explore our curated collections and save your favorite outfits!
+        </p>
+        <div class="empty-cart-actions">
+          <a href="{% url 'all_products' %}" class="btn-shop-now">
+            <i class="fas fa-compass me-2"></i> Explore Shop
+          </a>
+          <a href="{% url 'cart_view' %}" class="btn-view-wishlist">
+            <i class="fas fa-shopping-bag me-2"></i> View Shopping Bag
+          </a>
+        </div>
+      </div>
+    {% endif %}
+
+  </main>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- Hidden Form for CSRF Token -->
+  <form id="csrfHelperForm" style="display:none;">
+    {% csrf_token %}
+  </form>
+
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                      document.querySelector('#csrfHelperForm [name=csrfmiddlewaretoken]')?.value;
+
+    // Toast Notification Utility (Matching Cart Page)
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      }
+    });
+
+    /**
+     * AJAX Remove Item from Wishlist
+     */
+    function confirmRemoveWishlistItem(itemId, itemName) {
+      Swal.fire({
+        title: 'Remove Item?',
+        text: `Are you sure you want to remove "${itemName}" from your saved wishlist?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Yes, remove it',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const card = document.getElementById(`wishlist-item-${itemId}`);
+          if (card) card.classList.add('removing');
+
+          fetch(`/wishlist/remove/${itemId}/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': csrfToken,
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json'
+            }
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              setTimeout(() => {
+                if (card) card.remove();
+                const container = document.getElementById('wishlistItemsContainer');
+                if (!container || container.querySelectorAll('.cart-item-card').length === 0) {
+                  window.location.reload();
+                }
+              }, 300);
+
+              // Update badges
+              const badge = document.getElementById('wishlistCountBadge');
+              if (badge && typeof data.wishlist_count !== 'undefined') {
+                badge.textContent = `${data.wishlist_count} item${data.wishlist_count === 1 ? '' : 's'}`;
+              }
+
+              Toast.fire({
+                icon: 'success',
+                title: 'Item removed from wishlist'
+              });
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch(err => {
+            console.error('Error removing item:', err);
+            window.location.reload();
+          });
+        }
+      });
+    }
+
+    /**
+     * AJAX Move Single Item to Cart
+     */
+    function moveToCart(itemId, itemName, btnElem) {
+      const originalHTML = btnElem.innerHTML;
+      btnElem.disabled = true;
+      btnElem.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Moving...';
+
+      fetch(`/wishlist/move_to_cart/${itemId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const card = document.getElementById(`wishlist-item-${itemId}`);
+          if (card) {
+            card.classList.add('removing');
+            setTimeout(() => {
+              card.remove();
+              const container = document.getElementById('wishlistItemsContainer');
+              if (!container || container.querySelectorAll('.cart-item-card').length === 0) {
+                window.location.reload();
+              }
+            }, 300);
+          }
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Moved to Bag!',
+            text: data.message,
+            showCancelButton: true,
+            confirmButtonColor: '#088178',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'View Shopping Bag',
+            cancelButtonText: 'Continue Shopping'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "{% url 'cart_view' %}";
+            }
+          });
+        } else {
+          btnElem.disabled = false;
+          btnElem.innerHTML = originalHTML;
+          Swal.fire({
+            icon: 'error',
+            title: 'Could Not Move',
+            text: data.message || 'Error moving product to bag.'
+          });
+        }
+      })
+      .catch(err => {
+        console.error('Error moving item to cart:', err);
+        window.location.reload();
+      });
+    }
+
+    /**
+     * Move All In-Stock Confirmation
+     */
+    function confirmMoveAllToCart() {
+      Swal.fire({
+        title: 'Move All In-Stock to Bag?',
+        text: 'All currently in-stock items will be transferred to your shopping bag.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#088178',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Yes, Move to Bag',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById('moveAllForm').submit();
+        }
+      });
+    }
+
+    /**
+     * Clear Entire Wishlist Confirmation
+     */
+    function confirmClearWishlist() {
+      Swal.fire({
+        title: 'Clear Entire Wishlist?',
+        text: 'Are you sure? All saved items will be permanently removed from your wishlist.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Yes, Clear All',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch("{% url 'clear_wishlist' %}", {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': csrfToken,
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json'
+            }
+          })
+          .then(res => res.json())
+          .then(data => {
+            window.location.reload();
+          })
+          .catch(err => {
+            window.location.reload();
+          });
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

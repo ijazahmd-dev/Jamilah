@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Item Tracking - Order #{{ order.id }} - Jamilah</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}" />
+
+  <!-- External Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Base Site Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-hover: #066c65;
+      --zy-primary-subtle: #edf7f7;
+      --zy-surface: #f8fafc;
+      --zy-card-bg: #ffffff;
+      --zy-border: #e2e8f0;
+      --zy-text: #1e293b;
+      --zy-muted: #64748b;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f6f8fa;
+      color: var(--zy-text);
+    }
+
+    /* Account Sidebar */
+    .account-sidebar {
+      background: var(--zy-card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--zy-border);
+      padding: 24px;
+      position: sticky;
+      top: 90px;
+    }
+
+    .account-sidebar nav,
+    .account-sidebar .account-nav {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      gap: 4px !important;
+      height: auto !important;
+    }
+
+    .user-mini-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .user-mini-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--zy-primary) 0%, #066c65 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .account-sidebar .nav-link {
+      display: flex !important;
+      align-items: center !important;
+      padding: 12px 16px !important;
+      border-radius: 10px !important;
+      color: #334155 !important;
+      font-weight: 500 !important;
+      font-size: 0.95rem !important;
+      transition: all 0.2s ease !important;
+      width: 100% !important;
+      text-align: left !important;
+      text-decoration: none !important;
+    }
+
+    .account-sidebar .nav-link i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      width: 22px;
+      text-align: center;
+      color: var(--zy-muted);
+      transition: color 0.25s ease;
+    }
+
+    .account-sidebar .nav-link:hover {
+      background-color: var(--zy-primary-subtle) !important;
+      color: var(--zy-primary) !important;
+    }
+
+    .account-sidebar .nav-link:hover i {
+      color: var(--zy-primary) !important;
+    }
+
+    .account-sidebar .nav-link.active {
+      background-color: var(--zy-primary) !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.3);
+    }
+
+    .account-sidebar .nav-link.active i {
+      color: #ffffff !important;
+    }
+
+    .account-sidebar .logout-link {
+      color: #dc2626 !important;
+      margin-top: 10px;
+      border-top: 1px solid var(--zy-border);
+      padding-top: 14px;
+    }
+
+    .account-sidebar .logout-link:hover {
+      background-color: #fef2f2 !important;
+      color: #b91c1c !important;
+    }
+
+    /* Content Cards */
+    .content-box {
+      background: var(--zy-card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--zy-border);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    /* Header Banner */
+    .order-header-banner {
+      background: linear-gradient(135deg, #092c29 0%, #088178 100%);
+      border-radius: 16px;
+      padding: 24px 28px;
+      color: #ffffff;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 20px rgba(8, 129, 120, 0.25);
+    }
+
+    /* Stepper Styling */
+    .stepper-container {
+      position: relative;
+      margin: 20px 0 30px 0;
+    }
+
+    .stepper-track {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .stepper-track::before {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 30px;
+      right: 30px;
+      height: 3px;
+      background-color: #e2e8f0;
+      z-index: 1;
+    }
+
+    .stepper-step {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
+    }
+
+    .stepper-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .stepper-step.completed .stepper-icon {
+      background: var(--zy-primary);
+      border-color: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.3);
+    }
+
+    .stepper-step.active .stepper-icon {
+      background: #ffffff;
+      border-color: var(--zy-primary);
+      color: var(--zy-primary);
+      box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.15);
+      font-weight: bold;
+    }
+
+    .stepper-step.special-alert .stepper-icon {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: white;
+    }
+
+    .stepper-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .stepper-step.completed .stepper-label,
+    .stepper-step.active .stepper-label {
+      color: #0f172a;
+    }
+
+    /* Product Item Showcase */
+    .product-showcase {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .product-main-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: #fff;
+      border: 1px solid var(--zy-border);
+      flex-shrink: 0;
+    }
+
+    .badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+
+    .badge-status {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-status.completed,
+    .badge-status.delivered {
+      background-color: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+    }
+
+    .badge-status.processing,
+    .badge-status.order_placed {
+      background-color: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .badge-status.shipped,
+    .badge-status.out_for_delivery {
+      background-color: #fdf4ff;
+      color: #7e22ce;
+      border: 1px solid #f0abfc;
+    }
+
+    .badge-status.canceled {
+      background-color: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .badge-status.return_requested,
+    .badge-status.returned {
+      background-color: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    /* Buttons */
+    .btn-action-outline {
+      border: 1.5px solid #ffffff;
+      color: #ffffff;
+      background: transparent;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-outline:hover {
+      background: #ffffff;
+      color: var(--zy-primary);
+    }
+
+    .btn-action-primary {
+      background: #ffffff;
+      color: var(--zy-primary);
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-action-primary:hover {
+      background: #f1f5f9;
+      color: var(--zy-primary-hover);
+    }
+
+    .btn-cancel-item {
+      background: #fff;
+      color: #dc2626;
+      border: 1.5px solid #fecaca;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-cancel-item:hover {
+      background: #fef2f2;
+      border-color: #dc2626;
+      color: #b91c1c;
+    }
+
+    .btn-return-item {
+      background: #fff;
+      color: #d97706;
+      border: 1.5px solid #fde68a;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-return-item:hover {
+      background: #fffbeb;
+      border-color: #d97706;
+      color: #b45309;
+    }
+
+    /* Price Summary Box */
+    .summary-card {
+      background: var(--zy-surface);
+      border-radius: 12px;
+      border: 1px solid var(--zy-border);
+      padding: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.92rem;
+      color: #475569;
+    }
+
+    .summary-row.total {
+      border-top: 2px dashed #cbd5e1;
+      padding-top: 14px;
+      margin-top: 14px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    @media (max-width: 991px) {
+      .account-sidebar {
+        position: static;
+        margin-bottom: 24px;
+      }
+      .product-showcase {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== BREADCRUMB ===============-->
+  <section class="breadcrumb">
+    <ul class="breadcrumb__list flex container">
+      <li><a href="{% url 'home' %}" class="breadcrumb__link">Home</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><a href="{% url 'user_profile' %}" class="breadcrumb__link">My Account</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><a href="{% url 'user_orders' %}" class="breadcrumb__link">My Orders</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><a href="{% url 'order_items' order.id %}" class="breadcrumb__link">Order #{{ order.id }}</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><span class="breadcrumb__link" style="color: var(--zy-primary); font-weight: 600;">Item Tracking</span></li>
+    </ul>
+  </section>
+
+  <!--=============== MAIN CONTAINER ===============-->
+  <div class="container my-4 pb-5">
+    <div class="row g-4">
+      <!-- Account Sidebar -->
+      <div class="col-lg-3">
+        <div class="account-sidebar">
+          <div class="user-mini-badge">
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-mini-avatar">
+            {% else %}
+              <div class="user-mini-avatar">
+                {{ user.first_name|default:user.username|slice:":1"|upper }}
+              </div>
+            {% endif %}
+            <div class="overflow-hidden">
+              <div class="fw-bold text-truncate" style="font-size: 0.95rem;">
+                {{ user.get_full_name|default:user.username }}
+              </div>
+              <small class="text-muted d-block text-truncate">@{{ user.username }}</small>
+            </div>
+          </div>
+
+          <nav class="account-nav d-flex flex-column w-100">
+            <a class="nav-link" href="{% url 'user_profile' %}">
+              <i class="bi bi-person"></i> My Profile
+            </a>
+            <a class="nav-link" href="{% url 'addresses' %}">
+              <i class="bi bi-geo-alt"></i> My Addresses
+            </a>
+            <a class="nav-link active" href="{% url 'user_orders' %}">
+              <i class="bi bi-bag-check-fill"></i> My Orders
+            </a>
+            <a class="nav-link" href="{% url 'wallet_view' %}">
+              <i class="bi bi-wallet2"></i> My Wallet
+            </a>
+            <a class="nav-link" href="{% url 'view_coupons' %}">
+              <i class="bi bi-ticket-perforated"></i> Coupons
+            </a>
+            <a class="nav-link" href="{% url 'wishlist' %}">
+              <i class="bi bi-heart"></i> My Wishlist
+            </a>
+            <a class="nav-link logout-link" href="{% url 'userlogout' %}">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Main Column -->
+      <div class="col-lg-9">
+        <!-- Order Header Banner -->
+        <div class="order-header-banner">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="fs-4 fw-bold">Order #{{ order.id }}</span>
+                <span class="badge bg-white text-dark rounded-pill px-3 py-1 font-monospace fw-semibold">
+                  <i class="bi bi-credit-card me-1 text-primary"></i> {{ order.payment_method|upper }}
+                </span>
+                {% if order.payment_status == 'Paid' %}
+                  <span class="badge bg-success text-white rounded-pill px-3 py-1 fw-semibold">
+                    <i class="bi bi-check-circle-fill me-1"></i> Paid
+                  </span>
+                {% elif order.payment_status == 'Refunded' %}
+                  <span class="badge bg-info text-dark rounded-pill px-3 py-1 fw-semibold">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Refunded
+                  </span>
+                {% elif order.payment_method == 'COD' %}
+                  <span class="badge bg-secondary text-white rounded-pill px-3 py-1 fw-semibold">
+                    <i class="bi bi-cash-stack me-1"></i> Due on Delivery
+                  </span>
+                {% else %}
+                  <span class="badge bg-warning text-dark rounded-pill px-3 py-1 fw-semibold">
+                    <i class="bi bi-hourglass-split me-1"></i> Payment Pending
+                  </span>
+                {% endif %}
+              </div>
+              <p class="mb-0 text-white-50 small mt-1">
+                Ordered on {{ order.created_at|date:"F d, Y" }} at {{ order.created_at|date:"h:i A" }}
+              </p>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+              <a href="{% url 'order_items' order.id %}" class="btn-action-outline">
+                <i class="bi bi-arrow-left"></i> Order Summary
+              </a>
+              {% if particular_product.status in 'delivered,return_requested,returned,return_denied' or order.status == 'completed' %}
+              <a href="{% url 'download_invoice' order.id %}" class="btn-action-primary">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Invoice
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. Tracking Timeline Stepper Card -->
+        <div class="content-box">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0" style="color: #0f172a;">
+              <i class="bi bi-truck me-2 text-primary"></i>Delivery Progress
+            </h5>
+            <span class="badge-status {{ particular_product.status }}">
+              {{ particular_product.get_status_display }}
+            </span>
+          </div>
+
+          {% if particular_product.status == 'canceled' %}
+          <div class="alert alert-danger d-flex align-items-center mt-3 mb-0" role="alert">
+            <i class="bi bi-x-circle-fill fs-3 me-3"></i>
+            <div>
+              <strong>This item was canceled</strong>
+              {% if particular_product.cancel_reason %}
+                <div class="small mt-1">Reason: {{ particular_product.cancel_reason }}</div>
+              {% endif %}
+            </div>
+          </div>
+          {% elif particular_product.status == 'return_requested' %}
+          <div class="alert alert-warning d-flex align-items-center mt-3 mb-0" role="alert">
+            <i class="bi bi-arrow-return-left fs-3 me-3"></i>
+            <div>
+              <strong>Return Request Submitted</strong>
+              <div class="small mt-1">Your return request is under review. Our courier will contact you shortly for pickup.</div>
+            </div>
+          </div>
+          {% elif particular_product.status == 'returned' %}
+          <div class="alert alert-secondary d-flex align-items-center mt-3 mb-0" role="alert">
+            <i class="bi bi-arrow-counterclockwise fs-3 me-3"></i>
+            <div>
+              <strong>Item Returned & Refund Credited</strong>
+              <div class="small mt-1">The product has been received and verified. The refund has been credited directly to your wallet.</div>
+            </div>
+          </div>
+          {% elif particular_product.status == 'return_denied' %}
+          <div class="alert alert-danger d-flex align-items-center mt-3 mb-0" role="alert">
+            <i class="bi bi-x-octagon-fill fs-3 me-3"></i>
+            <div>
+              <strong>Return Request Denied</strong>
+              <div class="small mt-1">The return request was not eligible according to our return policy.</div>
+            </div>
+          </div>
+          {% else %}
+          <!-- Standard Stepper -->
+          <div class="stepper-container">
+            <ul class="stepper-track">
+              <!-- Step 1: Placed -->
+              <li class="stepper-step completed">
+                <div class="stepper-icon"><i class="bi bi-bag-check-fill"></i></div>
+                <div class="stepper-label">Order Placed</div>
+              </li>
+
+              <!-- Step 2: Processing -->
+              <li class="stepper-step {% if particular_product.status != 'order_placed' %}completed{% else %}active{% endif %}">
+                <div class="stepper-icon"><i class="bi bi-gear-fill"></i></div>
+                <div class="stepper-label">Processing</div>
+              </li>
+
+              <!-- Step 3: Shipped -->
+              <li class="stepper-step {% if particular_product.status == 'shipped' %}active{% elif particular_product.status == 'out_for_delivery' or particular_product.status == 'delivered' %}completed{% endif %}">
+                <div class="stepper-icon"><i class="bi bi-truck"></i></div>
+                <div class="stepper-label">Shipped</div>
+              </li>
+
+              <!-- Step 4: Out for Delivery -->
+              <li class="stepper-step {% if particular_product.status == 'out_for_delivery' %}active{% elif particular_product.status == 'delivered' %}completed{% endif %}">
+                <div class="stepper-icon"><i class="bi bi-bicycle"></i></div>
+                <div class="stepper-label">Out for Delivery</div>
+              </li>
+
+              <!-- Step 5: Delivered -->
+              <li class="stepper-step {% if particular_product.status == 'delivered' %}completed active{% endif %}">
+                <div class="stepper-icon"><i class="bi bi-check2-circle"></i></div>
+                <div class="stepper-label">Delivered</div>
+              </li>
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- 2. Main Product Showcase Card -->
+        <div class="content-box">
+          <h5 class="fw-bold mb-3" style="color: #0f172a;">
+            <i class="bi bi-bag-heart me-2 text-primary"></i>Product Details
+          </h5>
+
+          <div class="product-showcase">
+            <a href="{% url 'product_details' particular_product.product.id %}">
+              {% if particular_product.product.images.first %}
+                <img src="{{ particular_product.product.images.first.image.url }}" class="product-main-img" alt="{{ particular_product.product.name }}">
+              {% else %}
+                <div class="product-main-img d-flex align-items-center justify-content-center text-muted">
+                  <i class="bi bi-image fs-1"></i>
+                </div>
+              {% endif %}
+            </a>
+
+            <div class="flex-grow-1">
+              <h5 class="fw-bold mb-2">
+                <a href="{% url 'product_details' particular_product.product.id %}" class="text-decoration-none text-dark">
+                  {{ particular_product.product.name }}
+                </a>
+              </h5>
+
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                {% if particular_product.product_variant %}
+                  <span class="badge-chip">
+                    <i class="bi bi-palette"></i> Color: {{ particular_product.product_variant.color }}
+                  </span>
+                  <span class="badge-chip">
+                    <i class="bi bi-aspect-ratio"></i> Size: {{ particular_product.product_variant.size }}
+                  </span>
+                {% endif %}
+                <span class="badge-chip">
+                  <i class="bi bi-123"></i> Quantity: {{ particular_product.quantity }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center gap-3">
+                <span class="fs-4 fw-bold text-dark">₹{{ particular_product.final_offer_price|floatformat:2 }}</span>
+                {% if particular_product.product.price > particular_product.final_offer_price %}
+                  <span class="text-muted text-decoration-line-through">₹{{ particular_product.product.price|floatformat:2 }}</span>
+                  <span class="badge bg-success-subtle text-success border">Offer Price</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons Area -->
+          <div class="d-flex flex-wrap gap-3 mt-4 pt-3 border-top">
+            <a href="{% url 'order_items' order.id %}" class="btn btn-outline-secondary px-4 py-2 rounded-3 fw-semibold">
+              <i class="bi bi-arrow-left me-1"></i> Back to Items
+            </a>
+
+            {% if particular_product.status != 'processing' and particular_product.status != 'out_for_delivery' and particular_product.status != 'delivered' and particular_product.status != 'canceled' and particular_product.status != 'return_requested' and particular_product.status != 'returned' and particular_product.status != 'return_denied' %}
+            <a href="{% url 'cancel_order_item' particular_product.id %}" class="btn-cancel-item">
+              <i class="bi bi-x-circle me-1"></i> Cancel this Item
+            </a>
+            {% endif %}
+
+            {% if particular_product.status == 'delivered' and days_since_delivery <= 7 and particular_product.status != 'return_requested' and particular_product.status != 'returned' %}
+            <a href="{% url 'request_return' particular_product.id %}" class="btn-return-item">
+              <i class="bi bi-arrow-return-left me-1"></i> Request Return ({{ 7|add:"-1"|add:days_since_delivery }} days left)
+            </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- 3. Other Products in the Order -->
+        {% if other_products_in_order %}
+        <div class="content-box">
+          <h5 class="fw-bold mb-3" style="color: #0f172a;">
+            <i class="bi bi-collection me-2 text-primary"></i>Other Products in this Order
+          </h5>
+
+          {% for item in other_products_in_order %}
+          <div class="d-flex align-items-center justify-content-between p-3 mb-2 rounded-3 border bg-light">
+            <div class="d-flex align-items-center gap-3">
+              {% if item.product.images.first %}
+                <img src="{{ item.product.images.first.image.url }}" class="rounded" style="width: 56px; height: 56px; object-fit: cover;" alt="{{ item.product.name }}">
+              {% else %}
+                <div class="rounded bg-white border d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                  <i class="bi bi-image text-muted"></i>
+                </div>
+              {% endif %}
+              <div>
+                <div class="fw-semibold text-dark">{{ item.product.name }}</div>
+                <small class="text-muted">
+                  {{ item.product_variant.color }} • {{ item.product_variant.size }} • Qty: {{ item.quantity }}
+                </small>
+              </div>
+            </div>
+
+            <div class="text-end">
+              <div class="fw-bold text-dark">₹{{ item.final_offer_price|floatformat:2 }}</div>
+              <a href="{% url 'user_order_details' item.id %}" class="small text-primary text-decoration-none fw-semibold">
+                Track Item <i class="bi bi-chevron-right"></i>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 4. Delivery Address & Order Financial Summary -->
+        <div class="row g-4">
+          <!-- Delivery Address -->
+          <div class="col-md-6">
+            <div class="content-box h-100 mb-0">
+              <h5 class="fw-bold mb-3" style="color: #0f172a;">
+                <i class="bi bi-geo-alt-fill me-2 text-danger"></i>Delivery Address
+              </h5>
+
+              {% if order.shipping_address %}
+              <div class="p-3 bg-light rounded-3 border">
+                <div class="fw-bold text-dark fs-6 mb-1">
+                  {{ order.shipping_address.name }}
+                </div>
+                <div class="text-muted small mb-2">
+                  <i class="bi bi-telephone me-1"></i> {{ order.shipping_address.phone }}
+                </div>
+                <div class="text-secondary small" style="line-height: 1.6;">
+                  {{ order.shipping_address.address }}<br>
+                  {% if order.shipping_address.landmark %}{{ order.shipping_address.landmark }}, {% endif %}
+                  {{ order.shipping_address.city }}, {{ order.shipping_address.state }} - {{ order.shipping_address.pincode }}
+                </div>
+              </div>
+              {% else %}
+              <p class="text-muted small">Standard Shipping Address</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Financial Price Summary -->
+          <div class="col-md-6">
+            <div class="content-box h-100 mb-0">
+              <h5 class="fw-bold mb-3" style="color: #0f172a;">
+                <i class="bi bi-receipt me-2 text-primary"></i>Order Price Summary
+              </h5>
+
+              <div class="summary-card">
+                <div class="summary-row">
+                  <span>Total Listed Price</span>
+                  <span>₹{{ total_listed_price|floatformat:2 }}</span>
+                </div>
+
+                <div class="summary-row">
+                  <span>Special Offer Price</span>
+                  <span class="text-dark fw-semibold">₹{{ total_offer_price|floatformat:2 }}</span>
+                </div>
+
+                {% if coupon_discount %}
+                <div class="summary-row text-success">
+                  <span>
+                    <i class="bi bi-ticket-perforated-fill me-1"></i> Coupon Discount
+                  </span>
+                  <span class="fw-bold">- ₹{{ coupon_discount|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+
+                {% if discounted_amount %}
+                <div class="summary-row text-success">
+                  <span>You Saved</span>
+                  <span class="fw-bold">₹{{ discounted_amount|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+
+                <div class="summary-row">
+                  <span>Delivery Charge</span>
+                  {% if delivery_charge %}
+                    <span>₹{{ delivery_charge }}</span>
+                  {% else %}
+                    <span class="text-success fw-bold">FREE</span>
+                  {% endif %}
+                </div>
+
+                <div class="summary-row total">
+                  <div>
+                    <span class="d-block">Total Amount</span>
+                    <small class="text-muted fw-normal" style="font-size: 0.78rem;">
+                      via {{ order.payment_method|upper }} • 
+                      {% if order.payment_status == 'Paid' %}
+                        <span class="text-success fw-bold">Paid</span>
+                      {% elif order.payment_status == 'Refunded' %}
+                        <span class="text-info fw-bold">Refunded</span>
+                      {% elif order.payment_method == 'COD' %}
+                        <span class="text-secondary fw-bold">Due on Delivery</span>
+                      {% else %}
+                        <span class="text-warning fw-bold">Pending Payment</span>
+                      {% endif %}
+                    </small>
+                  </div>
+                  <span class="text-primary">₹{{ grand_total|floatformat:2 }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!--=============== JAVASCRIPT ===============-->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

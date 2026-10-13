@@ -1,0 +1,514 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add Variant - {{ product.name }} - Jamilah Admin</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066c65;
+            --brand-dark: #1e293b;
+            --brand-light: #f8fafc;
+            --brand-border: #e2e8f0;
+            --brand-radius: 14px;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #334155;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .container-fluid.page-body-wrapper {
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-panel {
+            background-color: transparent;
+            padding: 24px;
+        }
+
+        .content-wrapper {
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Top Header & Breadcrumb */
+        .page-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .breadcrumb-nav a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .breadcrumb-nav a:hover {
+            color: var(--brand-primary-hover);
+            text-decoration: underline;
+        }
+
+        /* Card Form */
+        .card-custom {
+            background-color: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            max-width: 780px;
+        }
+
+        .card-custom-header {
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--brand-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-custom-header h4 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-custom-body {
+            padding: 28px;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 1.5px solid var(--brand-border);
+            padding: 10px 16px;
+            font-size: 0.925rem;
+            background: #ffffff;
+            color: #1e293b;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.12);
+        }
+
+        /* Color Preview */
+        .color-preview-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 0.825rem;
+            color: #64748b;
+        }
+
+        .color-preview-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px #cbd5e1;
+            background-color: #cbd5e1;
+        }
+
+        /* Preset Size Badges */
+        .preset-sizes {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .preset-size-btn {
+            background: #f8fafc;
+            border: 1px solid var(--brand-border);
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .preset-size-btn:hover, .preset-size-btn.active {
+            background: #f0fdfa;
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        /* Buttons */
+        .btn-submit-variant {
+            background: linear-gradient(135deg, #088178 0%, #055e57 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(8, 129, 120, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-submit-variant:hover {
+            background: linear-gradient(135deg, #066c65 0%, #044b45 100%);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(8, 129, 120, 0.35);
+        }
+
+        .btn-cancel-variant {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid var(--brand-border);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel-variant:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        /* Toast Container */
+        .admin-toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100500;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            pointer-events: none;
+        }
+
+        .admin-toast {
+            pointer-events: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 16px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            animation: toastSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-toast.closing {
+            animation: toastSlideOut 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideIn {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastSlideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(110%); opacity: 0; }
+        }
+
+        .admin-toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .admin-toast--success .admin-toast-icon {
+            background-color: #ecfdf5;
+            color: #10b981;
+        }
+
+        .admin-toast--error .admin-toast-icon {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+
+        .admin-toast-body {
+            flex-grow: 1;
+            padding-right: 8px;
+        }
+
+        .admin-toast-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 2px;
+            line-height: 1.25;
+        }
+
+        .admin-toast-message {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .admin-toast-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.25rem;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast notifications -->
+    <div class="admin-toast-container" id="adminToastContainer">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="admin-toast {% if message.tags == 'error' %}admin-toast--error{% else %}admin-toast--success{% endif %}" role="alert">
+                <div class="admin-toast-icon">
+                    {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill"></i>{% else %}<i class="bi bi-check-circle-fill"></i>{% endif %}
+                </div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">{% if message.tags == 'error' %}Notice{% else %}Success{% endif %}</h6>
+                    <p class="admin-toast-message">{{ message }}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="closeToast(this.closest('.admin-toast'))">&times;</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <!-- Header & Breadcrumbs -->
+                    <div class="page-header-bar">
+                        <div>
+                            <div class="breadcrumb-nav mb-2">
+                                <a href="{% url 'product_management' %}"><i class="bi bi-arrow-left me-1"></i> Products</a>
+                                <span>/</span>
+                                <a href="{% url 'variant' product.id %}">{{ product.name }}</a>
+                                <span>/</span>
+                                <span class="text-dark fw-semibold">Add Variant</span>
+                            </div>
+                            <h3 class="fw-bold text-dark m-0">Add Variant SKU</h3>
+                        </div>
+                    </div>
+
+                    <!-- Form Card -->
+                    <div class="card-custom">
+                        <div class="card-custom-header">
+                            <h4><i class="bi bi-plus-circle-fill text-primary"></i> Variant Configuration</h4>
+                            <span class="badge bg-light text-dark px-3 py-2 border rounded-pill">{{ product.name|truncatechars:35 }}</span>
+                        </div>
+                        <div class="card-custom-body">
+                            <form id="addVariantForm" method="POST" action="{% url 'add_variant' product.id %}">
+                                {% csrf_token %}
+
+                                <!-- Color Option -->
+                                <div class="mb-4">
+                                    <label for="color" class="form-label">Color Name / Hex Code <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="color" name="color"
+                                        placeholder="e.g., Midnight Blue, Maroon, Emerald Green"
+                                        value="{{ color|default:'' }}" required maxlength="30">
+                                    <div class="color-preview-box">
+                                        <span class="color-preview-circle" id="colorSwatch"></span>
+                                        <span id="colorSwatchLabel">Live swatch preview</span>
+                                    </div>
+                                </div>
+
+                                <!-- Size Option -->
+                                <div class="mb-4">
+                                    <label for="size" class="form-label">Size Specification <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="size" name="size"
+                                        placeholder="e.g., M, L, XL, Free Size"
+                                        value="{{ size|default:'' }}" required maxlength="15">
+                                    <div class="preset-sizes">
+                                        <span class="text-muted small align-self-center me-1">Quick Select:</span>
+                                        <button type="button" class="preset-size-btn" data-size="XS">XS</button>
+                                        <button type="button" class="preset-size-btn" data-size="S">S</button>
+                                        <button type="button" class="preset-size-btn" data-size="M">M</button>
+                                        <button type="button" class="preset-size-btn" data-size="L">L</button>
+                                        <button type="button" class="preset-size-btn" data-size="XL">XL</button>
+                                        <button type="button" class="preset-size-btn" data-size="XXL">XXL</button>
+                                        <button type="button" class="preset-size-btn" data-size="Free Size">Free Size</button>
+                                    </div>
+                                </div>
+
+                                <!-- Stock Inventory -->
+                                <div class="mb-4">
+                                    <label for="stock" class="form-label">Initial Stock Quantity <span class="text-danger">*</span></label>
+                                    <input type="number" min="0" max="100000" class="form-control" id="stock" name="stock"
+                                        placeholder="Enter available quantity in units"
+                                        value="{{ stock|default:'10' }}" required>
+                                    <small class="text-muted mt-1 d-block">Number of physical units currently available in warehouse.</small>
+                                </div>
+
+                                <!-- Footer Actions -->
+                                <div class="d-flex justify-content-end gap-3 pt-3 border-top">
+                                    <a href="{% url 'variant' product.id %}" class="btn-cancel-variant">
+                                        Cancel
+                                    </a>
+                                    <button type="submit" class="btn-submit-variant" id="btnSubmitVariant">
+                                        <i class="bi bi-check2-circle fs-5"></i> Save Variant
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Live color preview
+        const colorInput = document.getElementById('color');
+        const colorSwatch = document.getElementById('colorSwatch');
+        const colorSwatchLabel = document.getElementById('colorSwatchLabel');
+
+        function updateColorSwatch() {
+            const val = colorInput.value.trim();
+            if (val) {
+                colorSwatch.style.backgroundColor = val;
+                colorSwatchLabel.textContent = `Color: ${val}`;
+            } else {
+                colorSwatch.style.backgroundColor = '#cbd5e1';
+                colorSwatchLabel.textContent = 'Live swatch preview';
+            }
+        }
+        colorInput.addEventListener('input', updateColorSwatch);
+        updateColorSwatch();
+
+        // Preset sizes
+        const sizeInput = document.getElementById('size');
+        document.querySelectorAll('.preset-size-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                sizeInput.value = this.getAttribute('data-size');
+                document.querySelectorAll('.preset-size-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Toast helpers
+        function showToast(type, title, message) {
+            const container = document.getElementById('adminToastContainer');
+            const iconClass = type === 'error' ? 'bi-x-circle-fill' : 'bi-check-circle-fill';
+            const toast = document.createElement('div');
+            toast.className = `admin-toast admin-toast--${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <div class="admin-toast-icon"><i class="bi ${iconClass}"></i></div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">${title}</h6>
+                    <p class="admin-toast-message">${message}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="closeToast(this.closest('.admin-toast'))">&times;</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => closeToast(toast), 4500);
+        }
+
+        function closeToast(el) {
+            if (!el) return;
+            el.classList.add('closing');
+            setTimeout(() => el.remove(), 350);
+        }
+
+        // Form Validation
+        document.getElementById('addVariantForm').addEventListener('submit', function (e) {
+            const color = colorInput.value.trim();
+            const size = sizeInput.value.trim();
+            const stock = parseInt(document.getElementById('stock').value);
+
+            if (!color || color.length < 2 || color.length > 30) {
+                e.preventDefault();
+                showToast('error', 'Validation Error', 'Color must be between 2 and 30 characters.');
+                colorInput.focus();
+                return;
+            }
+
+            if (!size || size.length < 1 || size.length > 15) {
+                e.preventDefault();
+                showToast('error', 'Validation Error', 'Size must be between 1 and 15 characters.');
+                sizeInput.focus();
+                return;
+            }
+
+            if (isNaN(stock) || stock < 0 || stock > 100000) {
+                e.preventDefault();
+                showToast('error', 'Validation Error', 'Stock must be a valid positive integer under 100,000.');
+                document.getElementById('stock').focus();
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitVariant');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Saving...`;
+        });
+    </script>
+</body>
+
+</html>

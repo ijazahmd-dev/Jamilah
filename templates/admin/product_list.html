@@ -1,0 +1,1095 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Product Management - Jamilah Admin</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066c65;
+            --brand-dark: #1e293b;
+            --brand-light: #f8fafc;
+            --brand-border: #e2e8f0;
+            --brand-radius: 14px;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #334155;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .container-fluid.page-body-wrapper {
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-panel {
+            background-color: transparent;
+            padding: 24px;
+        }
+
+        .content-wrapper {
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Top Action Bar */
+        .page-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .btn-create-product {
+            background: linear-gradient(135deg, #088178 0%, #055e57 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 22px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(8, 129, 120, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .btn-create-product:hover {
+            background: linear-gradient(135deg, #066c65 0%, #044b45 100%);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(8, 129, 120, 0.35);
+        }
+
+        /* Search Box */
+        .search-box-wrapper {
+            position: relative;
+            min-width: 290px;
+        }
+
+        .search-box-wrapper .form-control {
+            border-radius: 12px;
+            border: 1.5px solid var(--brand-border);
+            padding: 9px 16px 9px 40px;
+            font-size: 0.9rem;
+            background: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .search-box-wrapper .form-control:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.12);
+        }
+
+        .search-box-wrapper .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        /* Main Card & Table */
+        .card-custom {
+            background-color: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .card-custom-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--brand-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-custom-header h4 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-custom {
+            margin-bottom: 0;
+            width: 100%;
+        }
+
+        .table-custom thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--brand-border);
+            vertical-align: middle;
+        }
+
+        .table-custom tbody td {
+            padding: 16px 18px;
+            vertical-align: middle;
+            color: #334155;
+            font-size: 0.925rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Product Identity */
+        .product-identity {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .product-primary-thumb {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f1f5f9;
+            border: 1px solid var(--brand-border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-primary-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-primary-thumb .no-img-icon {
+            color: #94a3b8;
+            font-size: 1.5rem;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 3px;
+            font-size: 0.95rem;
+            line-height: 1.35;
+        }
+
+        .badge-category {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f1f5f9;
+            color: #475569;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        /* Variants Pill Stack */
+        .variants-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 200px;
+        }
+
+        .variant-pill {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 2px 7px;
+            font-size: 0.75rem;
+            color: #475569;
+            white-space: nowrap;
+        }
+
+        .variant-pill.low-stock {
+            border-color: #fecaca;
+            color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .variant-pill.out-stock {
+            border-color: #cbd5e1;
+            color: #94a3b8;
+            background: #f1f5f9;
+            text-decoration: line-through;
+        }
+
+        /* Prices */
+        .price-text {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 0.95rem;
+        }
+
+        .price-original {
+            text-decoration: line-through;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-left: 4px;
+        }
+
+        .offer-pill {
+            display: inline-flex;
+            align-items: center;
+            background: #ecfdf5;
+            color: #059669;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            margin-top: 3px;
+        }
+
+        /* Gallery preview */
+        .thumb-gallery {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .thumb-gallery img {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease;
+        }
+
+        .thumb-gallery img:hover {
+            transform: scale(1.4);
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Status Pill */
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.775rem;
+            font-weight: 600;
+        }
+
+        .badge-status.listed {
+            background-color: #ecfdf5;
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .badge-status.unlisted {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-action-stock {
+            background-color: #f0f9ff;
+            color: #0284c7;
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-stock:hover {
+            background-color: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+        }
+
+        .btn-action-edit {
+            background-color: #f0fdfa;
+            color: var(--brand-primary);
+            border: 1px solid rgba(8, 129, 120, 0.2);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-edit:hover {
+            background-color: var(--brand-primary);
+            color: #ffffff;
+            border-color: var(--brand-primary);
+        }
+
+        .btn-action-toggle {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-toggle.unlist {
+            color: #f59e0b;
+            background-color: #fffbeb;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-action-toggle.unlist:hover {
+            background-color: #f59e0b;
+            color: #ffffff;
+        }
+
+        .btn-action-toggle.relist {
+            color: #10b981;
+            background-color: #ecfdf5;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-action-toggle.relist:hover {
+            background-color: #10b981;
+            color: #ffffff;
+        }
+
+        .btn-action-delete {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #ef4444;
+            background-color: #fef2f2;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-delete:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Top-Right Floating Notifications (Toasts) */
+        .admin-toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100500;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            pointer-events: none;
+        }
+
+        .admin-toast {
+            pointer-events: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 16px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            animation: toastSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-toast.closing {
+            animation: toastSlideOut 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideIn {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastSlideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(110%); opacity: 0; }
+        }
+
+        .admin-toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .admin-toast--success .admin-toast-icon {
+            background-color: #ecfdf5;
+            color: #10b981;
+        }
+
+        .admin-toast--error .admin-toast-icon {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+
+        .admin-toast--info .admin-toast-icon {
+            background-color: #f0fdfa;
+            color: #088178;
+        }
+
+        .admin-toast-body {
+            flex-grow: 1;
+            padding-right: 8px;
+        }
+
+        .admin-toast-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 2px;
+            line-height: 1.25;
+        }
+
+        .admin-toast-message {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .admin-toast-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.25rem;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .admin-toast-close:hover {
+            color: #334155;
+        }
+
+        .admin-toast-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .admin-toast-progress-bar {
+            height: 100%;
+            width: 100%;
+            animation: toastProgress 4.5s linear forwards;
+        }
+
+        .admin-toast--success .admin-toast-progress-bar {
+            background-color: #10b981;
+        }
+
+        .admin-toast--error .admin-toast-progress-bar {
+            background-color: #ef4444;
+        }
+
+        .admin-toast--info .admin-toast-progress-bar {
+            background-color: #088178;
+        }
+
+        @keyframes toastProgress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* Modal Custom Style */
+        .modal-custom .modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.2);
+            overflow: hidden;
+        }
+
+        .modal-custom .modal-header {
+            padding: 22px 28px;
+            border-bottom: 1px solid var(--brand-border);
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-custom-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-custom-title-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #fef2f2;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .btn-close-modal {
+            background: #f1f5f9;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-close-modal:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .modal-custom .modal-body {
+            padding: 24px 28px;
+        }
+
+        .modal-custom .modal-footer {
+            padding: 18px 28px;
+            border-top: 1px solid var(--brand-border);
+            background: #ffffff;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-modal-cancel {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-cancel:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .btn-modal-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-modal-danger:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35);
+            color: #ffffff;
+        }
+
+        /* Pagination */
+        .pagination-custom {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 20px;
+        }
+
+        .pagination-custom a,
+        .pagination-custom span {
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #475569;
+            background: #ffffff;
+            border: 1px solid var(--brand-border);
+            transition: all 0.2s ease;
+        }
+
+        .pagination-custom a:hover {
+            background: #f1f5f9;
+            color: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+
+        .pagination-custom .current {
+            background: var(--brand-primary);
+            color: #ffffff;
+            border-color: var(--brand-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top-Right Floating Notifications Toast Container -->
+    <div class="admin-toast-container" id="adminToastContainer">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="admin-toast {% if message.tags == 'error' %}admin-toast--error{% elif message.tags == 'success' %}admin-toast--success{% else %}admin-toast--info{% endif %}" role="alert">
+                <div class="admin-toast-icon">
+                    {% if message.tags == 'error' %}
+                        <i class="bi bi-x-circle-fill"></i>
+                    {% elif message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill"></i>
+                    {% else %}
+                        <i class="bi bi-info-circle-fill"></i>
+                    {% endif %}
+                </div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">
+                        {% if message.tags == 'error' %}Notice{% elif message.tags == 'success' %}Success{% else %}Information{% endif %}
+                    </h6>
+                    <p class="admin-toast-message">{{ message }}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="closeToast(this.closest('.admin-toast'))">&times;</button>
+                <div class="admin-toast-progress">
+                    <div class="admin-toast-progress-bar"></div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <!-- Top Action Bar -->
+                    <div class="page-header-bar">
+                        <div>
+                            <a href="{% url 'create_product' %}" class="btn-create-product">
+                                <i class="bi bi-plus-lg"></i> Add New Product
+                            </a>
+                        </div>
+
+                        <!-- Search Form -->
+                        <form method="GET" action="{% url 'product_management' %}" class="d-flex align-items-center">
+                            <div class="search-box-wrapper">
+                                <i class="bi bi-search search-icon"></i>
+                                <input type="text" name="q" value="{{ query|default:'' }}" class="form-control" placeholder="Search products by title...">
+                            </div>
+                            {% if query %}
+                                <a href="{% url 'product_management' %}" class="btn btn-link text-muted ms-2" title="Clear Search">
+                                    <i class="bi bi-x-lg"></i>
+                                </a>
+                            {% endif %}
+                        </form>
+                    </div>
+
+                    <!-- Products Table Card -->
+                    <div class="card-custom">
+                        <div class="card-custom-header">
+                            <h4>
+                                <i class="bi bi-box-seam-fill text-muted"></i> Product Catalog
+                            </h4>
+                            <span class="badge bg-light text-dark px-3 py-2 border rounded-pill">
+                                Total: {{ products.paginator.count|default:products|length }} products
+                            </span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70px;">ID</th>
+                                        <th>Product Info</th>
+                                        <th>Category</th>
+                                        <th>Variants & Stock</th>
+                                        <th>Price & Offer</th>
+                                        <th>Gallery</th>
+                                        <th>Status</th>
+                                        <th style="width: 250px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if products %}
+                                    {% for product in products %}
+                                    <tr id="product-row-{{ product.id }}">
+                                        <td class="text-muted fw-bold">#{{ product.id }}</td>
+                                        <td>
+                                            <div class="product-identity">
+                                                <div class="product-primary-thumb">
+                                                    {% with first_img=product.images.first %}
+                                                        {% if first_img and first_img.image %}
+                                                            <img src="{{ first_img.image.url }}" alt="{{ product.name }}" loading="lazy">
+                                                        {% else %}
+                                                            <i class="bi bi-image no-img-icon"></i>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                </div>
+                                                <div>
+                                                    <div class="product-name">{{ product.name }}</div>
+                                                    <span class="text-muted small">Updated {{ product.updated_at|default:product.created_at|date:"M d, Y" }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge-category">
+                                                <i class="bi bi-tag-fill me-1 text-muted"></i>
+                                                {{ product.category.category_name|default:"Uncategorized" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="variants-stack">
+                                                {% for variant in product.variants.all %}
+                                                    <span class="variant-pill {% if variant.stock == 0 %}out-stock{% elif variant.stock < 5 %}low-stock{% endif %}" title="{{ variant.color }} / {{ variant.size }}: {{ variant.stock }} in stock">
+                                                        {{ variant.color }} · {{ variant.size }} ({{ variant.stock }})
+                                                    </span>
+                                                {% empty %}
+                                                    <span class="text-muted small fst-italic">No variants yet</span>
+                                                {% endfor %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                {% if product.best_offer_price is not None and product.has_offer %}
+                                                    <span class="price-text">₹{{ product.best_offer_price|floatformat:2 }}</span>
+                                                    <span class="price-original">₹{{ product.price|floatformat:2 }}</span>
+                                                    <div>
+                                                        <span class="offer-pill">
+                                                            <i class="bi bi-percent me-1"></i> {{ product.best_offer_percentage }}% OFF
+                                                        </span>
+                                                    </div>
+                                                {% else %}
+                                                    <span class="price-text">₹{{ product.price|floatformat:2 }}</span>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="thumb-gallery">
+                                                {% for img in product.images.all %}
+                                                    <img src="{{ img.image.url }}" alt="thumb" loading="lazy">
+                                                {% empty %}
+                                                    <span class="text-muted small">-</span>
+                                                {% endfor %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if product.is_listed %}
+                                                <span class="badge-status listed">
+                                                    <i class="bi bi-check-circle-fill"></i> Listed
+                                                </span>
+                                            {% else %}
+                                                <span class="badge-status unlisted">
+                                                    <i class="bi bi-eye-slash-fill"></i> Unlisted
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="action-btns">
+                                                <!-- Add/Manage Stock -->
+                                                <a href="{% url 'variant' product.id %}" class="btn-action-stock" title="Manage Variants & Stock">
+                                                    <i class="bi bi-boxes"></i> Stock
+                                                </a>
+
+                                                <!-- Edit Product -->
+                                                <a href="{% url 'edit_product' product.id %}" class="btn-action-edit" title="Edit Product">
+                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                </a>
+
+                                                <!-- Toggle Listing -->
+                                                {% if product.is_listed %}
+                                                    <a href="{% url 'list_unlist' product.id %}" class="btn-action-toggle unlist" title="Unlist Product">
+                                                        <i class="bi bi-eye-slash"></i> Unlist
+                                                    </a>
+                                                {% else %}
+                                                    <a href="{% url 'list_unlist' product.id %}" class="btn-action-toggle relist" title="Relist Product">
+                                                        <i class="bi bi-eye"></i> ReList
+                                                    </a>
+                                                {% endif %}
+
+                                                <!-- Delete Product Button -->
+                                                <button type="button" class="btn-action-delete btn-trigger-delete-product"
+                                                    data-id="{{ product.id }}"
+                                                    data-name="{{ product.name }}"
+                                                    data-variants="{{ product.variants.count }}"
+                                                    data-images="{{ product.images.count }}"
+                                                    title="Delete Product">
+                                                    <i class="bi bi-trash3"></i> Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="8" class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="bi bi-box-seam display-4 d-block mb-3"></i>
+                                                <h5>No products found</h5>
+                                                <p class="small">Try adjusting your search query or click "Add New Product" to get started.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination Controls -->
+                        {% if products.paginator.num_pages > 1 %}
+                        <div class="pagination-custom">
+                            {% if products.has_previous %}
+                                <a href="?page=1{% if query %}&q={{ query }}{% endif %}">&laquo; First</a>
+                                <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Prev</a>
+                            {% endif %}
+
+                            <span class="current">Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+
+                            {% if products.has_next %}
+                                <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
+                                <a href="?page={{ products.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Last &raquo;</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: DELETE PRODUCT CONFIRMATION
+    ======================================================== -->
+    <div class="modal fade modal-custom" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-custom-title-wrap">
+                        <div class="modal-custom-title-icon">
+                            <i class="bi bi-trash3-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold" id="deleteProductModalLabel">Delete Product</h5>
+                            <p class="text-muted small mb-0">Permanently remove this product from catalog</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-modal" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-secondary mb-3">Are you sure you want to permanently delete this product?</p>
+                    
+                    <div class="p-3 bg-light rounded-3 border mb-3">
+                        <div class="fw-bold text-dark fs-6" id="deleteProductName">Product Name</div>
+                        <div class="small text-muted mt-1" id="deleteProductStats">Variants: 0 · Images: 0</div>
+                    </div>
+
+                    <div class="alert alert-danger py-2 px-3 small d-flex align-items-center gap-2 mb-0">
+                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                        <span>This will permanently delete this product along with all its variants, images, and reviews. This action <strong>cannot be undone</strong>.</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal-cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn-modal-danger" id="btnConfirmDeleteProduct">
+                        <i class="bi bi-trash3-fill"></i> Delete Product
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Toast notification helper
+        function showToast(type, title, message) {
+            const container = document.getElementById('adminToastContainer');
+            const iconClass = type === 'error' ? 'bi-x-circle-fill' : (type === 'success' ? 'bi-check-circle-fill' : 'bi-info-circle-fill');
+            const toast = document.createElement('div');
+            toast.className = `admin-toast admin-toast--${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <div class="admin-toast-icon"><i class="bi ${iconClass}"></i></div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">${title}</h6>
+                    <p class="admin-toast-message">${message}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="closeToast(this.closest('.admin-toast'))">&times;</button>
+                <div class="admin-toast-progress"><div class="admin-toast-progress-bar"></div></div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => closeToast(toast), 4500);
+        }
+
+        function closeToast(el) {
+            if (!el) return;
+            el.classList.add('closing');
+            setTimeout(() => el.remove(), 350);
+        }
+
+        // Auto close server-rendered toasts
+        document.querySelectorAll('.admin-toast').forEach(toast => {
+            setTimeout(() => closeToast(toast), 4500);
+        });
+
+        // Delete Product Handler
+        const deleteModalEl = document.getElementById('deleteProductModal');
+        const deleteModal = new bootstrap.Modal(deleteModalEl);
+        let currentDeleteProductId = null;
+
+        document.querySelectorAll('.btn-trigger-delete-product').forEach(btn => {
+            btn.addEventListener('click', function () {
+                currentDeleteProductId = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const variants = this.getAttribute('data-variants') || '0';
+                const images = this.getAttribute('data-images') || '0';
+
+                document.getElementById('deleteProductName').textContent = name;
+                document.getElementById('deleteProductStats').textContent = `Associated variants: ${variants} · Images: ${images}`;
+                deleteModal.show();
+            });
+        });
+
+        document.getElementById('btnConfirmDeleteProduct').addEventListener('click', function () {
+            if (!currentDeleteProductId) return;
+
+            const btn = this;
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Deleting...`;
+
+            fetch(`/products/delete/${currentDeleteProductId}`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'ajax=true'
+            })
+            .then(res => res.json())
+            .then(data => {
+                deleteModal.hide();
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+
+                if (data.success) {
+                    showToast('success', 'Deleted', data.message || 'Product deleted successfully!');
+                    const row = document.getElementById(`product-row-${currentDeleteProductId}`);
+                    if (row) {
+                        row.style.transition = 'all 0.4s ease';
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateX(20px)';
+                        setTimeout(() => row.remove(), 400);
+                    }
+                } else {
+                    showToast('error', 'Delete Failed', data.error || 'Failed to delete product.');
+                }
+            })
+            .catch(err => {
+                deleteModal.hide();
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+                // Fallback to form/redirect if needed
+                window.location.href = `/products/delete/${currentDeleteProductId}`;
+            });
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+
+</html>

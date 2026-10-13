@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Email - Jamilah</title>
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Flaticon & Swiper -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <!-- Bootstrap 5.3 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Core Theme Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-hover: #066c65;
+      --zy-primary-subtle: #e8f5f4;
+      --zy-primary-border: #b2dedb;
+      --zy-dark: #1e293b;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-card-bg: #ffffff;
+      --zy-surface: #f8fafc;
+    }
+
+    body {
+      background-color: #f6f8fa;
+      color: var(--zy-dark);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* Page Container Card */
+    .content-box {
+      background: var(--zy-card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--zy-border);
+      padding: 40px;
+      margin: 40px auto;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    .otp-icon-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+    }
+
+    .otp-input {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 12px;
+      text-align: center;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid #cbd5e1;
+      color: #0f766e;
+      background-color: #fcfdfd;
+    }
+
+    .otp-input:focus {
+      border-color: var(--zy-primary);
+      box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.15);
+      outline: none;
+    }
+
+    .btn-verify-otp {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 28px;
+      font-weight: 600;
+      font-size: 1rem;
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.25);
+    }
+
+    .btn-verify-otp:hover {
+      background: var(--zy-primary-hover);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(8, 129, 120, 0.35);
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== BREADCRUMB ===============-->
+  <section class="breadcrumb">
+    <ul class="breadcrumb__list flex container">
+      <li><a href="{% url 'home' %}" class="breadcrumb__link">Home</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><a href="{% url 'user_profile' %}" class="breadcrumb__link">My Profile</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><span class="breadcrumb__link" style="color: var(--zy-primary); font-weight: 600;">Verify OTP</span></li>
+    </ul>
+  </section>
+
+  <!--=============== MAIN CONTAINER ===============-->
+  <div class="container my-4 pb-5">
+    <div class="content-box">
+      <div class="otp-icon-circle">
+        <i class="bi bi-shield-check"></i>
+      </div>
+
+      <h4 class="fw-bold mb-2">Verify Your New Email</h4>
+      <p class="text-muted small mb-3">
+        We sent a 6-digit confirmation code to:
+      </p>
+      <div class="fw-bold text-dark bg-light py-2 px-3 rounded-pill d-inline-block mb-4 border" style="font-size: 0.95rem;">
+        <i class="bi bi-envelope-fill me-1 text-teal" style="color: var(--zy-primary);"></i> {{ new_email }}
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show text-start mb-4" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form id="verifyOtpForm" method="POST" action="{% url 'verify_email' %}" novalidate>
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="otp" class="form-label small text-uppercase fw-bold text-muted d-block mb-2">Enter 6-Digit Code</label>
+          <input type="text" name="otp" id="otp" class="form-control otp-input" required placeholder="••••••" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+          <div id="otp_error" class="text-danger small mt-2" style="display:none;"></div>
+        </div>
+
+        <button type="submit" class="btn-verify-otp mb-3">
+          <i class="bi bi-check-circle-fill"></i> Verify & Update Email
+        </button>
+
+        <div>
+          <a href="{% url 'change_email' %}" class="text-decoration-none small text-muted">
+            <i class="bi bi-arrow-left"></i> Change email address or resend
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('verifyOtpForm');
+      const otpInput = document.getElementById('otp');
+      const errDiv = document.getElementById('otp_error');
+
+      otpInput.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 6);
+      });
+
+      form.addEventListener('submit', function (e) {
+        const val = otpInput.value.trim();
+        otpInput.value = val;
+
+        if (!val) {
+          e.preventDefault();
+          errDiv.textContent = 'Please enter the 6-digit OTP code.';
+          errDiv.style.display = 'block';
+          otpInput.classList.add('is-invalid');
+        } else if (!/^\d{6}$/.test(val)) {
+          e.preventDefault();
+          errDiv.textContent = 'OTP must be exactly 6 numeric digits.';
+          errDiv.style.display = 'block';
+          otpInput.classList.add('is-invalid');
+        } else {
+          errDiv.textContent = '';
+          errDiv.style.display = 'none';
+          otpInput.classList.remove('is-invalid');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

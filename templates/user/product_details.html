@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ product.name }} - Jamilah</title>
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+
+  <!-- Base Site Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-hover: #06665f;
+      --zy-primary-subtle: #f0fdf9;
+      --zy-primary-border: #a7f3d0;
+      --zy-dark: #0f172a;
+      --zy-slate: #334155;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-surface: #ffffff;
+      --zy-bg: #f8fafc;
+      --zy-gold: #f59e0b;
+      --zy-danger: #ef4444;
+      --zy-radius-sm: 8px;
+      --zy-radius-md: 12px;
+      --zy-radius-lg: 18px;
+      --zy-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+      --zy-shadow-md: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
+      --zy-shadow-lg: 0 20px 35px -8px rgba(15, 23, 42, 0.12);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--zy-bg);
+      color: var(--zy-slate);
+      line-height: 1.6;
+    }
+
+    /* Breadcrumbs */
+    .zy-breadcrumb-bar {
+      background: var(--zy-surface);
+      border-bottom: 1px solid var(--zy-border);
+      padding: 14px 0;
+      font-size: 0.88rem;
+    }
+
+    .zy-breadcrumb-bar a {
+      color: var(--zy-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .zy-breadcrumb-bar a:hover {
+      color: var(--zy-primary);
+    }
+
+    .zy-breadcrumb-bar .sep {
+      margin: 0 10px;
+      color: #cbd5e1;
+    }
+
+    .zy-breadcrumb-bar .current {
+      color: var(--zy-dark);
+      font-weight: 600;
+    }
+
+    /* Product Details Container */
+    .product-details-wrap {
+      padding: 40px 0 70px;
+    }
+
+    /* Gallery Styles */
+    .gallery-container {
+      position: sticky;
+      top: 100px;
+    }
+
+    .main-image-viewport {
+      position: relative;
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 520px;
+      height: 520px;
+      box-shadow: var(--zy-shadow-md);
+      cursor: crosshair;
+    }
+
+    .main-stage-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.2s ease-out;
+      transform-origin: center center;
+    }
+
+    /* Floating Badges on Image */
+    .gallery-badge-top-left {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .badge-discount-tag {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.5px;
+      padding: 6px 12px;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35);
+      text-transform: uppercase;
+    }
+
+    .badge-category-tag {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .gallery-actions-top-right {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-circle-action {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--zy-border);
+      box-shadow: var(--zy-shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      color: var(--zy-slate);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-circle-action:hover {
+      background: #ffffff;
+      transform: scale(1.08);
+      box-shadow: var(--zy-shadow-md);
+      color: var(--zy-primary);
+    }
+
+    .btn-circle-action.in-wishlist {
+      color: #ef4444;
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    /* Thumbnail Reel */
+    .thumbnails-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      overflow-x: auto;
+      padding: 4px;
+      scrollbar-width: thin;
+    }
+
+    .thumb-cell {
+      flex: 0 0 88px;
+      height: 88px;
+      border-radius: var(--zy-radius-md);
+      border: 2px solid var(--zy-border);
+      background: #ffffff;
+      cursor: pointer;
+      overflow: hidden;
+      padding: 4px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .thumb-cell:hover {
+      border-color: var(--zy-primary);
+      transform: translateY(-2px);
+    }
+
+    .thumb-cell.active {
+      border-color: var(--zy-primary);
+      box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.2);
+    }
+
+    .thumb-cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: calc(var(--zy-radius-md) - 4px);
+    }
+
+    /* Product Overview (Right Column) */
+    .product-meta-card {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      padding: 36px;
+      box-shadow: var(--zy-shadow-md);
+    }
+
+    .category-kicker {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--zy-primary);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .product-main-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--zy-dark);
+      line-height: 1.25;
+      margin-bottom: 14px;
+      letter-spacing: -0.5px;
+    }
+
+    /* Rating & Reviews Bar */
+    .rating-row-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--zy-border);
+      flex-wrap: wrap;
+    }
+
+    .rating-pill-badge {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      color: #b45309;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 4px 12px;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .rating-pill-badge i {
+      color: var(--zy-gold);
+      font-size: 0.95rem;
+    }
+
+    .rating-link-count {
+      color: var(--zy-muted);
+      font-size: 0.88rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .rating-link-count:hover {
+      color: var(--zy-primary);
+      text-decoration: underline;
+    }
+
+    .verified-badge {
+      font-size: 0.82rem;
+      color: var(--zy-primary);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    /* Price Panel */
+    .price-showcase-panel {
+      background: var(--zy-primary-subtle);
+      border: 1px solid var(--zy-primary-border);
+      border-radius: var(--zy-radius-md);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+
+    .price-main-line {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .current-offer-price {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--zy-primary);
+      letter-spacing: -1px;
+    }
+
+    .mrp-strike-price {
+      font-size: 1.25rem;
+      color: var(--zy-muted);
+      text-decoration: line-through;
+      font-weight: 500;
+    }
+
+    .discount-percent-badge {
+      background: #dc2626;
+      color: #ffffff;
+      font-size: 0.84rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .savings-subtext {
+      font-size: 0.88rem;
+      color: #065f46;
+      font-weight: 600;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Stock Indicator */
+    .stock-indicator-row {
+      margin-bottom: 24px;
+    }
+
+    .stock-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .stock-pill.in-stock {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .stock-pill.low-stock {
+      background: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+      animation: pulse-amber 2s infinite;
+    }
+
+    .stock-pill.out-of-stock {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    @keyframes pulse-amber {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+    }
+
+    /* Variant Selectors */
+    .variant-option-group {
+      margin-bottom: 24px;
+    }
+
+    .variant-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .variant-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+    }
+
+    .selected-val-tag {
+      font-weight: 600;
+      color: var(--zy-primary);
+    }
+
+    .size-guide-trigger {
+      font-size: 0.84rem;
+      color: var(--zy-primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s;
+    }
+
+    .size-guide-trigger:hover {
+      text-decoration: underline;
+      color: var(--zy-primary-hover);
+    }
+
+    /* Color Chips */
+    .color-swatches-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .color-chip-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      background: #ffffff;
+      border: 2px solid var(--zy-border);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--zy-dark);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .color-chip-btn:hover {
+      border-color: var(--zy-primary);
+      background: #f8fafc;
+    }
+
+    .color-chip-btn.active {
+      border-color: var(--zy-primary);
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.15);
+    }
+
+    .color-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      display: inline-block;
+    }
+
+    /* Size Buttons */
+    .size-pills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .size-pill-btn {
+      min-width: 54px;
+      height: 46px;
+      padding: 0 16px;
+      border-radius: var(--zy-radius-md);
+      background: #ffffff;
+      border: 2px solid var(--zy-border);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      user-select: none;
+    }
+
+    .size-pill-btn:hover:not(.disabled) {
+      border-color: var(--zy-primary);
+      transform: translateY(-2px);
+    }
+
+    .size-pill-btn.active {
+      border-color: var(--zy-primary);
+      background: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.35);
+    }
+
+    .size-pill-btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      background: #f1f5f9;
+      text-decoration: line-through;
+      border-color: #e2e8f0;
+    }
+
+    /* Quantity & CTAs */
+    .purchase-actions-box {
+      margin-top: 30px;
+      padding-top: 24px;
+      border-top: 1px solid var(--zy-border);
+    }
+
+    .qty-and-cta-grid {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .qty-stepper {
+      display: inline-flex;
+      align-items: center;
+      border: 2px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      background: #ffffff;
+      overflow: hidden;
+      height: 52px;
+    }
+
+    .qty-btn {
+      width: 44px;
+      height: 100%;
+      background: transparent;
+      border: none;
+      font-size: 1.1rem;
+      color: var(--zy-dark);
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .qty-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      color: var(--zy-primary);
+    }
+
+    .qty-btn:disabled {
+      color: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .qty-input {
+      width: 50px;
+      text-align: center;
+      border: none;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--zy-dark);
+      outline: none;
+      background: transparent;
+    }
+
+    .btn-add-to-cart-zy {
+      flex: 1;
+      min-width: 200px;
+      height: 52px;
+      border-radius: var(--zy-radius-md);
+      background: var(--zy-primary);
+      border: 2px solid var(--zy-primary);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(8, 129, 120, 0.35);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-add-to-cart-zy:hover {
+      background: var(--zy-primary-hover);
+      border-color: var(--zy-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(8, 129, 120, 0.4);
+      color: #ffffff;
+    }
+
+    .btn-buy-now-zy {
+      flex: 1;
+      min-width: 200px;
+      height: 52px;
+      border-radius: var(--zy-radius-md);
+      background: var(--zy-dark);
+      border: 2px solid var(--zy-dark);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-buy-now-zy:hover {
+      background: #1e293b;
+      border-color: #1e293b;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.35);
+      color: #ffffff;
+    }
+
+    /* Interactive Feedback Toast / Box */
+    .product-ajax-alert {
+      display: none;
+      border-radius: var(--zy-radius-md);
+      padding: 14px 18px;
+      margin-top: 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .product-ajax-alert.success {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .product-ajax-alert.error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    /* Trust Features Grid */
+    .trust-badges-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--zy-border);
+    }
+
+    .trust-badge-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: var(--zy-radius-md);
+    }
+
+    .trust-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .trust-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 2px;
+    }
+
+    .trust-desc {
+      font-size: 0.74rem;
+      color: var(--zy-muted);
+      line-height: 1.3;
+    }
+
+    /* Details & Reviews Tabs */
+    .details-tabs-wrapper {
+      margin-top: 50px;
+    }
+
+    .nav-tabs-executive {
+      border-bottom: 2px solid var(--zy-border);
+      gap: 28px;
+    }
+
+    .nav-tabs-executive .nav-link {
+      border: none;
+      background: transparent;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--zy-muted);
+      padding: 14px 4px;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .nav-tabs-executive .nav-link:hover {
+      color: var(--zy-primary);
+    }
+
+    .nav-tabs-executive .nav-link.active {
+      color: var(--zy-primary);
+      background: transparent;
+    }
+
+    .nav-tabs-executive .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--zy-primary);
+      border-radius: 3px 3px 0 0;
+    }
+
+    .tabs-content-card {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-top: none;
+      border-radius: 0 0 var(--zy-radius-lg) var(--zy-radius-lg);
+      padding: 40px;
+      box-shadow: var(--zy-shadow-md);
+    }
+
+    /* Reviews Styling */
+    .reviews-summary-block {
+      background: #f8fafc;
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      padding: 30px;
+      margin-bottom: 35px;
+    }
+
+    .big-score-number {
+      font-size: 3.6rem;
+      font-weight: 800;
+      color: var(--zy-dark);
+      line-height: 1;
+    }
+
+    .rating-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+
+    .rating-progress-bar {
+      flex: 1;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .rating-progress-fill {
+      height: 100%;
+      background: var(--zy-gold);
+      border-radius: 4px;
+    }
+
+    .review-user-card {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .review-user-card:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .user-avatar-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--zy-primary) 0%, #0d9488 100%);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Related Products Grid */
+    .related-products-section {
+      margin-top: 70px;
+    }
+
+    .related-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 30px;
+    }
+
+    .product-curated-card {
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--zy-shadow-sm);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .product-curated-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--zy-shadow-lg);
+      border-color: var(--zy-primary-border);
+    }
+
+    .curated-card-media {
+      position: relative;
+      background: #f8fafc;
+      height: 260px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .curated-card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .product-curated-card:hover .curated-card-media img {
+      transform: scale(1.06);
+    }
+
+    .curated-card-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .curated-card-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      text-decoration: none;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 8px;
+      transition: color 0.2s;
+    }
+
+    .curated-card-title:hover {
+      color: var(--zy-primary);
+    }
+
+    /* Lightbox Modal */
+    .modal-backdrop.show {
+      opacity: 0.75;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 991px) {
+      .gallery-container {
+        position: relative;
+        top: 0;
+        margin-bottom: 30px;
+      }
+      .main-image-viewport {
+        height: 420px;
+        min-height: 420px;
+      }
+      .product-meta-card {
+        padding: 24px;
+      }
+      .product-main-title {
+        font-size: 1.6rem;
+      }
+      .current-offer-price {
+        font-size: 2rem;
+      }
+      .trust-badges-grid {
+        grid-template-columns: 1fr;
+      }
+      .tabs-content-card {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== BREADCRUMBS ===============-->
+  <nav class="zy-breadcrumb-bar" aria-label="breadcrumb">
+    <div class="container">
+      <div class="d-flex align-items-center">
+        <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+        <span class="sep">/</span>
+        <a href="{% url 'all_products' %}">Shop</a>
+        {% if product.category %}
+        <span class="sep">/</span>
+        <a href="{% url 'all_products' %}?category={{ product.category.id }}">{{ product.category.category_name }}</a>
+        {% endif %}
+        <span class="sep">/</span>
+        <span class="current text-truncate" style="max-width: 320px;">{{ product.name }}</span>
+      </div>
+    </div>
+  </nav>
+
+  <!--=============== MAIN PRODUCT SECTION ===============-->
+  <main class="product-details-wrap">
+    <div class="container">
+      <div class="row g-5">
+
+        <!-- LEFT COLUMN: HD GALLERY & THUMBNAILS -->
+        <div class="col-lg-6">
+          <div class="gallery-container">
+            <!-- Main Hero Viewport -->
+            <div class="main-image-viewport" id="mainImageViewport">
+              <!-- Top Left Floating Badges -->
+              <div class="gallery-badge-top-left">
+                {% if product.has_offer %}
+                <span class="badge-discount-tag">
+                  <i class="bi bi-tag-fill me-1"></i>{{ product.best_offer_percentage }}% OFF
+                </span>
+                {% endif %}
+                {% if product.category %}
+                <span class="badge-category-tag">{{ product.category.category_name }}</span>
+                {% endif %}
+              </div>
+
+              <!-- Top Right Quick Actions -->
+              <div class="gallery-actions-top-right">
+                <button type="button" class="btn-circle-action {% if in_wishlist %}in-wishlist{% endif %}" id="btnWishlistToggle" title="Save to Wishlist" onclick="toggleProductWishlist('{{ product.id }}')">
+                  <i class="bi {% if in_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                </button>
+                <button type="button" class="btn-circle-action" id="btnShareProduct" title="Share Product" onclick="shareCurrentProduct()">
+                  <i class="bi bi-share"></i>
+                </button>
+                <button type="button" class="btn-circle-action" id="btnExpandImage" title="View Fullscreen" onclick="openImageLightbox()">
+                  <i class="bi bi-arrows-fullscreen"></i>
+                </button>
+              </div>
+
+              <!-- Primary Hero Image -->
+              {% if product_images %}
+                <img src="{{ product_images.0.image.url }}" alt="{{ product.name }}" class="main-stage-img" id="mainProductImage" data-zoom-src="{{ product_images.0.image.url }}">
+              {% else %}
+                <div class="text-center text-muted p-5">
+                  <i class="bi bi-image fs-1 mb-2"></i>
+                  <p class="mb-0">No image preview available</p>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Thumbnails Reel -->
+            {% if product_images and product_images|length > 1 %}
+            <div class="thumbnails-strip" id="thumbnailReel">
+              {% for img in product_images %}
+              <div class="thumb-cell {% if forloop.first %}active{% endif %}" onclick="selectMainImage('{{ img.image.url }}', this)" title="Preview {{ product.name }} angle {{ forloop.counter }}">
+                <img src="{{ img.image.url }}" alt="{{ product.name }} thumbnail {{ forloop.counter }}">
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: PRODUCT META, VARIANTS & ACTIONS -->
+        <div class="col-lg-6">
+          <div class="product-meta-card">
+            
+            <!-- Category Tag -->
+            <div class="category-kicker">
+              <i class="bi bi-stars"></i>
+              <span>{{ product.category.category_name|default:"PREMIUM COLLECTION" }}</span>
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="product-main-title">{{ product.name }}</h1>
+
+            <!-- Ratings & Quick Stats -->
+            <div class="rating-row-bar">
+              <div class="rating-pill-badge" onclick="jumpToReviewsTab()" role="button">
+                <i class="bi bi-star-fill"></i>
+                <span>{{ avg_rating }}</span>
+                <span class="text-muted fw-normal">/ 5.0</span>
+              </div>
+              <a href="#reviewsTab" class="rating-link-count" onclick="jumpToReviewsTab()">
+                Based on {{ review_count }} review{{ review_count|pluralize }}
+              </a>
+              <div class="verified-badge">
+                <i class="bi bi-patch-check-fill text-success"></i>
+                <span>100% Authentic</span>
+              </div>
+            </div>
+
+            <!-- Price & Offer Showcase -->
+            <div class="price-showcase-panel">
+              <div class="price-main-line">
+                {% if product.has_offer %}
+                  <span class="current-offer-price">₹{{ best_offer_price|floatformat:2 }}</span>
+                  <span class="mrp-strike-price">₹{{ product.price|floatformat:2 }}</span>
+                  <span class="discount-percent-badge">{{ product.best_offer_percentage }}% OFF</span>
+                {% else %}
+                  <span class="current-offer-price">₹{{ product.price|floatformat:2 }}</span>
+                {% endif %}
+              </div>
+
+              {% if product.has_offer and savings > 0 %}
+              <div class="savings-subtext">
+                <i class="bi bi-piggy-bank-fill"></i>
+                <span>You save ₹{{ savings|floatformat:2 }} with this exclusive deal!</span>
+              </div>
+              {% endif %}
+
+              <div class="d-flex align-items-center gap-2 mt-2 pt-2 border-top border-white-50 text-muted small">
+                <span><i class="bi bi-check-circle-fill text-success me-1"></i>Inclusive of all taxes</span>
+                <span>•</span>
+                <span><i class="bi bi-truck text-primary me-1"></i>FREE Delivery on orders over ₹1,000</span>
+              </div>
+            </div>
+
+            <!-- Live Stock Status Pill -->
+            <div class="stock-indicator-row" id="stockStatusContainer">
+              {% if total_stock > 5 %}
+                <span class="stock-pill in-stock" id="stockStatusPill">
+                  <i class="bi bi-check2-circle"></i> In Stock (Ready for Dispatch)
+                </span>
+              {% elif total_stock > 0 %}
+                <span class="stock-pill low-stock" id="stockStatusPill">
+                  <i class="bi bi-exclamation-triangle-fill"></i> Hurry! Only {{ total_stock }} left in stock
+                </span>
+              {% else %}
+                <span class="stock-pill out-of-stock" id="stockStatusPill">
+                  <i class="bi bi-x-circle-fill"></i> Currently Out of Stock
+                </span>
+              {% endif %}
+            </div>
+
+            <!-- Color Swatches -->
+            {% if unique_colors and unique_colors|length > 0 and unique_colors.0 != 'Default' %}
+            <div class="variant-option-group">
+              <div class="variant-label-row">
+                <span class="variant-title">Color: <span class="selected-val-tag" id="selectedColorLabel">{{ unique_colors.0 }}</span></span>
+              </div>
+              <div class="color-swatches-list" id="colorSwatches">
+                {% for color in unique_colors %}
+                <button type="button" class="color-chip-btn {% if forloop.first %}active{% endif %}" data-color="{{ color }}" onclick="onSelectColor('{{ color }}', this)">
+                  <span class="color-dot" style="background-color: {{ color|lower }};"></span>
+                  <span>{{ color }}</span>
+                </button>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Size Selection -->
+            <div class="variant-option-group">
+              <div class="variant-label-row">
+                <span class="variant-title">Size: <span class="selected-val-tag" id="selectedSizeLabel">Select Size</span></span>
+                <span class="size-guide-trigger" data-bs-toggle="modal" data-bs-target="#sizeGuideModal">
+                  <i class="bi bi-rulers"></i> Size Chart & Fit Guide
+                </span>
+              </div>
+              <div class="size-pills-list" id="sizePillsList">
+                <!-- Populated dynamically via JS from color_size_dict -->
+              </div>
+            </div>
+
+            <!-- Quantity & Call To Action Buttons -->
+            <div class="purchase-actions-box">
+              <div class="qty-and-cta-grid">
+                <!-- Quantity Stepper -->
+                <div class="qty-stepper">
+                  <button type="button" class="qty-btn" id="btnQtyMinus" onclick="adjustQuantity(-1)" title="Decrease Quantity">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  <input type="text" class="qty-input" id="quantityInput" value="1" readonly>
+                  <button type="button" class="qty-btn" id="btnQtyPlus" onclick="adjustQuantity(1)" title="Increase Quantity">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+
+                <!-- Add to Cart -->
+                <button type="button" class="btn-add-to-cart-zy" id="btnAddToCart" onclick="handleAddToCart()">
+                  <i class="bi bi-bag-plus"></i>
+                  <span id="btnAddToCartText">Add to Cart</span>
+                </button>
+
+                <!-- Buy Now -->
+                <button type="button" class="btn-buy-now-zy" id="btnBuyNow" onclick="handleBuyNow()">
+                  <i class="bi bi-lightning-charge-fill"></i>
+                  <span>Buy Now</span>
+                </button>
+              </div>
+
+              <!-- Ajax Alert / Toast for Cart & Wishlist -->
+              <div class="product-ajax-alert" id="productAjaxAlert"></div>
+            </div>
+
+            <!-- Assurance & Trust Highlights -->
+            <div class="trust-badges-grid">
+              <div class="trust-badge-cell">
+                <div class="trust-icon-box"><i class="bi bi-shield-check"></i></div>
+                <div>
+                  <div class="trust-title">100% Original</div>
+                  <div class="trust-desc">Guaranteed authentic quality</div>
+                </div>
+              </div>
+              <div class="trust-badge-cell">
+                <div class="trust-icon-box"><i class="bi bi-truck"></i></div>
+                <div>
+                  <div class="trust-title">Fast Shipping</div>
+                  <div class="trust-desc">Dispatched within 24 hours</div>
+                </div>
+              </div>
+              <div class="trust-badge-cell">
+                <div class="trust-icon-box"><i class="bi bi-arrow-counterclockwise"></i></div>
+                <div>
+                  <div class="trust-title">7-Day Easy Returns</div>
+                  <div class="trust-desc">Hassle-free doorstep pickup</div>
+                </div>
+              </div>
+              <div class="trust-badge-cell">
+                <div class="trust-icon-box"><i class="bi bi-lock-fill"></i></div>
+                <div>
+                  <div class="trust-title">Secure Payments</div>
+                  <div class="trust-desc">Razorpay, Wallet & COD</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!--=============== PRODUCT TABS: DETAILS, SIZING, SHIPPING, REVIEWS ===============-->
+      <div class="details-tabs-wrapper">
+        <ul class="nav nav-tabs nav-tabs-executive" id="productDetailTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="detailsTabBtn" data-bs-toggle="tab" data-bs-target="#tabDetails" type="button" role="tab">
+              <i class="bi bi-info-circle me-1"></i> Product Overview & Details
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="specTabBtn" data-bs-toggle="tab" data-bs-target="#tabSpecs" type="button" role="tab">
+              <i class="bi bi-sliders me-1"></i> Specifications & Care
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="shippingTabBtn" data-bs-toggle="tab" data-bs-target="#tabShipping" type="button" role="tab">
+              <i class="bi bi-box-seam me-1"></i> Shipping & Returns
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="reviewsTabBtn" data-bs-toggle="tab" data-bs-target="#tabReviews" type="button" role="tab">
+              <i class="bi bi-star me-1"></i> Customer Reviews ({{ review_count }})
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- 1. Product Overview -->
+          <div class="tab-pane fade show active tabs-content-card" id="tabDetails" role="tabpanel">
+            <div class="row g-4 align-items-center">
+              <div class="col-lg-8">
+                <h4 class="fw-bold text-dark mb-3">About the Product</h4>
+                <p class="text-secondary fs-6 leading-relaxed mb-4">
+                  {{ product.description|default:"Crafted with attention to detail and designed for effortless luxury, this piece combines premium comfort with modern executive styling." }}
+                </p>
+                <div class="row g-3">
+                  <div class="col-sm-6">
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                      <span class="fw-semibold text-dark">Tailored premium fit</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                      <span class="fw-semibold text-dark">Breathable, high-grade fabric</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                      <span class="fw-semibold text-dark">Pre-shrunk, color-locked yarn</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                      <span class="fw-semibold text-dark">Reinforced stitching for longevity</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="p-4 bg-light rounded-4 border">
+                  <h6 class="fw-bold text-dark mb-3">Product Summary</h6>
+                  <ul class="list-unstyled mb-0 small text-secondary d-flex flex-column gap-2">
+                    <li class="d-flex justify-content-between">
+                      <span>Category:</span>
+                      <strong class="text-dark">{{ product.category.category_name }}</strong>
+                    </li>
+                    <li class="d-flex justify-content-between">
+                      <span>Stock Status:</span>
+                      <strong class="text-success">{% if total_stock > 0 %}In Stock{% else %}Out of Stock{% endif %}</strong>
+                    </li>
+                    <li class="d-flex justify-content-between">
+                      <span>Product Code:</span>
+                      <strong class="text-dark">ZY-{{ product.id|stringformat:"04d" }}</strong>
+                    </li>
+                    <li class="d-flex justify-content-between">
+                      <span>Country of Origin:</span>
+                      <strong class="text-dark">India</strong>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Specifications & Care -->
+          <div class="tab-pane fade tabs-content-card" id="tabSpecs" role="tabpanel">
+            <h4 class="fw-bold text-dark mb-4">Fabric & Care Instructions</h4>
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="table-responsive">
+                  <table class="table table-bordered align-middle">
+                    <tbody>
+                      <tr>
+                        <th class="bg-light text-muted w-40">Material Composition</th>
+                        <td class="text-dark fw-semibold">100% Fine Combed Cotton / Viscose Blend</td>
+                      </tr>
+                      <tr>
+                        <th class="bg-light text-muted">Fit Type</th>
+                        <td class="text-dark fw-semibold">Tailored Executive Regular Fit</td>
+                      </tr>
+                      <tr>
+                        <th class="bg-light text-muted">Weave Type</th>
+                        <td class="text-dark fw-semibold">High-Density Twill Weave</td>
+                      </tr>
+                      <tr>
+                        <th class="bg-light text-muted">Pattern</th>
+                        <td class="text-dark fw-semibold">Contemporary Solid / Patterned</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-4 rounded-4 bg-light border">
+                  <h6 class="fw-bold text-dark mb-3"><i class="bi bi-droplet-half text-primary me-2"></i>Washing & Maintenance</h6>
+                  <ul class="small text-secondary mb-0 d-flex flex-column gap-2">
+                    <li><i class="bi bi-dot text-primary fs-5"></i> Machine wash gentle cycle in cold water (30°C max).</li>
+                    <li><i class="bi bi-dot text-primary fs-5"></i> Wash inside-out with like colors using mild detergent.</li>
+                    <li><i class="bi bi-dot text-primary fs-5"></i> Do not bleach or use heavy industrial softeners.</li>
+                    <li><i class="bi bi-dot text-primary fs-5"></i> Tumble dry low or line dry in shaded area to protect color vibrancy.</li>
+                    <li><i class="bi bi-dot text-primary fs-5"></i> Iron on medium heat; avoid direct contact with printed branding.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Shipping & Returns -->
+          <div class="tab-pane fade tabs-content-card" id="tabShipping" role="tabpanel">
+            <h4 class="fw-bold text-dark mb-4">Delivery & Return Policies</h4>
+            <div class="row g-4">
+              <div class="col-md-4">
+                <div class="p-4 rounded-4 bg-light border h-100">
+                  <div class="fs-2 text-primary mb-3"><i class="bi bi-truck-front-fill"></i></div>
+                  <h5 class="fw-bold text-dark mb-2">Fast Delivery</h5>
+                  <p class="text-secondary small mb-0">
+                    Orders placed before 2:00 PM are processed same-day. Delivery arrives within <strong>2 to 4 business days</strong> for metro cities and 3-5 days nationwide.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-4 rounded-4 bg-light border h-100">
+                  <div class="fs-2 text-primary mb-3"><i class="bi bi-arrow-repeat"></i></div>
+                  <h5 class="fw-bold text-dark mb-2">7-Day Return Window</h5>
+                  <p class="text-secondary small mb-0">
+                    Not fully satisfied? Return eligible items within <strong>7 days of delivery</strong> for a 100% refund straight to your Jamilah wallet balance or exchange for another size.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="p-4 rounded-4 bg-light border h-100">
+                  <div class="fs-2 text-primary mb-3"><i class="bi bi-box2-heart-fill"></i></div>
+                  <h5 class="fw-bold text-dark mb-2">Safe Doorstep Pickup</h5>
+                  <p class="text-secondary small mb-0">
+                    Our verified courier partner will pick up returns directly from your doorstep with contactless verification.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Customer Reviews -->
+          <div class="tab-pane fade tabs-content-card" id="tabReviews" role="tabpanel">
+            <div class="reviews-summary-block">
+              <div class="row align-items-center g-4">
+                <div class="col-md-4 text-center text-md-start border-end-md">
+                  <div class="big-score-number">{{ avg_rating }}</div>
+                  <div class="text-warning fs-4 mb-1">
+                    {% for i in "12345" %}
+                      {% if forloop.counter <= avg_rating %}
+                        <i class="bi bi-star-fill"></i>
+                      {% elif forloop.counter|add:"-1" < avg_rating %}
+                        <i class="bi bi-star-half"></i>
+                      {% else %}
+                        <i class="bi bi-star"></i>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <p class="text-muted small mb-0">Based on {{ review_count }} authentic customer rating{{ review_count|pluralize }}</p>
+                </div>
+
+                <div class="col-md-5">
+                  {% for stat in rating_stats %}
+                  <div class="rating-progress-row">
+                    <span class="text-muted text-nowrap" style="width: 45px;">{{ stat.star }} <i class="bi bi-star-fill text-warning"></i></span>
+                    <div class="rating-progress-bar">
+                      <div class="rating-progress-fill" style="width: {{ stat.percent }}%;"></div>
+                    </div>
+                    <span class="text-muted text-end text-nowrap" style="width: 40px;">{{ stat.count }}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-3 text-center text-md-end">
+                  {% if can_review %}
+                    <a href="{% url 'add_review' product.id %}" class="btn btn-primary px-4 py-2 rounded-3 fw-bold" style="background: var(--zy-primary); border-color: var(--zy-primary);">
+                      <i class="bi bi-pencil-square me-1"></i> Write a Review
+                    </a>
+                  {% elif request.user.is_authenticated %}
+                    <div class="small text-muted p-2 rounded-3 bg-white border">
+                      <i class="bi bi-info-circle me-1 text-primary"></i> Review available after item is delivered
+                    </div>
+                  {% else %}
+                    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-dark px-4 py-2 rounded-3 fw-bold small">
+                      Log in to Review
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer Reviews List -->
+            <div class="reviews-list-container">
+              {% if reviews %}
+                {% for review in reviews %}
+                <div class="review-user-card">
+                  <div class="d-flex align-items-start gap-3">
+                    <div class="user-avatar-circle">
+                      {{ review.user.first_name|first|upper|default:review.user.username|first|upper }}
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+                        <div>
+                          <strong class="text-dark">{{ review.user.get_full_name|default:review.user.username }}</strong>
+                          <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill ms-2" style="font-size: 0.72rem;">
+                            <i class="bi bi-check-circle-fill me-1"></i>Verified Purchaser
+                          </span>
+                        </div>
+                        <span class="text-muted small">{{ review.created_at|date:"M d, Y" }}</span>
+                      </div>
+
+                      <div class="text-warning small mb-2">
+                        {% for i in "12345" %}
+                          {% if forloop.counter <= review.rating %}
+                            <i class="bi bi-star-fill"></i>
+                          {% else %}
+                            <i class="bi bi-star"></i>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+
+                      <p class="text-secondary mb-2" style="line-height: 1.6;">
+                        {{ review.review_text }}
+                      </p>
+
+                      {% if review.user == request.user %}
+                      <div>
+                        <a href="{% url 'edit_review' review.id %}" class="small text-primary text-decoration-none fw-semibold">
+                          <i class="bi bi-pencil me-1"></i> Edit your review
+                        </a>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              {% else %}
+                <div class="text-center py-5">
+                  <div class="fs-1 text-muted mb-2"><i class="bi bi-chat-heart"></i></div>
+                  <h6 class="fw-bold text-dark">No reviews yet</h6>
+                  <p class="text-muted small">Be the first to share your thoughts on this product!</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--=============== RELATED PRODUCTS SECTION ===============-->
+      {% if related_products %}
+      <section class="related-products-section">
+        <div class="related-section-header">
+          <div>
+            <span class="category-kicker">CURATED RECOMMENDATIONS</span>
+            <h3 class="fw-bold text-dark mb-0">Similar Styles You May Love</h3>
+          </div>
+          <a href="{% url 'all_products' %}?category={{ product.category.id }}" class="btn btn-outline-dark rounded-pill px-4 btn-sm fw-semibold">
+            View All in {{ product.category.category_name }} <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+
+        <div class="row g-4">
+          {% for item in related_products %}
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="product-curated-card">
+              <div class="curated-card-media">
+                <a href="{% url 'product_details' item.id %}" class="w-100 h-100">
+                  {% if item.images.first %}
+                    <img src="{{ item.images.first.image.url }}" alt="{{ item.name }}">
+                  {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted bg-light">
+                      <i class="bi bi-image fs-3"></i>
+                    </div>
+                  {% endif %}
+                </a>
+                {% if item.has_offer %}
+                <span class="badge-discount-tag position-absolute top-2 start-2" style="top: 10px; left: 10px; font-size: 0.72rem; padding: 4px 8px;">
+                  {{ item.best_offer_percentage }}% OFF
+                </span>
+                {% endif %}
+              </div>
+
+              <div class="curated-card-body">
+                <small class="text-muted text-uppercase mb-1" style="font-size: 0.72rem; font-weight: 700;">
+                  {{ item.category.category_name }}
+                </small>
+                <a href="{% url 'product_details' item.id %}" class="curated-card-title" title="{{ item.name }}">
+                  {{ item.name }}
+                </a>
+
+                <div class="d-flex align-items-baseline gap-2 mt-auto pt-2">
+                  {% if item.has_offer %}
+                    <span class="fw-bold text-dark fs-6">₹{{ item.best_offer_price|floatformat:2 }}</span>
+                    <span class="small text-muted text-decoration-line-through">₹{{ item.price|floatformat:2 }}</span>
+                  {% else %}
+                    <span class="fw-bold text-dark fs-6">₹{{ item.price|floatformat:2 }}</span>
+                  {% endif %}
+                </div>
+
+                <div class="mt-3">
+                  <a href="{% url 'product_details' item.id %}" class="btn btn-sm btn-outline-primary w-100 rounded-pill fw-semibold" style="color: var(--zy-primary); border-color: var(--zy-primary);">
+                    View Details
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+    </div>
+  </main>
+
+  <!--=============== SIZE GUIDE MODAL ===============-->
+  <div class="modal fade" id="sizeGuideModal" tabindex="-1" aria-labelledby="sizeGuideModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+        <div class="modal-header bg-dark text-white p-4">
+          <div>
+            <h5 class="modal-title fw-bold mb-1" id="sizeGuideModalLabel">
+              <i class="bi bi-rulers me-2 text-warning"></i>Standard Size Chart & Measurement Guide
+            </h5>
+            <small class="text-white-50">All dimensions provided in inches for regular comfortable fit</small>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-toggle="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered text-center align-middle mb-4">
+              <thead class="table-light">
+                <tr>
+                  <th>Size</th>
+                  <th>Chest / Bust</th>
+                  <th>Waist</th>
+                  <th>Hips</th>
+                  <th>Length</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong class="badge bg-dark rounded-pill px-3 py-1">S (Small)</strong></td>
+                  <td>36 - 38"</td>
+                  <td>30 - 32"</td>
+                  <td>37 - 39"</td>
+                  <td>27.5"</td>
+                </tr>
+                <tr>
+                  <td><strong class="badge bg-dark rounded-pill px-3 py-1">M (Medium)</strong></td>
+                  <td>39 - 41"</td>
+                  <td>33 - 35"</td>
+                  <td>40 - 42"</td>
+                  <td>28.5"</td>
+                </tr>
+                <tr>
+                  <td><strong class="badge bg-dark rounded-pill px-3 py-1">L (Large)</strong></td>
+                  <td>42 - 44"</td>
+                  <td>36 - 38"</td>
+                  <td>43 - 45"</td>
+                  <td>29.5"</td>
+                </tr>
+                <tr>
+                  <td><strong class="badge bg-dark rounded-pill px-3 py-1">XL (Extra Large)</strong></td>
+                  <td>45 - 47"</td>
+                  <td>39 - 41"</td>
+                  <td>46 - 48"</td>
+                  <td>30.5"</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="p-3 bg-light rounded-3 border">
+            <h6 class="fw-bold text-dark mb-2"><i class="bi bi-info-circle text-primary me-2"></i>How to measure yourself:</h6>
+            <ul class="small text-secondary mb-0 d-flex flex-column gap-1">
+              <li><strong>Chest/Bust:</strong> Measure around the fullest part of your chest, keeping tape horizontal under arms.</li>
+              <li><strong>Waist:</strong> Measure around your natural waistline, keeping the tape comfortably loose.</li>
+              <li><strong>Hips:</strong> Stand with feet together and measure around the fullest point of hips.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer bg-light p-3">
+          <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close Guide</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== LIGHTBOX MODAL ===============-->
+  <div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-body p-0 text-center position-relative">
+          <button type="button" class="btn btn-light rounded-circle position-absolute top-0 end-0 m-3 shadow" data-bs-dismiss="modal" style="width: 44px; height: 44px; z-index: 10;">
+            <i class="bi bi-x-lg"></i>
+          </button>
+          <img src="" id="lightboxModalImage" class="img-fluid rounded-4 shadow-lg" style="max-height: 85vh; object-fit: contain; background: #ffffff;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!--=============== SCRIPTS ===============-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // State Variables
+    const PRODUCT_ID = "{{ product.id }}";
+    const COLOR_SIZE_MAP = JSON.parse('{{ color_size_dict|safe }}');
+    const TOTAL_STOCK = parseInt("{{ total_stock|default:0 }}");
+    const CSRF_TOKEN = "{{ csrf_token }}";
+
+    let selectedColor = "";
+    let selectedSize = "";
+    let selectedVariantStock = 0;
+    let selectedQuantity = 1;
+
+    // Initialize Page
+    document.addEventListener("DOMContentLoaded", function () {
+      initImageGalleryZoom();
+
+      // Pick first color if available
+      const colorKeys = Object.keys(COLOR_SIZE_MAP);
+      if (colorKeys.length > 0) {
+        selectedColor = colorKeys[0];
+        const colorLabel = document.getElementById("selectedColorLabel");
+        if (colorLabel && selectedColor !== "Default") {
+          colorLabel.innerText = selectedColor;
+        }
+      }
+
+      renderSizeButtons();
+    });
+
+    // 1. Image Thumbnail Switcher & Hover Zoom
+    function selectMainImage(imgUrl, clickedThumb) {
+      const mainImg = document.getElementById("mainProductImage");
+      if (mainImg) {
+        mainImg.src = imgUrl;
+        mainImg.setAttribute("data-zoom-src", imgUrl);
+      }
+
+      // Update active thumbnail
+      document.querySelectorAll(".thumb-cell").forEach(cell => cell.classList.remove("active"));
+      if (clickedThumb) {
+        clickedThumb.classList.add("active");
+      }
+    }
+
+    function initImageGalleryZoom() {
+      const viewport = document.getElementById("mainImageViewport");
+      const img = document.getElementById("mainProductImage");
+      if (!viewport || !img) return;
+
+      viewport.addEventListener("mousemove", function (e) {
+        const rect = viewport.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        img.style.transformOrigin = `${x}% ${y}%`;
+        img.style.transform = "scale(1.6)";
+      });
+
+      viewport.addEventListener("mouseleave", function () {
+        img.style.transform = "scale(1)";
+        img.style.transformOrigin = "center center";
+      });
+    }
+
+    function openImageLightbox() {
+      const mainImg = document.getElementById("mainProductImage");
+      const lightboxImg = document.getElementById("lightboxModalImage");
+      if (mainImg && lightboxImg) {
+        lightboxImg.src = mainImg.src;
+        const modal = new bootstrap.Modal(document.getElementById("imageLightboxModal"));
+        modal.show();
+      }
+    }
+
+    // 2. Color Selection
+    function onSelectColor(colorName, btnElem) {
+      selectedColor = colorName;
+      const colorLabel = document.getElementById("selectedColorLabel");
+      if (colorLabel) colorLabel.innerText = colorName;
+
+      document.querySelectorAll(".color-chip-btn").forEach(btn => btn.classList.remove("active"));
+      btnElem.classList.add("active");
+
+      renderSizeButtons();
+    }
+
+    // 3. Render Size Buttons from Current Color
+    function renderSizeButtons() {
+      const container = document.getElementById("sizePillsList");
+      if (!container) return;
+
+      container.innerHTML = "";
+      const variantsForColor = COLOR_SIZE_MAP[selectedColor] || [];
+
+      if (variantsForColor.length === 0) {
+        container.innerHTML = '<span class="text-danger small">No sizes available for selected option.</span>';
+        updateStockPill(0);
+        return;
+      }
+
+      // Determine default size selection (first with stock > 0, or first one)
+      let defaultPick = variantsForColor.find(v => v.stock > 0) || variantsForColor[0];
+
+      variantsForColor.forEach(variant => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "size-pill-btn";
+        btn.innerText = variant.size;
+
+        if (variant.stock <= 0) {
+          btn.classList.add("disabled");
+          btn.title = "Out of Stock";
+        } else {
+          btn.title = `${variant.stock} available`;
+        }
+
+        if (defaultPick && variant.size === defaultPick.size) {
+          btn.classList.add("active");
+          selectedSize = variant.size;
+          selectedVariantStock = variant.stock;
+        }
+
+        btn.addEventListener("click", function () {
+          if (variant.stock <= 0) return;
+          document.querySelectorAll(".size-pill-btn").forEach(b => b.classList.remove("active"));
+          this.classList.add("active");
+          selectedSize = variant.size;
+          selectedVariantStock = variant.stock;
+          document.getElementById("selectedSizeLabel").innerText = variant.size;
+          updateStockPill(variant.stock);
+          validateQuantityBounds();
+        });
+
+        container.appendChild(btn);
+      });
+
+      if (defaultPick) {
+        document.getElementById("selectedSizeLabel").innerText = defaultPick.size;
+        updateStockPill(defaultPick.stock);
+      }
+      validateQuantityBounds();
+    }
+
+    function updateStockPill(stock) {
+      const pill = document.getElementById("stockStatusPill");
+      const btnAdd = document.getElementById("btnAddToCart");
+      const btnBuy = document.getElementById("btnBuyNow");
+      if (!pill) return;
+
+      if (stock > 5) {
+        pill.className = "stock-pill in-stock";
+        pill.innerHTML = '<i class="bi bi-check2-circle"></i> In Stock (Ready for Dispatch)';
+        if (btnAdd) btnAdd.disabled = false;
+        if (btnBuy) btnBuy.disabled = false;
+      } else if (stock > 0) {
+        pill.className = "stock-pill low-stock";
+        pill.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> Only ${stock} left in stock - order soon!`;
+        if (btnAdd) btnAdd.disabled = false;
+        if (btnBuy) btnBuy.disabled = false;
+      } else {
+        pill.className = "stock-pill out-of-stock";
+        pill.innerHTML = '<i class="bi bi-x-circle-fill"></i> Out of Stock';
+        if (btnAdd) btnAdd.disabled = true;
+        if (btnBuy) btnBuy.disabled = true;
+      }
+    }
+
+    // 4. Quantity Adjustments
+    function adjustQuantity(delta) {
+      const qtyInput = document.getElementById("quantityInput");
+      const maxAllowed = Math.min(5, selectedVariantStock || 5);
+      let cur = parseInt(qtyInput.value) || 1;
+      let next = cur + delta;
+
+      if (next < 1) next = 1;
+      if (next > maxAllowed) {
+        next = maxAllowed;
+        showProductAlert(`Maximum limit is ${maxAllowed} units per order.`, "error");
+      }
+
+      qtyInput.value = next;
+      selectedQuantity = next;
+    }
+
+    function validateQuantityBounds() {
+      const qtyInput = document.getElementById("quantityInput");
+      const maxAllowed = Math.min(5, selectedVariantStock || 5);
+      let cur = parseInt(qtyInput.value) || 1;
+      if (cur > maxAllowed) {
+        qtyInput.value = Math.max(1, maxAllowed);
+        selectedQuantity = Math.max(1, maxAllowed);
+      }
+    }
+
+    // 5. Add to Cart Handler (AJAX)
+    function handleAddToCart(callbackOnSuccess) {
+      if (!selectedSize) {
+        showProductAlert("Please select a size before adding to cart.", "error");
+        return;
+      }
+
+      if (selectedVariantStock <= 0) {
+        showProductAlert("Selected size is currently out of stock.", "error");
+        return;
+      }
+
+      const btn = document.getElementById("btnAddToCart");
+      const btnText = document.getElementById("btnAddToCartText");
+      const originalText = btnText ? btnText.innerText : "Add to Cart";
+
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Adding...';
+
+      const formData = new URLSearchParams();
+      formData.append("product_id", PRODUCT_ID);
+      formData.append("color", selectedColor);
+      formData.append("size", selectedSize);
+      formData.append("quantity", selectedQuantity);
+
+      fetch("{% url 'add_to_cart' %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": CSRF_TOKEN,
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (btn) btn.disabled = false;
+        if (data.success) {
+          if (btnText) btnText.innerHTML = '<i class="bi bi-check2 me-1"></i>In Cart';
+          showProductAlert(data.message || "Product added to cart successfully!", "success");
+
+          // Update header cart count badge if available
+          const cartBadges = document.querySelectorAll(".header__action-btn[title='Cart'] .count");
+          cartBadges.forEach(b => {
+            const currentCount = parseInt(b.innerText) || 0;
+            b.innerText = currentCount + 1;
+          });
+
+          if (callbackOnSuccess) callbackOnSuccess();
+        } else {
+          if (btnText) btnText.innerText = originalText;
+          if (data.login_required) {
+            window.location.href = "{% url 'login' %}?next=" + encodeURIComponent(window.location.pathname);
+            return;
+          }
+          showProductAlert(data.error || "Unable to add product to cart.", "error");
+        }
+      })
+      .catch(err => {
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.innerText = originalText;
+        showProductAlert("Network error while adding to cart. Please try again.", "error");
+      });
+    }
+
+    // 6. Buy Now Handler (Add to Cart -> Immediate Checkout)
+    function handleBuyNow() {
+      const btnBuy = document.getElementById("btnBuyNow");
+      if (btnBuy) {
+        btnBuy.disabled = true;
+        btnBuy.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+      }
+
+      handleAddToCart(function () {
+        window.location.href = "{% url 'place_order' %}";
+      });
+
+      // Reset button if error halted callback
+      setTimeout(() => {
+        if (btnBuy && !window.location.href.includes("checkout")) {
+          btnBuy.disabled = false;
+          btnBuy.innerHTML = '<i class="bi bi-lightning-charge-fill"></i><span>Buy Now</span>';
+        }
+      }, 3500);
+    }
+
+    // 7. Wishlist Toggle (AJAX)
+    function toggleProductWishlist(productId) {
+      const btn = document.getElementById("btnWishlistToggle");
+      fetch(`/wishlist/add/${productId}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": CSRF_TOKEN,
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          if (btn) {
+            btn.classList.add("in-wishlist");
+            btn.innerHTML = '<i class="bi bi-heart-fill"></i>';
+          }
+          showProductAlert(data.message || "Added to your Wishlist!", "success");
+        } else {
+          // If already in wishlist, notify
+          showProductAlert(data.message || "Item is in your Wishlist.", "success");
+        }
+      })
+      .catch(err => {
+        showProductAlert("Unable to update wishlist. Please try again.", "error");
+      });
+    }
+
+    // 8. Share Current Product
+    function shareCurrentProduct() {
+      if (navigator.share) {
+        navigator.share({
+          title: "{{ product.name }} - Jamilah",
+          text: "Check out this item on Jamilah!",
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          showProductAlert("Product link copied to clipboard!", "success");
+        });
+      }
+    }
+
+    // 9. Jump to Reviews Tab
+    function jumpToReviewsTab() {
+      const tabBtn = document.getElementById("reviewsTabBtn");
+      if (tabBtn) {
+        const bsTab = new bootstrap.Tab(tabBtn);
+        bsTab.show();
+        tabBtn.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    // Helper: Show Feedback Alert
+    function showProductAlert(msg, type) {
+      const alertBox = document.getElementById("productAjaxAlert");
+      if (!alertBox) return;
+
+      alertBox.className = `product-ajax-alert ${type}`;
+      alertBox.innerHTML = `${type === 'success' ? '<i class="bi bi-check-circle-fill me-2"></i>' : '<i class="bi bi-exclamation-circle-fill me-2"></i>'}${msg}`;
+      alertBox.style.display = "block";
+
+      setTimeout(() => {
+        alertBox.style.display = "none";
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

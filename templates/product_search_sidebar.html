@@ -1,0 +1,243 @@
+<!-- Fully Isolated Search Sidebar -->
+<div class="evara-custom-search">
+    <style scoped>
+        /* Scoped styles that won't leak out */
+        .evara-custom-search * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        .evara-custom-search {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin: 20px 0;
+            width: 81%;
+            max-width: 100%;
+            margin-left: 10%;
+            
+            
+            align-content: center;
+        }
+        
+        .evara-custom-search .evara-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        
+        .evara-custom-search .evara-col {
+            position: relative;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 992px) {
+            .evara-custom-search .evara-col-lg-3 {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+            
+            .evara-custom-search .evara-col-lg-2 {
+                flex: 0 0 16.666667%;
+                max-width: 16.666667%;
+            }
+            
+            .evara-custom-search .evara-col-lg-1 {
+                flex: 0 0 8.333333%;
+                max-width: 8.333333%;
+            }
+            
+            .evara-custom-search .evara-divider {
+                display: block;
+            }
+        }
+        
+        .evara-custom-search .evara-search-heading {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .evara-custom-search .evara-filter-heading {
+            color: #2c3e50;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .evara-custom-search .evara-input-wrapper {
+            position: relative;
+        }
+        
+        .evara-custom-search .evara-search-input {
+            width: 100%;
+            height: 38px;
+            padding: 8px 15px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            transition: border-color .15s ease-in-out;
+        }
+        
+        .evara-custom-search .evara-search-button {
+            background: transparent;
+            border: none;
+            color: #00857c;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        
+        .evara-custom-search .evara-checkbox-wrapper {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .evara-custom-search .evara-checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .evara-custom-search .evara-checkbox {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+        
+        .evara-custom-search .evara-checkbox-label {
+            color: #2c3e50;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .evara-custom-search .evara-sort-select {
+            display: block;
+            width: 100%;
+            height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            appearance: auto;
+        }
+        
+        .evara-custom-search .evara-button {
+            display: inline-block;
+            font-weight: 500;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            padding: 0.375rem 0.75rem;
+            font-size: 14px;
+            line-height: 1.5;
+            border-radius: 20px;
+            border: none;
+            color: white;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .evara-custom-search .evara-apply-button {
+            background-color: #00857c;
+        }
+        
+        .evara-custom-search .evara-apply-button:hover {
+            background-color: #006b63;
+        }
+        
+        .evara-custom-search .evara-clear-button {
+            background-color: #e74c3c;
+        }
+        
+        .evara-custom-search .evara-clear-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .evara-custom-search .evara-divider {
+            width: 1px;
+            background-color: #eee;
+            margin: 0 auto;
+            height: 100%;
+            display: none;
+        }
+        
+        .evara-custom-search .evara-text-end {
+            text-align: right;
+        }
+    </style>
+
+    <div class="evara-row">
+        <!-- Search Section -->
+        <div class="evara-col evara-col-lg-3">
+            <h3 class="evara-search-heading">Search Products</h3>
+            <div class="evara-input-wrapper">
+                <input type="text" class="evara-search-input" placeholder="Search products...">
+                <button class="evara-search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="evara-col evara-col-lg-1">
+            <div class="evara-divider"></div>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="evara-col evara-col-lg-3">
+            <h4 class="evara-filter-heading">Filter by Category</h4>
+            <div class="evara-checkbox-wrapper">
+                <div class="evara-checkbox-item">
+                    <input class="evara-checkbox" type="checkbox" id="evara-custom-shirt">
+                    <label class="evara-checkbox-label" for="evara-custom-shirt">
+                        SHIRT
+                    </label>
+                </div>
+                <div class="evara-checkbox-item">
+                    <input class="evara-checkbox" type="checkbox" id="evara-custom-pants">
+                    <label class="evara-checkbox-label" for="evara-custom-pants">
+                        PANTS
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="evara-col evara-col-lg-1">
+            <div class="evara-divider"></div>
+        </div>
+        
+        <!-- Sort Section -->
+        <div class="evara-col evara-col-lg-2">
+            <h4 class="evara-filter-heading">Sort By</h4>
+            <select class="evara-sort-select">
+                <option selected>Name: A to Z</option>
+                <option>Name: Z to A</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+            </select>
+        </div>
+        
+        <!-- Buttons Section -->
+        <div class="evara-col evara-col-lg-2 evara-text-end">
+            <button class="evara-button evara-apply-button">Apply Filters</button>
+            <button class="evara-button evara-clear-button">Clear All Filters</button>
+        </div>
+    </div>
+</div>

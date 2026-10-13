@@ -1,0 +1,640 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - Jamilah</title>
+    <meta name="description" content="Verify your email address to complete your Jamilah account registration.">
+    <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: #ffffff;
+        }
+
+        /* ── LEFT BRANDING PANEL ── */
+        .brand-panel {
+            display: none;
+            width: 50%;
+            background: linear-gradient(145deg, #05201f 0%, #091212 50%, #163f3b 100%);
+            padding: 3rem;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
+        }
+
+        @media (min-width: 1024px) { .brand-panel { display: flex; } }
+
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            top: -80px; left: -80px;
+            width: 350px; height: 350px;
+            background: rgba(212, 184, 114, 0.06);
+            border-radius: 50%;
+        }
+
+        .brand-header { position: relative; z-index: 2; }
+
+        .brand-logo-wrap {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+
+        .brand-logo-wrap img {
+            height: 52px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.25));
+        }
+
+        .brand-tagline {
+            color: rgba(212, 184, 114, 0.85);
+            font-size: 0.92rem;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            margin-top: 0.4rem;
+        }
+
+        .brand-center { position: relative; z-index: 2; text-align: center; }
+
+        .brand-icon-large {
+            width: 100px; height: 100px;
+            background: rgba(212, 184, 114, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 1px solid rgba(212, 184, 114, 0.2);
+        }
+
+        .brand-icon-large svg { width: 48px; height: 48px; stroke: #d4b872; fill: none; }
+
+        .brand-center h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .brand-center p {
+            color: rgba(255,255,255,0.55);
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .welcome-features {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            text-align: left;
+        }
+
+        .welcome-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .welcome-feature svg { width: 18px; height: 18px; stroke: #d4b872; fill: none; flex-shrink: 0; }
+        .welcome-feature span { color: rgba(255,255,255,0.65); font-size: 0.875rem; font-weight: 300; }
+        .welcome-feature strong { color: rgba(212,184,114,0.9); }
+
+        .brand-footer {
+            position: relative;
+            z-index: 2;
+            color: rgba(255,255,255,0.35);
+            font-size: 0.8rem;
+            font-weight: 300;
+        }
+
+        /* ── RIGHT FORM PANEL ── */
+        .form-panel {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            background: #ffffff;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .form-wrapper { width: 100%; max-width: 420px; margin: auto 0; padding: 1rem 0 2rem; }
+
+        /* Mobile logo */
+        .mobile-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 0.5rem;
+        }
+
+        .mobile-logo-wrap img {
+            height: 48px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .mobile-tagline {
+            color: #888;
+            font-size: 0.85rem;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        @media (min-width: 1024px) { .mobile-logo { display: none; } }
+
+        /* Form card */
+        .form-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(5, 32, 31, 0.08), 0 4px 20px rgba(0,0,0,0.04);
+            padding: 2.5rem;
+            border: 1px solid rgba(212, 184, 114, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Expired overlay */
+        .expired-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.96);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        .expired-message {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .expired-message svg { width: 48px; height: 48px; stroke: #e74c3c; fill: none; margin-bottom: 1rem; }
+        .expired-message h3 { color: #05201f; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .expired-message p { color: #888; font-size: 0.875rem; }
+
+        /* Card header */
+        .card-icon-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+
+        .card-icon-wrap {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, rgba(22,63,59,0.08), rgba(212,184,114,0.12));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(212,184,114,0.2);
+        }
+
+        .card-icon-wrap svg { width: 32px; height: 32px; stroke: #163f3b; fill: none; }
+
+        .card-icon-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.65rem;
+            font-weight: 600;
+            color: #05201f;
+            margin-bottom: 0.4rem;
+        }
+
+        .card-icon-header p { color: #888; font-size: 0.875rem; font-weight: 300; line-height: 1.6; }
+        .email-chip {
+            display: inline-block;
+            margin-top: 0.4rem;
+            background: #f0f7f4;
+            color: #163f3b;
+            border: 1px solid rgba(22,63,59,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        /* Timer */
+        .timer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: #faf9f7;
+            border: 1px solid #ede8df;
+            border-radius: 10px;
+            padding: 0.65rem 1rem;
+            margin-bottom: 1.75rem;
+            font-size: 0.875rem;
+        }
+
+        .timer-bar svg { width: 16px; height: 16px; stroke: #163f3b; fill: none; flex-shrink: 0; }
+        .timer-bar span { color: #555; }
+        .timer-count { color: #163f3b; font-weight: 600; margin-left: 0.25rem; }
+        .timer-count.warning { color: #e74c3c; }
+
+        /* OTP inputs */
+        .code-inputs {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .code-input {
+            width: 58px; height: 62px;
+            border: 2px solid #e8e2d9;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: #05201f;
+            background: #faf9f7;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none;
+        }
+
+        .code-input:focus {
+            border-color: #d4b872;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(212, 184, 114, 0.15);
+        }
+
+        .code-input.is-valid { border-color: #27ae60; background: #f0fbf5; }
+
+        /* Alert */
+        .alert-danger {
+            background: #fdf0ef;
+            border: 1px solid #f5c6cb;
+            color: #c0392b;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-danger.alert-show { display: block; }
+
+        .static-alerts { margin-bottom: 1rem; }
+
+        .alert-msg {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+        .alert-success { background: #edf7f2; border: 1px solid #a9dfbf; color: #1e8449; }
+        .alert-error-static { background: #fdf0ef; border: 1px solid #f5c6cb; color: #c0392b; }
+
+        /* Submit button */
+        .btn-submit {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, #163f3b, #05201f);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(5, 32, 31, 0.25);
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(5, 32, 31, 0.35); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Resend */
+        .resend-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .resend-link {
+            color: #163f3b;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .resend-link:hover { color: #d4b872; }
+
+        .resend-link.disabled { color: #bbb; cursor: not-allowed; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <!-- LEFT BRANDING PANEL -->
+    <aside class="brand-panel">
+        <div class="brand-header">
+            <div class="brand-logo-wrap">
+                <a href="{% url 'home' %}" style="display: inline-block; text-decoration: none;">
+                    <img src="{% static 'assets/img/jamilah_logo_white.png' %}?v=2" alt="Jamilah Haute Modest Couture">
+                </a>
+            </div>
+            <p class="brand-tagline">Grace in Every Drape. Devotion in Every Stitch.</p>
+        </div>
+
+        <div class="brand-center">
+            <div class="brand-icon-large">
+                <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+            </div>
+            <h2>Almost There!</h2>
+            <p>Just one step away from joining the Jamilah community. Verify your email to unlock your account.</p>
+            <div class="welcome-features">
+                <div class="welcome-feature">
+                    <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <span>Access <strong>exclusive collections</strong> and seasonal drops</span>
+                </div>
+                <div class="welcome-feature">
+                    <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <span>Track your orders and manage your wishlist</span>
+                </div>
+                <div class="welcome-feature">
+                    <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <span>Earn <strong>referral rewards</strong> and member benefits</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="brand-footer">© 2024 Jamilah. All rights reserved.</p>
+    </aside>
+
+    <!-- RIGHT FORM PANEL -->
+    <main class="form-panel">
+        <div class="form-wrapper">
+
+            <!-- Mobile logo -->
+            <div class="mobile-logo">
+                <div class="mobile-logo-wrap">
+                    <a href="{% url 'home' %}" style="display: inline-block; text-decoration: none;">
+                        <img src="{% static 'assets/img/jamilah_logo.png' %}?v=2" alt="Jamilah Haute Modest Couture">
+                    </a>
+                </div>
+                <span class="mobile-tagline">Grace in Every Drape. Devotion in Every Stitch.</span>
+            </div>
+
+            <div class="form-card">
+                <!-- Expired overlay -->
+                <div class="expired-overlay" id="expiredOverlay">
+                    <div class="expired-message">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <h3>Code Expired</h3>
+                        <p>Your OTP has expired. Please request a new one.</p>
+                    </div>
+                </div>
+
+                <div class="card-icon-header">
+                    <div class="card-icon-wrap">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </div>
+                    <h2>Please Check Your Email</h2>
+                    <p>We've sent a 4-digit verification code to</p>
+                    <span class="email-chip">{{ email }}</span>
+                </div>
+
+                {% if error %}
+                    <div class="static-alerts">
+                        <div class="alert-msg alert-error-static">{{ error }}</div>
+                    </div>
+                {% endif %}
+                {% if messages %}
+                    <div class="static-alerts">
+                        {% for message in messages %}
+                            <div class="alert-msg {% if message.tags == 'error' %}alert-error-static{% else %}alert-success{% endif %}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Timer -->
+                <div class="timer-bar">
+                    <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span>Code expires in: <span class="timer-count" id="timerCount">01:00</span></span>
+                </div>
+
+                <!-- OTP form -->
+                <form method="POST" id="otpForm" novalidate>
+                    {% csrf_token %}
+                    <div class="code-inputs">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="code-input" autofocus />
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="code-input" />
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="code-input" />
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="code-input" />
+                    </div>
+
+                    <input type="hidden" name="otp" id="otpValue" />
+
+                    <div class="alert-danger" id="errorAlert"></div>
+
+                    <button type="submit" class="btn-submit" id="verifyBtn" disabled>Verify Account</button>
+
+                    <p class="resend-text">
+                        Didn't get the code?
+                        <a href="#" class="resend-link" id="resendLink">Click to resend</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputs = document.querySelectorAll('.code-input');
+            const form = document.getElementById('otpForm');
+            const verifyButton = document.getElementById('verifyBtn');
+            const otpValueInput = document.getElementById('otpValue');
+            const resendLink = document.getElementById('resendLink');
+            const timerCount = document.getElementById('timerCount');
+            const errorAlert = document.getElementById('errorAlert');
+            const expiredOverlay = document.getElementById('expiredOverlay');
+
+            const OTP_TIMEOUT = 60;
+            let otpTimer = null;
+            let remainingTime = OTP_TIMEOUT;
+
+            function startOtpTimer() {
+                remainingTime = OTP_TIMEOUT;
+                clearInterval(otpTimer);
+                if (expiredOverlay) expiredOverlay.style.display = 'none';
+                enableInputs();
+                updateTimerDisplay();
+
+                otpTimer = setInterval(() => {
+                    remainingTime--;
+                    updateTimerDisplay();
+                    if (remainingTime <= 0) {
+                        clearInterval(otpTimer);
+                        handleOtpExpiration();
+                    }
+                }, 1000);
+            }
+
+            function updateTimerDisplay() {
+                const m = Math.floor(remainingTime / 60);
+                const s = remainingTime % 60;
+                timerCount.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                timerCount.className = 'timer-count' + (remainingTime <= 10 ? ' warning' : '');
+            }
+
+            function handleOtpExpiration() {
+                if (expiredOverlay) expiredOverlay.style.display = 'flex';
+                disableInputs();
+                clearInputs();
+            }
+
+            function enableInputs() {
+                inputs.forEach(input => input.disabled = false);
+                updateOtpValue();
+            }
+
+            function disableInputs() {
+                inputs.forEach(input => input.disabled = true);
+                verifyButton.disabled = true;
+            }
+
+            function clearInputs() {
+                inputs.forEach(input => input.value = '');
+                otpValueInput.value = '';
+            }
+
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                    if (input.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                    updateOtpValue();
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = (e.clipboardData || window.clipboardData).getData('text').trim();
+                    const digits = pastedData.replace(/[^0-9]/g, '').slice(0, 4);
+                    if (digits.length > 0) {
+                        digits.split('').forEach((d, i) => { if (inputs[i]) inputs[i].value = d; });
+                        const targetFocus = Math.min(digits.length, inputs.length - 1);
+                        inputs[targetFocus].focus();
+                        updateOtpValue();
+                    }
+                });
+            });
+
+            function updateOtpValue() {
+                const code = Array.from(inputs).map(i => i.value).join('');
+                otpValueInput.value = code;
+                verifyButton.disabled = code.length !== 4;
+                if (code.length === 4) {
+                    inputs.forEach(i => i.classList.add('is-valid'));
+                } else {
+                    inputs.forEach(i => i.classList.remove('is-valid'));
+                }
+            }
+
+            form.addEventListener('submit', (e) => {
+                const code = Array.from(inputs).map(i => i.value).join('');
+                otpValueInput.value = code;
+                if (code.length !== 4 || !/^\d{4}$/.test(code)) {
+                    e.preventDefault();
+                    errorAlert.textContent = 'Please enter all 4 digits of the OTP.';
+                    errorAlert.classList.add('alert-show');
+                } else {
+                    errorAlert.classList.remove('alert-show');
+                    verifyButton.disabled = true;
+                    verifyButton.textContent = 'Verifying...';
+                }
+            });
+
+            resendLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!resendLink.classList.contains('disabled')) {
+                    resendLink.classList.add('disabled');
+
+                    fetch('{% url "resend_otp" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            clearInputs();
+                            startOtpTimer();
+                            errorAlert.classList.remove('alert-show');
+                            setTimeout(() => { resendLink.classList.remove('disabled'); }, 60000);
+                        } else {
+                            errorAlert.textContent = data.message;
+                            errorAlert.classList.add('alert-show');
+                            resendLink.classList.remove('disabled');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        errorAlert.textContent = 'An error occurred while resending OTP.';
+                        errorAlert.classList.add('alert-show');
+                        resendLink.classList.remove('disabled');
+                    });
+                }
+            });
+
+            startOtpTimer();
+        });
+    </script>
+</body>
+</html>

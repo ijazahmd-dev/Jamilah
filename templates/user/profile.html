@@ -1,0 +1,1496 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — Jamilah | Modest Couture &amp; Prayer Wear</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Outfit (luxury headings) & Plus Jakarta Sans (body) matching Shop page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Flaticon & Swiper -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- Core Theme Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  <meta name="csrf-token" content="{{ csrf_token }}">
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-dark: #06635c;
+      --zy-primary-light: #e8f5f4;
+      --zy-primary-border: #b2dedb;
+      --zy-gold: #c59b27;
+      --zy-gold-light: #fef8e7;
+      --zy-dark: #0f172a;
+      --zy-slate: #1e293b;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-card-bg: #ffffff;
+      --zy-surface: #f8fafc;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: var(--zy-slate);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* ── SHOP-MATCHING HERO HEADER ── */
+    .shop-hero {
+      background: linear-gradient(135deg, #091e1c 0%, #133a35 100%);
+      padding: 28px 0 24px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 20px rgba(8, 129, 120, 0.1);
+    }
+
+    .shop-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(8, 129, 120, 0.35) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.72rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-breadcrumb a {
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .hero-breadcrumb a:hover {
+      color: #ffffff;
+    }
+
+    .hero-breadcrumb .sep {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .hero-breadcrumb .current {
+      color: #5eead4;
+      font-weight: 600;
+    }
+
+    .shop-hero-title {
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      font-size: 1.75rem;
+      margin-bottom: 4px;
+    }
+
+    .shop-hero-subtitle {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      max-width: 580px;
+      margin-bottom: 0;
+    }
+
+    /* ── ACCOUNT SIDEBAR ── */
+    .account-sidebar {
+      position: sticky;
+      top: 24px;
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 20px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .user-mini-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .user-mini-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: 2px solid var(--zy-primary-border);
+      flex-shrink: 0;
+    }
+
+    .account-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .account-nav .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--zy-slate);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .account-nav .nav-link .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .account-nav .nav-link i {
+      font-size: 1.1rem;
+      color: var(--zy-muted);
+      width: 20px;
+      text-align: center;
+      transition: color 0.2s;
+    }
+
+    .account-nav .nav-link:hover {
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      transform: translateX(2px);
+    }
+
+    .account-nav .nav-link:hover i {
+      color: var(--zy-primary);
+    }
+
+    .account-nav .nav-link.active {
+      background: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 3px 12px rgba(8, 129, 120, 0.22);
+    }
+
+    .account-nav .nav-link.active i {
+      color: #ffffff;
+    }
+
+    .nav-badge-count {
+      background: rgba(0, 0, 0, 0.06);
+      padding: 1px 7px;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--zy-muted);
+    }
+
+    .account-nav .nav-link.active .nav-badge-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .logout-nav-link {
+      color: #dc2626 !important;
+      margin-top: 10px;
+      border-top: 1px dashed var(--zy-border);
+      padding-top: 14px !important;
+    }
+
+    .logout-nav-link:hover {
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
+    }
+
+    .logout-nav-link i {
+      color: #dc2626 !important;
+    }
+
+    /* ── MAIN PROFILE CARDS (MATCHING SHOP FILTER PANEL) ── */
+    .profile-card {
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .profile-card:hover {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .card-title-shop {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .card-title-shop i {
+      color: var(--zy-primary);
+      font-size: 1.2rem;
+    }
+
+    .card-subtitle-shop {
+      color: var(--zy-muted);
+      font-size: 0.8rem;
+      margin-top: 3px;
+      margin-bottom: 0;
+    }
+
+    /* ── USER OVERVIEW CARD ── */
+    .user-overview-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .avatar-interactive-wrapper {
+      position: relative;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .avatar-preview-img {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.18);
+    }
+
+    .avatar-preview-placeholder {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.18);
+    }
+
+    .avatar-cam-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--zy-primary);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .avatar-cam-btn:hover {
+      background: var(--zy-primary-dark);
+      transform: scale(1.1);
+    }
+
+    /* Status Badges Matching .filter-chip */
+    .filter-chip-custom {
+      background: var(--zy-primary-light);
+      border: 1px solid var(--zy-primary-border);
+      color: var(--zy-primary-dark);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .filter-chip-gold {
+      background: var(--zy-gold-light);
+      border: 1px solid #f2e2b6;
+      color: #926f15;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── QUICK KPI STAT CARDS ── */
+    .stat-card-shop {
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .stat-card-shop:hover {
+      border-color: var(--zy-primary-border);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.08);
+      color: inherit;
+    }
+
+    .stat-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .stat-icon-orders { background: var(--zy-primary-light); color: var(--zy-primary); }
+    .stat-icon-wallet { background: var(--zy-gold-light); color: var(--zy-gold); }
+    .stat-icon-address { background: #f1f5f9; color: #475569; }
+    .stat-icon-wishlist { background: #fef2f2; color: #dc2626; }
+
+    .stat-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      line-height: 1.2;
+    }
+
+    .stat-title {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--zy-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── FORM ELEMENTS (MATCHING SHOP FILTER INPUTS) ── */
+    .form-label-shop {
+      font-weight: 600;
+      font-size: 0.8125rem;
+      color: var(--zy-dark);
+      margin-bottom: 6px;
+    }
+
+    .filter-input-form {
+      border-radius: 8px;
+      border: 1.5px solid var(--zy-border);
+      padding: 9px 12px;
+      font-size: 0.84rem;
+      color: var(--zy-dark);
+      background-color: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .filter-input-form:focus {
+      border-color: var(--zy-primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.12);
+    }
+
+    .filter-input-form:read-only {
+      background-color: #f8fafc;
+      color: var(--zy-muted);
+      cursor: default;
+    }
+
+    .btn-apply-shop {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-apply-shop:hover {
+      background: var(--zy-primary-dark);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.18);
+    }
+
+    .btn-outline-shop {
+      background: #ffffff;
+      color: var(--zy-slate);
+      border: 1.5px solid var(--zy-border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-shop:hover {
+      border-color: var(--zy-primary);
+      color: var(--zy-primary);
+      background: var(--zy-primary-light);
+    }
+
+    /* ── RECENT PURCHASES ROW ITEMS ── */
+    .order-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--zy-border);
+      margin-bottom: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .order-row-item:hover {
+      background: #ffffff;
+      border-color: var(--zy-primary-border);
+      box-shadow: 0 2px 8px rgba(8, 129, 120, 0.06);
+    }
+
+    .status-badge-completed { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .status-badge-processing { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .status-badge-pending { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .status-badge-canceled { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    /* ── REFERRAL CARD (MATCHING SHOP OFFERS) ── */
+    .referral-shop-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #eef6f5 100%);
+      border: 1.5px dashed var(--zy-primary-border);
+      border-radius: 12px;
+      padding: 20px 22px;
+    }
+
+    .referral-code-pill {
+      background: #ffffff;
+      border: 1.5px solid var(--zy-primary-border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--zy-primary);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* ── PASSWORD TOGGLE & CHECKLIST ── */
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--zy-muted);
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+
+    .toggle-password:hover {
+      color: var(--zy-primary);
+    }
+
+    .pwd-req-strip {
+      background: #f8fafc;
+      border: 1px solid var(--zy-border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.8rem;
+    }
+
+    .pwd-req-col {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 4px;
+      font-size: 0.78rem;
+    }
+
+    .pwd-req-col.valid {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    .pwd-req-col.invalid {
+      color: var(--zy-muted);
+    }
+
+    @media (max-width: 991px) {
+      .account-sidebar {
+        position: static;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== SHOP-STYLE HERO BANNER ===============-->
+  <div class="shop-hero">
+    <div class="container position-relative">
+      <div class="hero-breadcrumb">
+        <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+        <span class="sep">/</span>
+        <a href="{% url 'user_profile' %}">Account</a>
+        <span class="sep">/</span>
+        <span class="current">My Profile</span>
+      </div>
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+          <h1 class="shop-hero-title">My Profile &amp; Account</h1>
+          <p class="shop-hero-subtitle">Manage your personal information, delivery destinations, and atelier preferences.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== MAIN CONTENT ===============-->
+  <div class="container pb-5">
+
+    <!-- Flash Messages -->
+    {% if messages %}
+    <div class="mb-4">
+      {% for message in messages %}
+      <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert" style="border-radius: 10px;">
+        <i class="bi {% if message.tags == 'error' %}bi-exclamation-circle-fill text-danger{% elif message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-primary{% endif %} me-2 fs-5"></i>
+        <div class="fw-medium small">{{ message }}</div>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+      
+      <!--================ LEFT SIDEBAR ================-->
+      <div class="col-lg-3">
+        <div class="account-sidebar">
+          
+          <!-- Mini Profile Badge -->
+          <div class="user-mini-badge">
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-mini-avatar" id="sidebarAvatar">
+            {% else %}
+              <div class="user-mini-avatar" id="sidebarAvatar">
+                {{ user.first_name|default:user.username|slice:":1"|upper }}
+              </div>
+            {% endif %}
+            <div class="overflow-hidden">
+              <div class="fw-bold text-truncate brand-font" style="font-size: 0.98rem; color: var(--zy-dark);">
+                {{ user.get_full_name|default:user.username }}
+              </div>
+              <small class="text-muted d-block text-truncate" style="font-size: 0.78rem;">@{{ user.username }}</small>
+            </div>
+          </div>
+
+          <!-- Navigation Links -->
+          <nav class="account-nav">
+            <a class="nav-link active" href="{% url 'user_profile' %}">
+              <span class="nav-left">
+                <i class="bi bi-person-fill"></i> My Profile
+              </span>
+            </a>
+            
+            <a class="nav-link" href="{% url 'addresses' %}">
+              <span class="nav-left">
+                <i class="bi bi-geo-alt-fill"></i> My Addresses
+              </span>
+              {% if addresses|length > 0 %}
+                <span class="nav-badge-count">{{ addresses|length }}</span>
+              {% endif %}
+            </a>
+            
+            <a class="nav-link" href="{% url 'user_orders' %}">
+              <span class="nav-left">
+                <i class="bi bi-bag-check-fill"></i> My Orders
+              </span>
+              {% if orders_count > 0 %}
+                <span class="nav-badge-count">{{ orders_count }}</span>
+              {% endif %}
+            </a>
+            
+            <a class="nav-link" href="{% url 'wallet_view' %}">
+              <span class="nav-left">
+                <i class="bi bi-wallet2"></i> My Wallet
+              </span>
+              <span class="nav-badge-count" style="color: var(--zy-primary); font-weight: 700;">₹{{ wallet.balance|default:"0.00" }}</span>
+            </a>
+            
+            <a class="nav-link" href="{% url 'view_coupons' %}">
+              <span class="nav-left">
+                <i class="bi bi-ticket-perforated-fill"></i> Coupons &amp; Offers
+              </span>
+            </a>
+            
+            <a class="nav-link" href="{% url 'wishlist' %}">
+              <span class="nav-left">
+                <i class="bi bi-heart-fill"></i> Saved Wishlist
+              </span>
+              {% if wishlist_count > 0 %}
+                <span class="nav-badge-count">{{ wishlist_count }}</span>
+              {% endif %}
+            </a>
+            
+            <a class="nav-link logout-nav-link" href="{% url 'userlogout' %}">
+              <span class="nav-left">
+                <i class="bi bi-box-arrow-right"></i> Sign Out
+              </span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!--================ RIGHT CONTENT ================-->
+      <div class="col-lg-9">
+
+        <!-- 1. USER OVERVIEW CARD -->
+        <div class="profile-card">
+          <div class="user-overview-box">
+            
+            <div class="d-flex align-items-center gap-3">
+              <!-- Avatar with Interactive Camera Trigger -->
+              <div class="avatar-interactive-wrapper">
+                {% if user.profile.avatar %}
+                  <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="avatar-preview-img" id="profileAvatarImg">
+                {% else %}
+                  <div class="avatar-preview-placeholder" id="profileAvatarPlaceholder">
+                    {{ user.first_name|default:user.username|slice:":1"|upper }}
+                  </div>
+                {% endif %}
+                <label for="avatarInput" class="avatar-cam-btn" title="Change portrait" aria-label="Change portrait">
+                  <i class="bi bi-camera-fill"></i>
+                  <input type="file" id="avatarInput" name="avatar" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleAvatarUpload(this);">
+                </label>
+              </div>
+
+              <!-- Identity Details -->
+              <div>
+                <h3 class="brand-font fw-bold mb-1" style="font-size: 1.35rem; color: var(--zy-dark);">
+                  {{ user.get_full_name|default:user.username }}
+                </h3>
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                  <span class="text-muted small">@{{ user.username }}</span>
+                  <span class="filter-chip-custom">
+                    <i class="bi bi-patch-check-fill" style="color: var(--zy-primary);"></i> Verified Account
+                  </span>
+                  <span class="filter-chip-gold">
+                    <i class="bi bi-calendar3"></i> Member Since {{ user.date_joined|date:"M Y" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Avatar Action Buttons -->
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" class="btn-outline-shop" onclick="document.getElementById('avatarInput').click();">
+                <i class="bi bi-cloud-arrow-up"></i> Upload Photo
+              </button>
+              {% if user.profile.avatar %}
+              <button type="button" class="btn btn-sm btn-outline-danger" id="removeAvatarBtn" onclick="removeAvatar();" style="border-radius: 8px; font-weight: 600; font-size: 0.8rem; padding: 6px 12px;">
+                <i class="bi bi-trash3"></i> Remove
+              </button>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2. QUICK METRIC STAT CARDS -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <a href="{% url 'user_orders' %}" class="stat-card-shop">
+              <div class="stat-icon-wrap stat-icon-orders">
+                <i class="bi bi-bag-check-fill"></i>
+              </div>
+              <div>
+                <div class="stat-title">Orders</div>
+                <div class="stat-number">{{ orders_count }}</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <a href="{% url 'wallet_view' %}" class="stat-card-shop">
+              <div class="stat-icon-wrap stat-icon-wallet">
+                <i class="bi bi-wallet2"></i>
+              </div>
+              <div>
+                <div class="stat-title">Wallet</div>
+                <div class="stat-number" style="font-size: 1.25rem;">₹{{ wallet.balance|default:"0.00" }}</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <a href="{% url 'addresses' %}" class="stat-card-shop">
+              <div class="stat-icon-wrap stat-icon-address">
+                <i class="bi bi-geo-alt-fill"></i>
+              </div>
+              <div>
+                <div class="stat-title">Addresses</div>
+                <div class="stat-number">{{ addresses|length }}</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <a href="{% url 'wishlist' %}" class="stat-card-shop">
+              <div class="stat-icon-wrap stat-icon-wishlist">
+                <i class="bi bi-heart-fill"></i>
+              </div>
+              <div>
+                <div class="stat-title">Wishlist</div>
+                <div class="stat-number">{{ wishlist_count }}</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. RECENT ORDERS SNAPSHOT -->
+        <div class="profile-card">
+          <div class="card-header-bar">
+            <div>
+              <h4 class="card-title-shop">
+                <i class="bi bi-clock-history"></i> Recent Purchases
+              </h4>
+              <p class="card-subtitle-shop">Review status and details of your most recent orders.</p>
+            </div>
+            <a href="{% url 'user_orders' %}" class="btn-outline-shop">
+              View All Orders ({{ orders_count }}) &rarr;
+            </a>
+          </div>
+
+          {% if recent_orders %}
+            <div>
+              {% for order in recent_orders %}
+              <div class="order-row-item">
+                <div class="d-flex align-items-center gap-3">
+                  <div style="width: 38px; height: 38px; border-radius: 8px; background: var(--zy-primary-light); color: var(--zy-primary); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+                    <i class="bi bi-box-seam"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold brand-font" style="color: var(--zy-dark); font-size: 0.9rem;">
+                      {{ order.id }}
+                    </div>
+                    <small class="text-muted" style="font-size: 0.76rem;">
+                      {{ order.created_at|date:"M d, Y" }} &bull; {{ order.items.count }} item{{ order.items.count|pluralize }}
+                    </small>
+                  </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 ms-auto ms-sm-0">
+                  <span class="filter-chip-custom status-badge-{{ order.status|lower }}" style="font-size: 0.72rem; text-transform: uppercase;">
+                    {% if order.status == 'completed' %}
+                      <i class="bi bi-check-circle-fill"></i>
+                    {% elif order.status == 'processing' or order.status == 'pending' %}
+                      <i class="bi bi-clock"></i>
+                    {% elif order.status == 'canceled' %}
+                      <i class="bi bi-x-circle"></i>
+                    {% else %}
+                      <i class="bi bi-info-circle"></i>
+                    {% endif %}
+                    {{ order.get_status_display|default:order.status|title }}
+                  </span>
+                  
+                  <span class="fw-bold brand-font" style="color: var(--zy-dark); font-size: 0.95rem;">
+                    ₹{{ order.total_price }}
+                  </span>
+
+                  <a href="{% url 'order_items' order.id %}" class="btn-outline-shop" style="padding: 4px 10px; font-size: 0.75rem;">
+                    Details &rarr;
+                  </a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-4" style="background: #f8fafc; border-radius: 10px; border: 1px dashed var(--zy-border);">
+              <i class="bi bi-bag-heart text-muted fs-2 mb-2 d-block"></i>
+              <h6 class="fw-bold brand-font mb-1" style="color: var(--zy-dark);">No Orders Placed Yet</h6>
+              <p class="text-muted small mb-3">Browse our newest modest couture silhouettes in the shop.</p>
+              <a href="{% url 'shop' %}" class="btn-apply-shop">
+                Explore The Shop &rarr;
+              </a>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- 4. PERSONAL INFORMATION FORM -->
+        <div class="profile-card">
+          <div class="card-header-bar">
+            <div>
+              <h4 class="card-title-shop">
+                <i class="bi bi-person-lines-fill"></i> Personal Information
+              </h4>
+              <p class="card-subtitle-shop">Update your display identity and primary account contacts.</p>
+            </div>
+          </div>
+
+          <form method="POST" id="profileForm" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+              <!-- Username -->
+              <div class="col-md-6">
+                <label class="form-label-shop" for="usernameInput">Username <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-at"></i></span>
+                  <input type="text" class="form-control filter-input-form border-start-0 ps-0" id="usernameInput" name="username" value="{{ user.username }}" required maxlength="20">
+                </div>
+                <div class="text-danger small mt-1" id="usernameError" style="display: none; font-size: 0.78rem;"></div>
+              </div>
+
+              <!-- Email -->
+              <div class="col-md-6">
+                <label class="form-label-shop">Registered Email Address</label>
+                <div class="position-relative">
+                  <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-envelope"></i></span>
+                    <input type="email" class="form-control filter-input-form border-start-0 ps-0" value="{{ user.email }}" readonly style="padding-right: 90px;">
+                  </div>
+                  <a href="{% url 'change_email' %}" class="btn-outline-shop position-absolute" style="right: 8px; top: 50%; transform: translateY(-50%); padding: 4px 10px; font-size: 0.75rem;">
+                    <i class="bi bi-pencil-square"></i> Change
+                  </a>
+                </div>
+              </div>
+
+              <!-- First Name -->
+              <div class="col-md-6">
+                <label class="form-label-shop" for="firstNameInput">First Name <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-person"></i></span>
+                  <input type="text" class="form-control filter-input-form border-start-0 ps-0" id="firstNameInput" name="first_name" value="{{ user.first_name }}" required maxlength="30" placeholder="e.g. Fatima">
+                </div>
+                <div class="text-danger small mt-1" id="firstNameError" style="display: none; font-size: 0.78rem;"></div>
+              </div>
+
+              <!-- Last Name -->
+              <div class="col-md-6">
+                <label class="form-label-shop" for="lastNameInput">Last Name <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-person"></i></span>
+                  <input type="text" class="form-control filter-input-form border-start-0 ps-0" id="lastNameInput" name="last_name" value="{{ user.last_name }}" required maxlength="30" placeholder="e.g. Zahra">
+                </div>
+                <div class="text-danger small mt-1" id="lastNameError" style="display: none; font-size: 0.78rem;"></div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="col-12 pt-2">
+                <button type="submit" class="btn-apply-shop" id="saveProfileBtn">
+                  <i class="bi bi-check2"></i> Save Profile Details
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- 5. REFERRAL PROGRAM PASS -->
+        <div class="profile-card">
+          <div class="card-header-bar">
+            <div>
+              <h4 class="card-title-shop">
+                <i class="bi bi-gift-fill" style="color: var(--zy-gold);"></i> Sisterhood Referral Pass
+              </h4>
+              <p class="card-subtitle-shop">Share your code with friends to receive instant wallet rewards.</p>
+            </div>
+            <span class="filter-chip-custom" style="font-weight: 700;">
+              <i class="bi bi-people-fill"></i> {{ referrals_count }} Friends Invited
+            </span>
+          </div>
+
+          <div class="referral-shop-card">
+            <div class="row align-items-center g-3">
+              <div class="col-md-7">
+                <h6 class="brand-font fw-bold mb-1" style="color: var(--zy-primary);">Give ₹50, Receive ₹100!</h6>
+                <p class="text-muted small mb-0" style="font-size: 0.82rem; line-height: 1.5;">
+                  When a friend registers with your invitation code, they receive <strong>₹50</strong> in their wallet, and you receive <strong>₹100</strong> credited upon their signup.
+                </p>
+              </div>
+              
+              <div class="col-md-5">
+                <div class="referral-code-pill">
+                  <span id="referralCodeText">{{ referral.referral_code|default:"NOT AVAILABLE" }}</span>
+                  <button type="button" class="btn-apply-shop" style="padding: 4px 12px; font-size: 0.76rem;" onclick="copyReferralCode()" title="Copy referral code">
+                    <i class="bi bi-copy" id="copyIcon"></i>
+                    <span id="copyBtnText">Copy</span>
+                  </button>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                  <a href="https://api.whatsapp.com/send?text=Join%20Jamilah%20using%20my%20invitation%20code%20{{ referral.referral_code }}%20to%20get%20%E2%82%B950%20welcome%20credit!" target="_blank" class="btn btn-sm" style="background: #25d366; color: #ffffff; border-radius: 8px; font-weight: 600; font-size: 0.78rem; padding: 5px 12px;">
+                    <i class="bi bi-whatsapp me-1"></i> Share on WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. SECURITY & PASSWORD MANAGEMENT -->
+        <div class="profile-card">
+          <div class="card-header-bar">
+            <div>
+              <h4 class="card-title-shop">
+                <i class="bi bi-shield-lock-fill"></i> Security &amp; Password
+              </h4>
+              <p class="card-subtitle-shop">Manage your password credentials and ensure your account stays secure.</p>
+            </div>
+          </div>
+
+          <form action="{% url 'change_password' %}" method="post" id="profilePasswordForm" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+              <!-- Current Password -->
+              <div class="col-md-6">
+                <label class="form-label-shop" for="currentPasswordInput">Current Password <span class="text-danger">*</span></label>
+                <div class="position-relative">
+                  <input type="password" class="form-control filter-input-form" id="currentPasswordInput" name="current_password" placeholder="Enter existing password" required autocomplete="current-password" style="padding-right: 40px;">
+                  <button type="button" class="toggle-password" tabindex="-1" aria-label="Toggle password visibility">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+                <div class="text-danger small mt-1" id="currentPasswordError" style="display: none; font-size: 0.78rem;"></div>
+              </div>
+
+              <!-- New Password -->
+              <div class="col-md-6">
+                <label class="form-label-shop" for="newPasswordInput">New Password <span class="text-danger">*</span></label>
+                <div class="position-relative">
+                  <input type="password" class="form-control filter-input-form" id="newPasswordInput" name="new_password" placeholder="Enter new password (min 8 chars)" required autocomplete="new-password" style="padding-right: 40px;">
+                  <button type="button" class="toggle-password" tabindex="-1" aria-label="Toggle password visibility">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+                <div class="text-danger small mt-1" id="newPasswordError" style="display: none; font-size: 0.78rem;"></div>
+              </div>
+
+              <!-- Password Requirements Checklist -->
+              <div class="col-12">
+                <div class="pwd-req-strip">
+                  <div class="fw-bold mb-2 brand-font" style="color: var(--zy-dark); font-size: 0.85rem;">
+                    <i class="bi bi-shield-check text-success me-1"></i> Password Security Requirements:
+                  </div>
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <div class="pwd-req-col invalid" id="req-length">
+                        <i class="bi bi-circle"></i> Between 8 and 128 characters
+                      </div>
+                      <div class="pwd-req-col invalid" id="req-upper">
+                        <i class="bi bi-circle"></i> At least one uppercase letter (A-Z)
+                      </div>
+                      <div class="pwd-req-col invalid" id="req-lower">
+                        <i class="bi bi-circle"></i> At least one lowercase letter (a-z)
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="pwd-req-col invalid" id="req-num">
+                        <i class="bi bi-circle"></i> At least one numeric digit (0-9)
+                      </div>
+                      <div class="pwd-req-col invalid" id="req-special">
+                        <i class="bi bi-circle"></i> At least one special symbol (!@#$%^&amp;*...)
+                      </div>
+                      <div class="pwd-req-col invalid" id="req-space">
+                        <i class="bi bi-circle"></i> No space characters allowed
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Confirm Password -->
+              <div class="col-md-6">
+                <label class="form-label-shop" for="confirmPasswordInput">Confirm New Password <span class="text-danger">*</span></label>
+                <div class="position-relative">
+                  <input type="password" class="form-control filter-input-form" id="confirmPasswordInput" name="confirm_password" placeholder="Confirm new password" required autocomplete="new-password" style="padding-right: 40px;">
+                  <button type="button" class="toggle-password" tabindex="-1" aria-label="Toggle password visibility">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+                <div class="text-danger small mt-1" id="confirmPasswordError" style="display: none; font-size: 0.78rem;"></div>
+              </div>
+
+              <!-- Submit Password Button -->
+              <div class="col-12 pt-2">
+                <button type="submit" class="btn-apply-shop" id="updatePasswordBtn">
+                  <i class="bi bi-shield-check"></i> Update Password
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    // Password visibility toggle
+    document.querySelectorAll('.toggle-password').forEach(button => {
+      button.addEventListener('click', function () {
+        const input = this.previousElementSibling;
+        const isPassword = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPassword ? 'text' : 'password');
+        const icon = this.querySelector('i');
+        icon.classList.toggle('bi-eye', !isPassword);
+        icon.classList.toggle('bi-eye-slash', isPassword);
+      });
+    });
+
+    // Copy Referral Code
+    function copyReferralCode() {
+      const codeEl = document.getElementById('referralCodeText');
+      if (!codeEl) return;
+      const code = codeEl.textContent.trim();
+      if (!code || code === 'NOT AVAILABLE') return;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(showCopySuccess).catch(() => fallbackCopy(code));
+      } else {
+        fallbackCopy(code);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      showCopySuccess();
+    }
+
+    function showCopySuccess() {
+      const btnText = document.getElementById('copyBtnText');
+      const icon = document.getElementById('copyIcon');
+      if (btnText && icon) {
+        btnText.textContent = 'Copied!';
+        icon.className = 'bi bi-check-lg';
+        setTimeout(() => {
+          btnText.textContent = 'Copy';
+          icon.className = 'bi bi-copy';
+        }, 2200);
+      }
+
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Referral code copied!',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+
+    // Avatar AJAX Upload
+    function handleAvatarUpload(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (!validTypes.includes(file.type)) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Unsupported Image',
+            text: 'Please upload a JPG, PNG, or WEBP portrait file.',
+            confirmButtonColor: '#088178'
+          });
+          input.value = '';
+          return;
+        }
+
+        if (file.size > maxSize) {
+          Swal.fire({
+            icon: 'error',
+            title: 'File Too Large',
+            text: 'Image size cannot exceed 5MB.',
+            confirmButtonColor: '#088178'
+          });
+          input.value = '';
+          return;
+        }
+
+        Swal.fire({
+          title: 'Updating Profile Picture...',
+          text: 'Please wait while we update your photo.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch('/update-profile-picture/', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': csrfToken
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Photo Updated!',
+              text: 'Your profile picture has been updated.',
+              timer: 1600,
+              showConfirmButton: false
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Upload Failed',
+              text: data.error || 'Failed to update photo.',
+              confirmButtonColor: '#088178'
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Upload Error',
+            text: 'A network error occurred while uploading picture.',
+            confirmButtonColor: '#088178'
+          });
+        });
+      }
+    }
+
+    // Avatar Removal
+    function removeAvatar() {
+      Swal.fire({
+        title: 'Remove Profile Photo?',
+        text: 'Your avatar will reset to default initials.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#088178',
+        confirmButtonText: 'Yes, Remove It',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const formData = new FormData();
+          formData.append('action', 'delete');
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+          fetch('/update-profile-picture/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-CSRFToken': csrfToken
+            }
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Photo Removed',
+                timer: 1500,
+                showConfirmButton: false
+              }).then(() => {
+                window.location.reload();
+              });
+            } else {
+              Swal.fire('Error', data.error || 'Could not remove avatar', 'error');
+            }
+          });
+        }
+      });
+    }
+
+    // Live Form Validations
+    document.addEventListener('DOMContentLoaded', function () {
+      // Profile Details Validation
+      const profileForm = document.getElementById('profileForm');
+      if (profileForm) {
+        const usernameInput = document.getElementById('usernameInput');
+        const firstNameInput = document.getElementById('firstNameInput');
+        const lastNameInput = document.getElementById('lastNameInput');
+
+        const usernameError = document.getElementById('usernameError');
+        const firstNameError = document.getElementById('firstNameError');
+        const lastNameError = document.getElementById('lastNameError');
+
+        function setStatus(input, errorEl, valid, msg) {
+          if (valid) {
+            input.classList.remove('is-invalid');
+            errorEl.style.display = 'none';
+            errorEl.textContent = '';
+          } else {
+            input.classList.add('is-invalid');
+            errorEl.style.display = 'block';
+            errorEl.textContent = msg;
+          }
+          return valid;
+        }
+
+        function validateUsername() {
+          const val = (usernameInput.value || '').trim();
+          const regex = /^[a-zA-Z0-9_]{3,20}$/;
+          if (!val) return setStatus(usernameInput, usernameError, false, 'Username is required.');
+          if (!regex.test(val)) return setStatus(usernameInput, usernameError, false, 'Username must be 3-20 characters (letters, numbers, underscores).');
+          return setStatus(usernameInput, usernameError, true, '');
+        }
+
+        function validateFirstName() {
+          const val = (firstNameInput.value || '').trim();
+          const regex = /^[a-zA-Z\s]{2,30}$/;
+          if (!val) return setStatus(firstNameInput, firstNameError, false, 'First name is required.');
+          if (!regex.test(val)) return setStatus(firstNameInput, firstNameError, false, 'First name must contain only letters (2-30 characters).');
+          return setStatus(firstNameInput, firstNameError, true, '');
+        }
+
+        function validateLastName() {
+          const val = (lastNameInput.value || '').trim();
+          const regex = /^[a-zA-Z\s]{1,30}$/;
+          if (!val) return setStatus(lastNameInput, lastNameError, false, 'Last name is required.');
+          if (!regex.test(val)) return setStatus(lastNameInput, lastNameError, false, 'Last name must contain only letters (1-30 characters).');
+          return setStatus(lastNameInput, lastNameError, true, '');
+        }
+
+        usernameInput.addEventListener('input', validateUsername);
+        firstNameInput.addEventListener('input', validateFirstName);
+        lastNameInput.addEventListener('input', validateLastName);
+
+        profileForm.addEventListener('submit', function (e) {
+          const uOk = validateUsername();
+          const fOk = validateFirstName();
+          const lOk = validateLastName();
+          if (!uOk || !fOk || !lOk) {
+            e.preventDefault();
+            if (!uOk) usernameInput.focus();
+            else if (!fOk) firstNameInput.focus();
+            else lastNameInput.focus();
+          }
+        });
+      }
+
+      // Password Form Live Validation
+      const pwdForm = document.getElementById('profilePasswordForm');
+      if (pwdForm) {
+        const curPwd = document.getElementById('currentPasswordInput');
+        const newPwd = document.getElementById('newPasswordInput');
+        const cnfPwd = document.getElementById('confirmPasswordInput');
+
+        const curErr = document.getElementById('currentPasswordError');
+        const newErr = document.getElementById('newPasswordError');
+        const cnfErr = document.getElementById('confirmPasswordError');
+
+        const reqLength = document.getElementById('req-length');
+        const reqUpper = document.getElementById('req-upper');
+        const reqLower = document.getElementById('req-lower');
+        const reqNum = document.getElementById('req-num');
+        const reqSpecial = document.getElementById('req-special');
+        const reqSpace = document.getElementById('req-space');
+
+        function updateReq(el, isValid) {
+          if (isValid) {
+            el.className = 'pwd-req-col valid';
+            el.querySelector('i').className = 'bi bi-check-circle-fill';
+          } else {
+            el.className = 'pwd-req-col invalid';
+            el.querySelector('i').className = 'bi bi-circle';
+          }
+        }
+
+        function checkNewPwd() {
+          const val = newPwd.value || '';
+          const hasLen = val.length >= 8 && val.length <= 128;
+          const hasUpper = /[A-Z]/.test(val);
+          const hasLower = /[a-z]/.test(val);
+          const hasNum = /\d/.test(val);
+          const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(val);
+          const hasNoSpace = !/\s/.test(val) && val.length > 0;
+
+          updateReq(reqLength, hasLen);
+          updateReq(reqUpper, hasUpper);
+          updateReq(reqLower, hasLower);
+          updateReq(reqNum, hasNum);
+          updateReq(reqSpecial, hasSpecial);
+          updateReq(reqSpace, hasNoSpace);
+
+          if (!val) {
+            newPwd.classList.add('is-invalid');
+            newErr.textContent = 'New password is required.';
+            newErr.style.display = 'block';
+            return false;
+          }
+          if (curPwd.value && val === curPwd.value) {
+            newPwd.classList.add('is-invalid');
+            newErr.textContent = 'New password cannot be the same as current password.';
+            newErr.style.display = 'block';
+            return false;
+          }
+          if (hasLen && hasUpper && hasLower && hasNum && hasSpecial && hasNoSpace) {
+            newPwd.classList.remove('is-invalid');
+            newErr.style.display = 'none';
+            return true;
+          } else {
+            newPwd.classList.add('is-invalid');
+            newErr.textContent = 'Please satisfy all password complexity requirements.';
+            newErr.style.display = 'block';
+            return false;
+          }
+        }
+
+        function checkConfirmPwd() {
+          const p1 = newPwd.value || '';
+          const p2 = cnfPwd.value || '';
+          if (!p2) {
+            cnfPwd.classList.add('is-invalid');
+            cnfErr.textContent = 'Please confirm your new password.';
+            cnfErr.style.display = 'block';
+            return false;
+          }
+          if (p1 !== p2) {
+            cnfPwd.classList.add('is-invalid');
+            cnfErr.textContent = 'Passwords do not match.';
+            cnfErr.style.display = 'block';
+            return false;
+          }
+          cnfPwd.classList.remove('is-invalid');
+          cnfErr.style.display = 'none';
+          return true;
+        }
+
+        newPwd.addEventListener('input', () => {
+          checkNewPwd();
+          if (cnfPwd.value) checkConfirmPwd();
+        });
+
+        cnfPwd.addEventListener('input', checkConfirmPwd);
+
+        pwdForm.addEventListener('submit', function (e) {
+          const cOk = !!curPwd.value.trim();
+          if (!cOk) {
+            curPwd.classList.add('is-invalid');
+            curErr.textContent = 'Current password is required.';
+            curErr.style.display = 'block';
+          } else {
+            curPwd.classList.remove('is-invalid');
+            curErr.style.display = 'none';
+          }
+
+          const nOk = checkNewPwd();
+          const mOk = checkConfirmPwd();
+
+          if (!cOk || !nOk || !mOk) {
+            e.preventDefault();
+            if (!cOk) curPwd.focus();
+            else if (!nOk) newPwd.focus();
+            else cnfPwd.focus();
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retry Payment — Order #{{ order.id }} | Jamilah</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css">
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-dark: #06635c;
+      --zy-primary-light: #e8f5f4;
+      --zy-primary-border: #b2dedb;
+      --zy-gold: #c59b27;
+      --zy-gold-light: #fef8e7;
+      --zy-amber: #f59e0b;
+      --zy-amber-light: #fffbeb;
+      --zy-dark: #0f172a;
+      --zy-slate: #334155;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-card-bg: #ffffff;
+      --zy-surface: #f8fafc;
+    }
+
+    body {
+      background-color: #f7f9fa;
+      color: var(--zy-slate);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Breadcrumbs */
+    .zy-breadcrumb {
+      background: transparent;
+      padding: 16px 0;
+      font-size: 0.875rem;
+    }
+
+    .zy-breadcrumb a {
+      color: var(--zy-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .zy-breadcrumb a:hover {
+      color: var(--zy-primary);
+    }
+
+    .zy-breadcrumb .separator {
+      margin: 0 10px;
+      color: #cbd5e1;
+    }
+
+    .zy-breadcrumb .active {
+      color: var(--zy-dark);
+      font-weight: 600;
+    }
+
+    /* Hero Banner */
+    .hero-retry-banner {
+      background: linear-gradient(135deg, #0d1e1c 0%, #163632 100%);
+      border-radius: 20px;
+      padding: 30px;
+      color: #ffffff;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px rgba(8, 129, 120, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-retry-banner::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(8, 129, 120, 0.4) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .banner-badge-warning {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fcd34d;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.8125rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .banner-meta-chip {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+      font-size: 0.8125rem;
+      padding: 5px 12px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Cards */
+    .zy-card {
+      background: var(--zy-card-bg);
+      border: 1px solid var(--zy-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .zy-card:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .zy-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--zy-border);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .zy-card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Item Row */
+    .order-item-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .order-item-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .order-item-img {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--zy-border);
+      background-color: #f8fafc;
+      flex-shrink: 0;
+    }
+
+    .item-variant-pill {
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    /* Payment Method Selector Cards */
+    .payment-option-card {
+      border: 2px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: #ffffff;
+      position: relative;
+    }
+
+    .payment-option-card:hover {
+      border-color: #94a3b8;
+      background: #fafbfc;
+    }
+
+    .payment-option-card.selected {
+      border-color: var(--zy-primary);
+      background: #f0faf9;
+      box-shadow: 0 4px 16px rgba(8, 129, 120, 0.1);
+    }
+
+    .payment-option-card.disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      background: #f8fafc;
+      border-color: var(--zy-border);
+    }
+
+    .payment-option-radio {
+      accent-color: var(--zy-primary);
+      width: 19px;
+      height: 19px;
+      cursor: pointer;
+    }
+
+    .payment-option-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    .payment-option-icon.razorpay {
+      background: #e8f5f4;
+      color: var(--zy-primary);
+    }
+
+    .payment-option-icon.wallet {
+      background: #fef8e7;
+      color: #b45309;
+    }
+
+    /* Price Breakdown */
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9375rem;
+      margin-bottom: 12px;
+      color: #475569;
+    }
+
+    .price-row.total-row {
+      border-top: 2px dashed var(--zy-border);
+      padding-top: 16px;
+      margin-top: 16px;
+      margin-bottom: 0;
+      color: var(--zy-dark);
+    }
+
+    .total-amount-display {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--zy-primary);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Main CTA Button */
+    .btn-pay-now {
+      background: linear-gradient(135deg, #088178 0%, #055e57 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(8, 129, 120, 0.25);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-pay-now:hover {
+      background: linear-gradient(135deg, #066d65 0%, #044b45 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(8, 129, 120, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .btn-pay-now:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-cancel-return {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid var(--zy-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      width: 100%;
+      text-align: center;
+      display: block;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .btn-cancel-return:hover {
+      background: #e2e8f0;
+      color: var(--zy-dark);
+    }
+
+    /* Security trust box */
+    .trust-badge-box {
+      background: #f8fafc;
+      border: 1px solid var(--zy-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .trust-badge-icon {
+      font-size: 1.4rem;
+      color: var(--zy-primary);
+    }
+
+    .sticky-checkout {
+      position: sticky;
+      top: 24px;
+    }
+
+    /* Error Message Box */
+    .payment-error-alert {
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== BREADCRUMB ===============-->
+  <div class="container">
+    <div class="zy-breadcrumb">
+      <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+      <span class="separator">></span>
+      <a href="{% url 'user_orders' %}">My Orders</a>
+      <span class="separator">></span>
+      <span class="active">Retry Payment (#{{ order.id }})</span>
+    </div>
+  </div>
+
+  <!--=============== MAIN CONTENT ===============-->
+  <div class="container mb-5 pb-4">
+
+    <!-- Hero Header Banner -->
+    <div class="hero-retry-banner">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="banner-badge-warning">
+            <i class="bi bi-exclamation-triangle-fill"></i> Payment Required
+          </span>
+          <span class="banner-meta-chip">
+            <i class="bi bi-hash"></i> {{ order.id }}
+          </span>
+          {% if order.retry_payment_attempts > 0 %}
+          <span class="banner-meta-chip">
+            <i class="bi bi-arrow-repeat"></i> Attempt #{{ order.retry_payment_attempts|add:1 }}
+          </span>
+          {% endif %}
+        </div>
+        <div class="text-white-50 small">
+          <i class="bi bi-calendar3 me-1"></i> Placed: {{ order.created_at|date:"M d, Y · h:i A" }}
+        </div>
+      </div>
+
+      <h2 class="fw-bold mb-2 text-white">Complete Your Order Payment</h2>
+      <p class="text-white-50 mb-0" style="max-width: 680px; font-size: 0.95rem;">
+        Your selected items are reserved. Complete payment using our secure gateway or wallet balance to immediately initiate dispatch.
+      </p>
+    </div>
+
+    <!-- Error Alert Box -->
+    <div id="payment-error-alert" class="payment-error-alert">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-x-circle-fill fs-5"></i>
+        <span id="payment-error-text">Payment failed. Please try again.</span>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      
+      <!-- LEFT COLUMN: Order Items & Delivery Address -->
+      <div class="col-lg-7">
+        
+        <!-- Ordered Items Card -->
+        <div class="zy-card">
+          <div class="zy-card-header">
+            <h5 class="zy-card-title">
+              <i class="bi bi-bag-check-fill text-success"></i> Items in this Order ({{ total_units }})
+            </h5>
+            <span class="badge bg-light text-secondary border px-3 py-1 rounded-pill">
+              {{ order_items|length }} product{{ order_items|length|pluralize }}
+            </span>
+          </div>
+
+          <div class="order-items-list">
+            {% for item in order_items %}
+            <div class="order-item-row">
+              {% with first_img=item.product.images.first %}
+                {% if first_img and first_img.image %}
+                  <img src="{{ first_img.image.url }}" alt="{{ item.product.name }}" class="order-item-img">
+                {% else %}
+                  <div class="order-item-img d-flex align-items-center justify-content-center text-muted">
+                    <i class="bi bi-image fs-3"></i>
+                  </div>
+                {% endif %}
+              {% endwith %}
+
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                  <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">
+                    {{ item.product.name }}
+                  </h6>
+                  <span class="fw-bold text-dark text-nowrap" style="font-size: 0.95rem;">
+                    ₹{{ item.subtotal|floatformat:2 }}
+                  </span>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-2 mt-1">
+                  {% if item.product_variant %}
+                    <span class="item-variant-pill">
+                      {{ item.product_variant.size|default:"Standard" }}
+                      {% if item.product_variant.colour %}· {{ item.product_variant.colour }}{% endif %}
+                    </span>
+                  {% endif %}
+                  
+                  <span class="text-muted small">Qty: {{ item.quantity }}</span>
+
+                  <span class="text-muted small">·</span>
+                  <span class="text-muted small">₹{{ item.unit_offer_price|floatformat:2 }}/ea</span>
+
+                  {% if item.listed_subtotal > item.subtotal %}
+                    <span class="text-decoration-line-through text-muted small">
+                      ₹{{ item.listed_subtotal|floatformat:2 }}
+                    </span>
+                  {% endif %}
+                </div>
+
+                {% if item.status == 'canceled' %}
+                  <div class="mt-2">
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small">
+                      <i class="bi bi-x-circle me-1"></i> Canceled (Not charged)
+                    </span>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Delivery Address Card -->
+        <div class="zy-card">
+          <div class="zy-card-header">
+            <h5 class="zy-card-title">
+              <i class="bi bi-geo-alt-fill text-primary"></i> Shipping Destination
+            </h5>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill small">
+              <i class="bi bi-truck me-1"></i> Express Delivery
+            </span>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-sm-7">
+              <h6 class="fw-bold mb-1 text-dark">{{ order.shipping_address.name }}</h6>
+              <p class="text-muted small mb-2 line-height-base">
+                {{ order.shipping_address.address }},<br>
+                {{ order.shipping_address.city }}, {{ order.shipping_address.state }} – {{ order.shipping_address.postcode }}<br>
+                {{ order.shipping_address.country }}
+              </p>
+              <div class="d-flex align-items-center gap-2 text-dark small fw-semibold">
+                <i class="bi bi-telephone text-primary"></i> {{ order.shipping_address.phone }}
+              </div>
+            </div>
+            <div class="col-sm-5 border-start-sm ps-sm-4">
+              <div class="p-3 bg-light rounded-3">
+                <div class="text-muted small mb-1">Estimated Arrival</div>
+                <div class="fw-bold text-dark" style="font-size: 0.95rem;">
+                  {{ est_delivery_start }} – {{ est_delivery_end }}
+                </div>
+                <div class="text-success small mt-1">
+                  <i class="bi bi-check2-circle me-1"></i> Tracking link sent upon payment
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Payment Method & Breakdown -->
+      <div class="col-lg-5">
+        <div class="sticky-checkout">
+
+          <!-- Payment Method Choice Card -->
+          <div class="zy-card">
+            <div class="zy-card-header">
+              <h5 class="zy-card-title">
+                <i class="bi bi-credit-card-2-front-fill text-primary"></i> Choose Payment Method
+              </h5>
+            </div>
+
+            <form id="retryPaymentForm" method="POST" action="{% url 'payments:retry_payment' order.id %}">
+              {% csrf_token %}
+
+              <!-- Option 1: Razorpay Gateway -->
+              <label class="payment-option-card selected d-flex align-items-center gap-3" id="optionRazorpayCard">
+                <input type="radio" name="payment_method" value="razorpay" class="payment-option-radio" checked>
+                <div class="payment-option-icon razorpay">
+                  <i class="bi bi-shield-check"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <span class="fw-bold text-dark">Online Payment</span>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill small">Recommended</span>
+                  </div>
+                  <div class="text-muted small mt-1">
+                    UPI (Google Pay, PhonePe, Paytm), Cards & NetBanking
+                  </div>
+                </div>
+              </label>
+
+              <!-- Option 2: Jamilah Wallet Balance -->
+              <label class="payment-option-card d-flex align-items-center gap-3 {% if not can_pay_with_wallet %}disabled{% endif %}" id="optionWalletCard">
+                <input type="radio" name="payment_method" value="wallet" class="payment-option-radio" {% if not can_pay_with_wallet %}disabled{% endif %}>
+                <div class="payment-option-icon wallet">
+                  <i class="bi bi-wallet2"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <span class="fw-bold text-dark">Jamilah Wallet</span>
+                    {% if can_pay_with_wallet %}
+                      <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill small">Available</span>
+                    {% else %}
+                      <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill small">Low Balance</span>
+                    {% endif %}
+                  </div>
+                  <div class="d-flex align-items-center justify-content-between mt-1">
+                    <span class="text-muted small">Current Balance:</span>
+                    <span class="fw-bold text-dark small">₹{{ wallet.balance|floatformat:2 }}</span>
+                  </div>
+                  {% if not can_pay_with_wallet %}
+                    <div class="text-danger small mt-1" style="font-size: 0.75rem;">
+                      <i class="bi bi-info-circle me-1"></i> Short by ₹{{ payable_amount|add:wallet.balance|floatformat:2 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </label>
+
+              <!-- Price Breakdown Card -->
+              <div class="mt-4 pt-3 border-top">
+                <div class="price-row">
+                  <span>Items Subtotal</span>
+                  <span class="fw-semibold text-dark">₹{{ total_offer_price|floatformat:2 }}</span>
+                </div>
+
+                {% if coupon_savings > 0 %}
+                <div class="price-row text-success">
+                  <span>
+                    <i class="bi bi-tag-fill me-1"></i> Coupon Discount
+                    {% if order.coupon %}({{ order.coupon.code }}){% endif %}
+                  </span>
+                  <span class="fw-semibold">-₹{{ coupon_savings|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+
+                <div class="price-row">
+                  <span>Delivery Charges</span>
+                  <span class="text-success fw-semibold">FREE</span>
+                </div>
+
+                {% if total_savings > 0 %}
+                <div class="p-2 px-3 bg-success-subtle border border-success-subtle rounded-3 text-success small fw-semibold my-3 d-flex align-items-center gap-2">
+                  <i class="bi bi-gift-fill"></i> You are saving ₹{{ total_savings|floatformat:2 }} on this order!
+                </div>
+                {% endif %}
+
+                <div class="price-row total-row">
+                  <div>
+                    <div class="fw-bold text-dark fs-6">Total Payable</div>
+                    <div class="text-muted small">Inclusive of all taxes</div>
+                  </div>
+                  <div class="total-amount-display">
+                    ₹{{ payable_amount|floatformat:2 }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- CTA Pay Button -->
+              <div class="mt-4">
+                <button type="submit" id="payNowBtn" class="btn-pay-now">
+                  <i class="bi bi-shield-lock-fill"></i>
+                  <span id="btnPayText">Pay ₹{{ payable_amount|floatformat:2 }} via Online Payment</span>
+                </button>
+
+                <a href="{% url 'user_orders' %}" class="btn-cancel-return">
+                  <i class="bi bi-arrow-left me-1"></i> Return to Orders List
+                </a>
+              </div>
+            </form>
+
+            <!-- Trust Badge Box -->
+            <div class="trust-badge-box">
+              <i class="bi bi-patch-check-fill trust-badge-icon"></i>
+              <div class="small text-muted line-height-sm">
+                <strong class="text-dark d-block">100% Secure & Protected</strong>
+                256-bit encrypted transaction with instant order confirmation.
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <script>
+    (function() {
+      const form = document.getElementById('retryPaymentForm');
+      const payBtn = document.getElementById('payNowBtn');
+      const btnPayText = document.getElementById('btnPayText');
+      const errorAlert = document.getElementById('payment-error-alert');
+      const errorText = document.getElementById('payment-error-text');
+      
+      const optionRazorpayCard = document.getElementById('optionRazorpayCard');
+      const optionWalletCard = document.getElementById('optionWalletCard');
+      const radios = document.querySelectorAll('input[name="payment_method"]');
+
+      const orderTotal = "{{ payable_amount|floatformat:2 }}";
+      const orderId = "{{ order.id }}";
+      const csrfToken = "{{ csrf_token }}";
+
+      function showError(msg) {
+        errorText.innerText = msg || "An unexpected error occurred. Please try again.";
+        errorAlert.style.display = 'block';
+        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function hideError() {
+        errorAlert.style.display = 'none';
+      }
+
+      // Radio Selection Styling & Text Sync
+      radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          hideError();
+          if (this.value === 'razorpay') {
+            optionRazorpayCard.classList.add('selected');
+            if (optionWalletCard) optionWalletCard.classList.remove('selected');
+            btnPayText.innerText = `Pay ₹${orderTotal} via Online Gateway`;
+          } else if (this.value === 'wallet') {
+            if (optionWalletCard) optionWalletCard.classList.add('selected');
+            optionRazorpayCard.classList.remove('selected');
+            btnPayText.innerText = `Pay ₹${orderTotal} with Wallet Balance`;
+          }
+        });
+      });
+
+      // Handle Submission
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        hideError();
+
+        const selectedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'razorpay';
+
+        // 1. WALLET PAYMENT FLOW
+        if (selectedMethod === 'wallet') {
+          Swal.fire({
+            title: 'Confirm Wallet Payment',
+            html: `Debit <strong>₹${orderTotal}</strong> from your Jamilah Wallet for Order <strong>#${orderId}</strong>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#088178',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: '<i class="bi bi-check-circle-fill me-1"></i> Yes, Pay Now',
+            cancelButtonText: 'Cancel'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              executeWalletPayment();
+            }
+          });
+          return;
+        }
+
+        // 2. RAZORPAY PAYMENT FLOW
+        executeRazorpayPayment();
+      });
+
+      function executeWalletPayment() {
+        payBtn.disabled = true;
+        payBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing Wallet Debit...';
+
+        fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: new URLSearchParams({
+            'payment_method': 'wallet'
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.redirect_url) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Payment Successful!',
+              text: data.message || 'Your payment was completed successfully.',
+              confirmButtonColor: '#088178',
+              timer: 2000,
+              showConfirmButton: false
+            }).then(() => {
+              window.location.href = data.redirect_url;
+            });
+          } else {
+            payBtn.disabled = false;
+            payBtn.innerHTML = `<i class="bi bi-shield-lock-fill"></i> Pay ₹${orderTotal} with Wallet Balance`;
+            showError(data.error || 'Failed to complete wallet payment.');
+          }
+        })
+        .catch(err => {
+          console.error('Wallet payment error:', err);
+          payBtn.disabled = false;
+          payBtn.innerHTML = `<i class="bi bi-shield-lock-fill"></i> Pay ₹${orderTotal} with Wallet Balance`;
+          showError('Network error while processing wallet payment.');
+        });
+      }
+
+      function executeRazorpayPayment() {
+        payBtn.disabled = true;
+        payBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Opening Secure Gateway...';
+
+        fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: new URLSearchParams({
+            'payment_method': 'razorpay'
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            payBtn.disabled = false;
+            payBtn.innerHTML = `<i class="bi bi-shield-lock-fill"></i> Pay ₹${orderTotal} via Online Gateway`;
+            showError(data.error);
+            return;
+          }
+
+          if (data.razorpay_order_id) {
+            const options = {
+              key: data.razorpay_merchant_key,
+              amount: data.razorpay_amount,
+              currency: data.currency || "INR",
+              name: "Jamilah",
+              description: `Retry Payment for Order #${orderId}`,
+              order_id: data.razorpay_order_id,
+              handler: function(response) {
+                payBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Verifying Payment...';
+                
+                fetch(data.callback_url, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                  },
+                  body: new URLSearchParams({
+                    'razorpay_payment_id': response.razorpay_payment_id,
+                    'razorpay_order_id': response.razorpay_order_id,
+                    'razorpay_signature': response.razorpay_signature
+                  })
+                })
+                .then(res => res.json())
+                .then(verifyData => {
+                  if (verifyData.success && verifyData.redirect_url) {
+                    window.location.href = verifyData.redirect_url;
+                  } else {
+                    payBtn.disabled = false;
+                    payBtn.innerHTML = `<i class="bi bi-shield-lock-fill"></i> Pay ₹${orderTotal} via Online Gateway`;
+                    showError(verifyData.error || 'Payment verification failed.');
+                  }
+                })
+                .catch(err => {
+                  console.error('Verification error:', err);
+                  window.location.href = data.callback_url;
+                });
+              },
+              modal: {
+                ondismiss: function() {
+                  payBtn.disabled = false;
+                  payBtn.innerHTML = `<i class="bi bi-shield-lock-fill"></i> Pay ₹${orderTotal} via Online Gateway`;
+                  showError("Payment window was dismissed before completion. You can retry anytime.");
+                }
+              },
+              prefill: {
+                name: "{{ order.shipping_address.name|default:request.user.username }}",
+                email: "{{ request.user.email }}",
+                contact: "{{ order.shipping_address.phone|default:'' }}"
+              },
+              theme: {
+                color: "#088178"
+              }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function(resp) {
+              payBtn.disabled = false;
+              payBtn.innerHTML = `<i class="bi bi-shield-lock-fill"></i> Pay ₹${orderTotal} via Online Gateway`;
+              showError(resp.error.description || "Payment failed. Please try an alternate card or payment method.");
+            });
+            rzp.open();
+          } else {
+            payBtn.disabled = false;
+            payBtn.innerHTML = `<i class="bi bi-shield-lock-fill"></i> Pay ₹${orderTotal} via Online Gateway`;
+            showError("Could not retrieve gateway transaction credentials.");
+          }
+        })
+        .catch(err => {
+          console.error('Razorpay init error:', err);
+          payBtn.disabled = false;
+          payBtn.innerHTML = `<i class="bi bi-shield-lock-fill"></i> Pay ₹${orderTotal} via Online Gateway`;
+          showError("Network connection error while connecting to payment gateway.");
+        });
+      }
+
+    })();
+  </script>
+</body>
+</html>

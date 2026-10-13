@@ -1,0 +1,1410 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Wallet — Jamilah | Modest Couture &amp; Prayer Wear</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}" />
+
+  <!-- Google Fonts: Outfit (luxury headings & numbers) & Plus Jakarta Sans (body) matching Shop page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- Core Theme Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-dark: #06635c;
+      --zy-primary-light: #e8f5f4;
+      --zy-primary-border: #b2dedb;
+      --zy-gold: #c59b27;
+      --zy-gold-light: #fef8e7;
+      --zy-dark: #0f172a;
+      --zy-slate: #1e293b;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-card-bg: #ffffff;
+      --zy-surface: #f8fafc;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: var(--zy-slate);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* ── SHOP-MATCHING HERO HEADER ── */
+    .shop-hero {
+      background: linear-gradient(135deg, #091e1c 0%, #133a35 100%);
+      padding: 28px 0 24px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 20px rgba(8, 129, 120, 0.1);
+    }
+
+    .shop-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(8, 129, 120, 0.35) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.72rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-breadcrumb a {
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .hero-breadcrumb a:hover {
+      color: #ffffff;
+    }
+
+    .hero-breadcrumb .sep {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .hero-breadcrumb .current {
+      color: #5eead4;
+      font-weight: 600;
+    }
+
+    .shop-hero-title {
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      font-size: 1.75rem;
+      margin-bottom: 4px;
+    }
+
+    .shop-hero-subtitle {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      max-width: 580px;
+      margin-bottom: 0;
+    }
+
+    .hero-chip {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 0.82rem;
+      padding: 6px 14px;
+      border-radius: 30px;
+      backdrop-filter: blur(4px);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* ── ACCOUNT SIDEBAR ── */
+    .account-sidebar {
+      position: sticky;
+      top: 24px;
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 20px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .user-mini-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .user-mini-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: 2px solid var(--zy-primary-border);
+      flex-shrink: 0;
+    }
+
+    .account-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .account-nav .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--zy-slate);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .account-nav .nav-link .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .account-nav .nav-link i {
+      font-size: 1.1rem;
+      color: var(--zy-muted);
+      width: 20px;
+      text-align: center;
+      transition: color 0.2s;
+    }
+
+    .account-nav .nav-link:hover {
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      transform: translateX(2px);
+    }
+
+    .account-nav .nav-link:hover i {
+      color: var(--zy-primary);
+    }
+
+    .account-nav .nav-link.active {
+      background: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 3px 12px rgba(8, 129, 120, 0.22);
+    }
+
+    .account-nav .nav-link.active i {
+      color: #ffffff;
+    }
+
+    .nav-badge-count {
+      background: rgba(0, 0, 0, 0.06);
+      padding: 1px 7px;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--zy-muted);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .account-nav .nav-link.active .nav-badge-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .logout-nav-link {
+      color: #dc2626 !important;
+      margin-top: 10px;
+      border-top: 1px dashed var(--zy-border);
+      padding-top: 14px !important;
+    }
+
+    .logout-nav-link:hover {
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
+    }
+
+    .logout-nav-link i {
+      color: #dc2626 !important;
+    }
+
+    /* ── QUICK FINANCIAL KPI CHIPS (SHOP CARD STYLE) ── */
+    .stat-chip {
+      background: #ffffff;
+      border: 1.5px solid var(--zy-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-chip:hover {
+      border-color: var(--zy-primary-border);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(8, 129, 120, 0.08);
+      color: inherit;
+    }
+
+    .stat-chip.active-chip {
+      border: 2px solid var(--zy-primary);
+      background: #ffffff;
+      box-shadow: 0 4px 16px rgba(8, 129, 120, 0.12);
+    }
+
+    .stat-chip.active-chip::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--zy-primary);
+    }
+
+    .stat-chip-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .stat-chip:hover .stat-chip-icon {
+      transform: scale(1.05);
+    }
+
+    .stat-chip-icon.balance { background: #e8f5f4; color: #088178; }
+    .stat-chip-icon.credits { background: #dcfce7; color: #16a34a; }
+    .stat-chip-icon.debits { background: #fee2e2; color: #dc2626; }
+    .stat-chip-icon.count { background: #e0f2fe; color: #0284c7; }
+
+    .stat-number {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--zy-dark);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--zy-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    /* ── MAIN CONTENT CARDS ── */
+    .profile-card {
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .profile-card:hover {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .card-title-shop {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .card-title-shop i {
+      color: var(--zy-primary);
+      font-size: 1.25rem;
+    }
+
+    .card-subtitle-shop {
+      color: var(--zy-muted);
+      font-size: 0.81rem;
+      margin-top: 3px;
+      margin-bottom: 0;
+    }
+
+    /* ── LUXURY VIRTUAL WALLET CARD ── */
+    .virtual-wallet-card {
+      background: linear-gradient(135deg, #091e1c 0%, #133a35 55%, #088178 100%);
+      border-radius: 18px;
+      padding: 26px;
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(8, 129, 120, 0.28);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 270px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .virtual-wallet-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .chip-graphic {
+      width: 40px;
+      height: 30px;
+      background: linear-gradient(135deg, #fce078 0%, #c59b27 50%, #9c7816 100%);
+      border-radius: 6px;
+      display: inline-block;
+      box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.35);
+      position: relative;
+    }
+
+    .chip-graphic::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .card-balance-display {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      line-height: 1.1;
+    }
+
+    .card-number-masked {
+      font-family: 'Outfit', monospace;
+      letter-spacing: 3px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ── TOP-UP STATION CARD ── */
+    .topup-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      border: 1px solid var(--zy-border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 270px;
+      transition: all 0.2s ease;
+    }
+
+    .topup-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    .quick-amount-chip {
+      border: 1.5px solid var(--zy-border);
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .quick-amount-chip:hover {
+      background: var(--zy-primary-light);
+      border-color: var(--zy-primary-border);
+      color: var(--zy-primary);
+      transform: translateY(-1px);
+    }
+
+    .quick-amount-chip.active {
+      background: var(--zy-primary);
+      border-color: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(8, 129, 120, 0.25);
+    }
+
+    .amount-input-box {
+      position: relative;
+    }
+
+    .amount-input-box .currency-tag {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      color: var(--zy-primary);
+    }
+
+    .amount-input-box input {
+      padding-left: 38px;
+      height: 46px;
+      border-radius: 10px;
+      border: 1.5px solid var(--zy-border);
+      font-size: 1.1rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: var(--zy-dark);
+      transition: all 0.2s ease;
+    }
+
+    .amount-input-box input:focus {
+      border-color: var(--zy-primary);
+      box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.12);
+    }
+
+    .btn-topup-action {
+      background: var(--zy-primary);
+      color: #ffffff;
+      height: 46px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.94rem;
+      border: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(8, 129, 120, 0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .btn-topup-action:hover:not(:disabled) {
+      background: var(--zy-primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(8, 129, 120, 0.35);
+      color: #ffffff;
+    }
+
+    .test-guide-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      color: #166534;
+    }
+
+    /* ── SEARCH & FILTER TABS (SHOP STYLE) ── */
+    .search-box-wrap {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1.5px solid var(--zy-border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .search-box-wrap:focus-within {
+      border-color: var(--zy-primary);
+      box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.12);
+    }
+
+    .search-box-wrap .form-control {
+      border: none;
+      box-shadow: none;
+      padding: 7px 12px;
+      font-size: 0.85rem;
+      color: var(--zy-dark);
+      background: transparent;
+    }
+
+    .search-box-wrap .btn-search {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: none;
+      padding: 7px 14px;
+      font-size: 0.86rem;
+      transition: background 0.2s ease;
+    }
+
+    .search-box-wrap .btn-search:hover {
+      background: var(--zy-primary-dark);
+    }
+
+    .filter-tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .filter-tab-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      color: #475569;
+      background: #f1f5f9;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-tab-pill:hover {
+      color: var(--zy-primary);
+      background: var(--zy-primary-light);
+      border-color: var(--zy-primary-border);
+    }
+
+    .filter-tab-pill.active {
+      background: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(8, 129, 120, 0.25);
+    }
+
+    .btn-outline-shop {
+      background: #ffffff;
+      color: var(--zy-slate);
+      border: 1.5px solid var(--zy-border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-shop:hover {
+      border-color: var(--zy-primary);
+      color: var(--zy-primary);
+      background: var(--zy-primary-light);
+    }
+
+    /* ── TRANSACTION ROWS ── */
+    .transaction-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1.5px solid var(--zy-border);
+      background: #ffffff;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .transaction-row:hover {
+      border-color: var(--zy-primary-border);
+      box-shadow: 0 6px 18px rgba(8, 129, 120, 0.06);
+      transform: translateY(-1px);
+    }
+
+    .tx-direction-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .tx-direction-icon.credit {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    .tx-direction-icon.debit {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .tx-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.94rem;
+      color: var(--zy-dark);
+      margin-bottom: 2px;
+    }
+
+    .tx-amount {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .tx-amount.credit {
+      color: #16a34a;
+    }
+
+    .tx-amount.debit {
+      color: #dc2626;
+    }
+
+    /* ── PAGINATION MATCHING SHOP ── */
+    .pagination-custom .page-link {
+      color: var(--zy-slate);
+      border-radius: 8px;
+      margin: 0 3px;
+      border: 1.5px solid var(--zy-border);
+      padding: 7px 14px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .pagination-custom .page-link:hover {
+      border-color: var(--zy-primary);
+      color: var(--zy-primary);
+      background: var(--zy-primary-light);
+    }
+
+    .pagination-custom .page-item.active .page-link {
+      background-color: var(--zy-primary);
+      border-color: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(8, 129, 120, 0.25);
+    }
+
+    @media (max-width: 991px) {
+      .account-sidebar {
+        position: static;
+        margin-bottom: 24px;
+      }
+      .transaction-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .search-box-wrap {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== SHOP-STYLE HERO HEADER ===============-->
+  <section class="shop-hero">
+    <div class="container position-relative">
+      <div class="hero-breadcrumb">
+        <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+        <span class="sep">/</span>
+        <a href="{% url 'user_profile' %}">Account</a>
+        <span class="sep">/</span>
+        <span class="current">My Wallet</span>
+      </div>
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+          <h1 class="shop-hero-title">My Wallet</h1>
+          <p class="shop-hero-subtitle">Manage store credits, instant refund balances, top up funds, and track transaction history.</p>
+        </div>
+        <div class="hero-chip d-none d-md-inline-flex align-items-center">
+          <i class="bi bi-wallet2 text-warning me-2"></i>
+          <span>Available: <strong class="text-white">₹{{ wallet.balance|floatformat:2 }}</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== MAIN WALLET CONTAINER ===============-->
+  <div class="container pb-5">
+    <div class="row g-4">
+
+      <!-- Left Column: Unified Account Sidebar -->
+      <div class="col-lg-3">
+        <div class="account-sidebar">
+          <!-- User Mini Profile -->
+          <div class="user-mini-badge">
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-mini-avatar">
+            {% else %}
+              <div class="user-mini-avatar">
+                {{ user.first_name|default:user.username|slice:":1"|upper }}
+              </div>
+            {% endif %}
+            <div class="overflow-hidden">
+              <div class="fw-bold text-truncate brand-font" style="font-size: 0.95rem; color: var(--zy-dark);">
+                {{ user.get_full_name|default:user.username }}
+              </div>
+              <small class="text-muted d-block text-truncate">@{{ user.username }}</small>
+            </div>
+          </div>
+
+          <!-- Account Navigation Links -->
+          <nav class="account-nav">
+            <a class="nav-link" href="{% url 'user_profile' %}">
+              <span class="nav-left">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </span>
+            </a>
+            <a class="nav-link" href="{% url 'addresses' %}">
+              <span class="nav-left">
+                <i class="bi bi-geo-alt"></i>
+                <span>My Addresses</span>
+              </span>
+            </a>
+            <a class="nav-link" href="{% url 'user_orders' %}">
+              <span class="nav-left">
+                <i class="bi bi-bag-check-fill"></i>
+                <span>My Orders</span>
+              </span>
+            </a>
+            <a class="nav-link active" href="{% url 'wallet_view' %}">
+              <span class="nav-left">
+                <i class="bi bi-wallet2"></i>
+                <span>My Wallet</span>
+              </span>
+              <span class="nav-badge-count">₹{{ wallet.balance|floatformat:0 }}</span>
+            </a>
+            <a class="nav-link" href="{% url 'view_coupons' %}">
+              <span class="nav-left">
+                <i class="bi bi-ticket-perforated"></i>
+                <span>Coupons</span>
+              </span>
+            </a>
+            <a class="nav-link" href="{% url 'wishlist' %}">
+              <span class="nav-left">
+                <i class="bi bi-heart"></i>
+                <span>My Wishlist</span>
+              </span>
+            </a>
+            <a class="nav-link logout-nav-link" href="{% url 'userlogout' %}">
+              <span class="nav-left">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+              </span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Right Column: Wallet Content -->
+      <div class="col-lg-9">
+
+        <!-- 1. Four Financial KPI Cards -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="stat-chip active-chip">
+              <div class="stat-chip-icon balance">
+                <i class="bi bi-wallet2"></i>
+              </div>
+              <div>
+                <div class="stat-label">Available</div>
+                <div class="stat-number" id="display-kpi-balance">₹{{ wallet.balance|floatformat:2 }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="stat-chip">
+              <div class="stat-chip-icon credits">
+                <i class="bi bi-arrow-down-left"></i>
+              </div>
+              <div>
+                <div class="stat-label">Total Added</div>
+                <div class="stat-number text-success">+₹{{ total_credited|floatformat:2 }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="stat-chip">
+              <div class="stat-chip-icon debits">
+                <i class="bi bi-arrow-up-right"></i>
+              </div>
+              <div>
+                <div class="stat-label">Total Spent</div>
+                <div class="stat-number text-danger">-₹{{ total_debited|floatformat:2 }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="stat-chip">
+              <div class="stat-chip-icon count">
+                <i class="bi bi-clock-history"></i>
+              </div>
+              <div>
+                <div class="stat-label">Transactions</div>
+                <div class="stat-number">{{ total_tx_count }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Virtual Card & Top Up Station Side-by-Side -->
+        <div class="row g-4 mb-4">
+          <!-- Digital Wallet Card -->
+          <div class="col-lg-6">
+            <div class="virtual-wallet-card h-100">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="chip-graphic"></div>
+                  <i class="bi bi-reception-4 fs-4 text-white-50 ms-1"></i>
+                </div>
+                <div>
+                  <span class="badge bg-white text-dark rounded-pill px-3 py-1 font-monospace fw-bold" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                    <i class="bi bi-shield-check text-success me-1"></i> ACTIVE WALLET
+                  </span>
+                </div>
+              </div>
+
+              <div class="my-3">
+                <span class="text-white-50 text-uppercase small" style="letter-spacing: 1.5px; font-size: 0.75rem;">Current Balance</span>
+                <div class="card-balance-display mt-1" id="display-wallet-balance">
+                  ₹{{ wallet.balance|floatformat:2 }}
+                </div>
+              </div>
+
+              <div>
+                <div class="card-number-masked mb-2">
+                  •••• •••• •••• {{ request.user.id|stringformat:"04d" }}
+                </div>
+                <div class="d-flex justify-content-between align-items-end">
+                  <div>
+                    <small class="text-white-50 text-uppercase d-block" style="font-size: 0.68rem; letter-spacing: 1px;">Card Holder</small>
+                    <span class="fw-bold text-white small brand-font" style="letter-spacing: 0.5px;">
+                      {{ request.user.get_full_name|default:request.user.username|upper }}
+                    </span>
+                  </div>
+                  <div class="text-end">
+                    <span class="fw-bold fs-5 text-white brand-font" style="letter-spacing: 1px;">JAMILAH<span style="color: #5eead4;">PAY</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top-Up Module -->
+          <div class="col-lg-6">
+            <div class="topup-card h-100">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h3 class="card-title-shop" style="font-size: 1.1rem;">
+                    <i class="bi bi-plus-circle-fill text-teal" style="color: var(--zy-primary);"></i> Add Money to Wallet
+                  </h3>
+                  <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 small" style="font-size: 0.72rem; font-weight: 700;">
+                    <i class="bi bi-lightning-charge-fill me-1"></i>Instant Credit
+                  </span>
+                </div>
+                <p class="card-subtitle-shop mb-3">Recharge balance securely via Razorpay UPI, Cards or Netbanking</p>
+
+                <!-- Quick Amount Selector -->
+                <div class="mb-3">
+                  <label class="form-label small text-muted fw-semibold mb-2" style="font-size: 0.78rem;">Quick Amount</label>
+                  <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="quick-amount-chip" data-amount="100">+ ₹100</button>
+                    <button type="button" class="quick-amount-chip" data-amount="500">+ ₹500</button>
+                    <button type="button" class="quick-amount-chip" data-amount="1000">+ ₹1,000</button>
+                    <button type="button" class="quick-amount-chip" data-amount="2000">+ ₹2,000</button>
+                    <button type="button" class="quick-amount-chip" data-amount="5000">+ ₹5,000</button>
+                  </div>
+                </div>
+
+                <!-- Custom Amount Input -->
+                <div class="mb-3">
+                  <label for="topup-amount" class="form-label small text-muted fw-semibold mb-1" style="font-size: 0.78rem;">Or Enter Custom Amount</label>
+                  <div class="amount-input-box">
+                    <span class="currency-tag">₹</span>
+                    <input type="number" id="topup-amount" class="form-control" placeholder="Enter amount (e.g. 500)" min="1" max="100000" step="1">
+                  </div>
+                  <div class="d-flex justify-content-between mt-1">
+                    <small class="text-muted" style="font-size: 0.72rem;">Min: ₹1 | Max: ₹1,00,000</small>
+                    <small class="text-muted" style="font-size: 0.72rem;"><i class="bi bi-shield-lock-fill text-success me-1"></i>256-bit SSL Encrypted</small>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <!-- Top Up Button -->
+                <button type="button" id="btn-wallet-topup" class="btn-topup-action w-100 mb-2">
+                  <i class="bi bi-credit-card"></i>
+                  <span id="btn-topup-text">Proceed to Top Up</span>
+                </button>
+
+                <!-- Test Mode Helper Accordion -->
+                <div class="test-guide-box">
+                  <div class="d-flex align-items-center justify-content-between" style="cursor: pointer;" id="test-help-toggle">
+                    <span><i class="bi bi-info-circle-fill me-1 text-success"></i> <strong>Razorpay Test Credentials</strong></span>
+                    <i class="bi bi-chevron-down small" id="test-help-icon"></i>
+                  </div>
+                  <div id="test-help-content" style="display: none;" class="mt-2 pt-2 border-top border-success-subtle">
+                    <div style="font-size: 0.76rem; line-height: 1.5;">
+                      <strong>Cards:</strong> Visa <code class="fw-bold">4718 6091 0820 4366</code> | MC <code class="fw-bold">5104 0600 0000 0008</code> (CVV: 123, any future expiry)<br>
+                      <strong>UPI:</strong> Enter <code class="fw-bold">success@razorpay</code><br>
+                      <strong>Netbanking:</strong> Select Bank of Baroda or Canara Bank &amp; click <em>Success</em>.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Transaction History Section -->
+        <div class="profile-card">
+          <div class="card-header-bar">
+            <div>
+              <h2 class="card-title-shop">
+                <i class="bi bi-journal-text"></i> Transaction History
+              </h2>
+              <p class="card-subtitle-shop">Review all credits, debits and refund activities on your wallet</p>
+            </div>
+
+            <!-- Search Bar -->
+            <form method="get" action="{% url 'wallet_view' %}" class="search-box-wrap">
+              <input type="hidden" name="filter" value="{{ filter_type }}">
+              <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search transactions...">
+              <button class="btn-search" type="submit" title="Search">
+                <i class="bi bi-search"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Filter Tabs Toolbar -->
+          <div class="filter-tab-bar justify-content-between">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <a href="{% url 'wallet_view' %}?filter=all{% if search_query %}&q={{ search_query }}{% endif %}" class="filter-tab-pill {% if filter_type == 'all' or not filter_type %}active{% endif %}">
+                <i class="bi bi-grid-fill"></i> All Transactions
+              </a>
+              <a href="{% url 'wallet_view' %}?filter=credit{% if search_query %}&q={{ search_query }}{% endif %}" class="filter-tab-pill {% if filter_type == 'credit' %}active{% endif %}">
+                <i class="bi bi-arrow-down-left-circle-fill"></i> Credits Only
+              </a>
+              <a href="{% url 'wallet_view' %}?filter=debit{% if search_query %}&q={{ search_query }}{% endif %}" class="filter-tab-pill {% if filter_type == 'debit' %}active{% endif %}">
+                <i class="bi bi-arrow-up-right-circle-fill"></i> Debits Only
+              </a>
+            </div>
+
+            {% if search_query or filter_type != 'all' and filter_type %}
+            <a href="{% url 'wallet_view' %}" class="btn-outline-shop py-1 px-2" style="font-size: 0.76rem;" title="Reset Filters">
+              <i class="bi bi-x-circle text-danger"></i> Reset
+            </a>
+            {% endif %}
+          </div>
+
+          <!-- Transaction List -->
+          {% if transactions %}
+            {% for tx in transactions %}
+            <div class="transaction-row">
+              <div class="d-flex align-items-center gap-3">
+                <div class="tx-direction-icon {{ tx.transaction_type }}">
+                  {% if tx.transaction_type == 'credit' %}
+                    <i class="bi bi-arrow-down-left"></i>
+                  {% else %}
+                    <i class="bi bi-arrow-up-right"></i>
+                  {% endif %}
+                </div>
+
+                <div>
+                  <div class="tx-title">
+                    {% if tx.description %}
+                      {{ tx.description }}
+                    {% elif tx.order %}
+                      Payment for Order #{{ tx.order.id }}
+                    {% else %}
+                      Wallet Transaction
+                    {% endif %}
+                  </div>
+
+                  <div class="d-flex flex-wrap align-items-center gap-2 text-muted small">
+                    <span><i class="bi bi-calendar3 me-1"></i>{{ tx.created_at|date:"M d, Y" }} at {{ tx.created_at|date:"h:i A" }}</span>
+                    {% if tx.order %}
+                    <span>•</span>
+                    <a href="{% url 'order_items' tx.order.id %}" class="badge bg-light text-primary border text-decoration-none py-1 px-2" style="font-size: 0.72rem; font-family: 'Outfit', sans-serif;">
+                      <i class="bi bi-box-arrow-up-right me-1"></i>View Order #{{ tx.order.id }}
+                    </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-md-end">
+                <div class="tx-amount {{ tx.transaction_type }}">
+                  {% if tx.transaction_type == 'credit' %}+{% else %}-{% endif %}₹{{ tx.amount|floatformat:2 }}
+                </div>
+                <span class="badge {% if tx.transaction_type == 'credit' %}bg-success-subtle text-success border border-success-subtle{% else %}bg-danger-subtle text-danger border border-danger-subtle{% endif %} rounded-pill px-2 py-0 small" style="font-size: 0.7rem; font-family: 'Outfit', sans-serif; font-weight: 700;">
+                  {{ tx.transaction_type|upper }}
+                </span>
+              </div>
+            </div>
+            {% endfor %}
+
+            <!-- Pagination Toolbar -->
+            {% if transactions.has_other_pages %}
+            <div class="d-flex justify-content-center mt-4 pt-2">
+              <nav aria-label="Transaction pagination">
+                <ul class="pagination pagination-custom mb-0">
+                  {% if transactions.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ transactions.previous_page_number }}&filter={{ filter_type }}{% if search_query %}&q={{ search_query }}{% endif %}">
+                      <i class="bi bi-chevron-left me-1"></i> Prev
+                    </a>
+                  </li>
+                  {% endif %}
+
+                  {% for num in transactions.paginator.page_range %}
+                    {% if transactions.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > transactions.number|add:'-3' and num < transactions.number|add:'3' %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ num }}&filter={{ filter_type }}{% if search_query %}&q={{ search_query }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if transactions.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ transactions.next_page_number }}&filter={{ filter_type }}{% if search_query %}&q={{ search_query }}{% endif %}">
+                      Next <i class="bi bi-chevron-right ms-1"></i>
+                    </a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            </div>
+            {% endif %}
+
+          {% else %}
+          <div class="text-center py-5 my-2">
+            <div class="d-inline-flex p-4 rounded-circle bg-light mb-3 text-muted" style="font-size: 3.2rem; border: 1.5px dashed var(--zy-border);">
+              <i class="bi bi-wallet2" style="color: var(--zy-primary);"></i>
+            </div>
+            <h4 class="brand-font fw-bold text-dark mb-2">No Transactions Found</h4>
+            <p class="text-muted small mb-4 mx-auto" style="max-width: 420px; line-height: 1.6;">
+              {% if search_query %}
+                No transactions match "{{ search_query }}". Try adjusting your search query.
+              {% else %}
+                When you add funds or place orders using your wallet, transactions will appear here.
+              {% endif %}
+            </p>
+            {% if search_query or filter_type != 'all' and filter_type %}
+              <a href="{% url 'wallet_view' %}" class="btn-outline-shop px-4 py-2">
+                <i class="bi bi-arrow-repeat me-1"></i> Reset All Filters
+              </a>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!--=============== SCRIPTS ===============-->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const amountInput = document.getElementById('topup-amount');
+    const topupBtn = document.getElementById('btn-wallet-topup');
+    const topupBtnText = document.getElementById('btn-topup-text');
+    const quickChips = document.querySelectorAll('.quick-amount-chip');
+    const helpToggle = document.getElementById('test-help-toggle');
+    const helpContent = document.getElementById('test-help-content');
+    const helpIcon = document.getElementById('test-help-icon');
+
+    // Test mode helper toggle
+    if (helpToggle && helpContent) {
+      helpToggle.addEventListener('click', function () {
+        const isHidden = helpContent.style.display === 'none';
+        helpContent.style.display = isHidden ? 'block' : 'none';
+        if (helpIcon) {
+          helpIcon.className = isHidden ? 'bi bi-chevron-up small' : 'bi bi-chevron-down small';
+        }
+      });
+    }
+
+    // Quick amount pills click
+    quickChips.forEach(btn => {
+      btn.addEventListener('click', function () {
+        quickChips.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        amountInput.value = this.dataset.amount;
+        amountInput.focus();
+      });
+    });
+
+    // Deselect pill if user types a custom amount
+    amountInput.addEventListener('input', function () {
+      quickChips.forEach(b => {
+        if (b.dataset.amount === this.value) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+    });
+
+    // Enter key triggers top up
+    amountInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        topupBtn.click();
+      }
+    });
+
+    // Initiate Top-Up via Razorpay
+    topupBtn.addEventListener('click', function () {
+      const val = amountInput.value.trim();
+      const amount = parseFloat(val);
+
+      if (!val || isNaN(amount) || amount < 1) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Invalid Amount',
+          text: 'Please enter a valid amount of at least ₹1.00.',
+          confirmButtonColor: '#088178'
+        });
+        amountInput.focus();
+        return;
+      }
+
+      if (amount > 100000) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Limit Exceeded',
+          text: 'Maximum top-up amount allowed per transaction is ₹1,00,000.',
+          confirmButtonColor: '#088178'
+        });
+        return;
+      }
+
+      // Disable button & show spinner
+      topupBtn.disabled = true;
+      topupBtnText.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Connecting to Razorpay...';
+
+      fetch("{% url 'initiate_wallet_topup' %}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: new URLSearchParams({
+          'amount': amount
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.success || !data.razorpay_order_id) {
+          topupBtn.disabled = false;
+          topupBtnText.innerText = 'Proceed to Top Up';
+          Swal.fire({
+            icon: 'error',
+            title: 'Initiation Failed',
+            text: data.error || 'Failed to create Razorpay order. Please try again.',
+            confirmButtonColor: '#d33'
+          });
+          return;
+        }
+
+        // Options for Razorpay Checkout modal
+        const options = {
+          key: data.razorpay_merchant_key,
+          amount: data.amount,
+          currency: data.currency,
+          name: "Jamilah",
+          description: "Wallet Top-Up (₹" + data.display_amount + ")",
+          order_id: data.razorpay_order_id,
+          prefill: {
+            name: data.user_name,
+            email: data.user_email
+          },
+          theme: {
+            color: "#088178"
+          },
+          handler: function (response) {
+            Swal.fire({
+              title: 'Verifying Payment',
+              text: 'Crediting your wallet balance, please wait a moment...',
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              }
+            });
+
+            fetch("{% url 'verify_wallet_topup' %}", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+              },
+              body: new URLSearchParams({
+                'razorpay_payment_id': response.razorpay_payment_id,
+                'razorpay_order_id': response.razorpay_order_id,
+                'razorpay_signature': response.razorpay_signature
+              })
+            })
+            .then(res => res.json())
+            .then(verifyData => {
+              topupBtn.disabled = false;
+              topupBtnText.innerText = 'Proceed to Top Up';
+
+              if (verifyData.success) {
+                const balEl = document.getElementById('display-wallet-balance');
+                const kpiBalEl = document.getElementById('display-kpi-balance');
+                if (balEl && verifyData.new_balance) {
+                  balEl.innerText = '₹' + verifyData.new_balance;
+                }
+                if (kpiBalEl && verifyData.new_balance) {
+                  kpiBalEl.innerText = '₹' + verifyData.new_balance;
+                }
+                amountInput.value = '';
+                quickChips.forEach(b => b.classList.remove('active'));
+
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Top-Up Successful!',
+                  text: verifyData.message || 'Your wallet balance has been updated.',
+                  confirmButtonColor: '#088178',
+                  confirmButtonText: 'Great!'
+                }).then(() => {
+                  window.location.reload();
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Payment Verification Failed',
+                  text: verifyData.error || 'Could not verify the transaction.',
+                  confirmButtonColor: '#d33'
+                });
+              }
+            })
+            .catch(err => {
+              console.error('Verify error:', err);
+              topupBtn.disabled = false;
+              topupBtnText.innerText = 'Proceed to Top Up';
+              Swal.fire({
+                icon: 'error',
+                title: 'Network Error',
+                text: 'Failed to verify transaction with the server.',
+                confirmButtonColor: '#d33'
+              });
+            });
+          },
+          modal: {
+            ondismiss: function () {
+              topupBtn.disabled = false;
+              topupBtnText.innerText = 'Proceed to Top Up';
+            }
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+          topupBtn.disabled = false;
+          topupBtnText.innerText = 'Proceed to Top Up';
+          Swal.fire({
+            icon: 'error',
+            title: 'Payment Failed',
+            text: (resp.error && resp.error.description) ? resp.error.description : 'Payment could not be completed.',
+            confirmButtonColor: '#d33'
+          });
+        });
+        rzp.open();
+      })
+      .catch(err => {
+        console.error('Initiate error:', err);
+        topupBtn.disabled = false;
+        topupBtnText.innerText = 'Proceed to Top Up';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while connecting to Razorpay.',
+          confirmButtonColor: '#d33'
+        });
+      });
+    });
+  });
+  </script>
+
+</body>
+</html>

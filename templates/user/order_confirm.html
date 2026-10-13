@@ -1,0 +1,1228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Flaticon & FontAwesome -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <!-- Razorpay SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <title>{% if is_success %}Order Confirmed - Jamilah{% else %}Payment Failed - Jamilah{% endif %}</title>
+
+  <style>
+    :root {
+      --primary: #088178;
+      --primary-dark: #06665f;
+      --primary-light: #e6f4f2;
+      --primary-glow: rgba(8, 129, 120, 0.15);
+      --accent-coral: #ef4444;
+      --accent-coral-light: #fee2e2;
+      --accent-amber: #f59e0b;
+      --accent-amber-light: #fef3c7;
+      --accent-emerald: #10b981;
+      --accent-emerald-light: #ecfdf5;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.09);
+      --shadow-teal: 0 8px 20px rgba(8, 129, 120, 0.2);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f6f8fa;
+      color: var(--slate-800);
+      margin: 0;
+      padding: 0;
+    }
+
+    .confirm-page-wrapper {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+    }
+
+    /* Stepper Navigation */
+    .checkout-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2.25rem;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--slate-200);
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--slate-400);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .step-item.completed {
+      color: var(--primary);
+    }
+
+    .step-item.active-success {
+      color: var(--accent-emerald);
+    }
+
+    .step-item.active-failed {
+      color: var(--accent-coral);
+    }
+
+    .step-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--slate-100);
+      color: var(--slate-500);
+    }
+
+    .step-item.completed .step-circle {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .step-item.active-success .step-circle {
+      background: var(--accent-emerald);
+      color: white;
+      box-shadow: 0 0 0 4px var(--accent-emerald-light);
+    }
+
+    .step-item.active-failed .step-circle {
+      background: var(--accent-coral);
+      color: white;
+      box-shadow: 0 0 0 4px var(--accent-coral-light);
+    }
+
+    .step-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--slate-200);
+    }
+
+    /* Hero Status Banner Card */
+    .hero-status-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-md);
+      padding: 3rem 2.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-status-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+    }
+
+    .hero-status-card.status-success::before {
+      background: linear-gradient(90deg, #088178, #10b981);
+    }
+
+    .hero-status-card.status-failed::before {
+      background: linear-gradient(90deg, #ef4444, #f59e0b);
+    }
+
+    /* Animated Status Icon */
+    .status-icon-animated {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2.5rem;
+      position: relative;
+    }
+
+    .hero-status-card.status-success .status-icon-animated {
+      background: var(--accent-emerald-light);
+      color: var(--accent-emerald);
+      box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.12);
+      animation: pulseGreen 2s infinite;
+    }
+
+    .hero-status-card.status-failed .status-icon-animated {
+      background: var(--accent-coral-light);
+      color: var(--accent-coral);
+      box-shadow: 0 0 0 10px rgba(239, 68, 68, 0.12);
+      animation: pulseRed 2s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { box-shadow: 0 0 0 16px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    @keyframes pulseRed {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .hero-status-title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--slate-900);
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-status-subtitle {
+      font-size: 1.05rem;
+      color: var(--slate-500);
+      max-width: 620px;
+      margin: 0 auto 1.75rem;
+      line-height: 1.55;
+    }
+
+    /* Quick Info Metrics Ribbon */
+    .metrics-ribbon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      background: var(--slate-50);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      border: 1px solid var(--slate-200);
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .metric-ribbon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--slate-400);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .copy-id-btn {
+      background: transparent;
+      border: none;
+      color: var(--slate-400);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .copy-id-btn:hover {
+      color: var(--primary);
+    }
+
+    .status-badge-pill {
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-badge-pill.green {
+      background: var(--accent-emerald-light);
+      color: #065f46;
+    }
+
+    .status-badge-pill.amber {
+      background: var(--accent-amber-light);
+      color: #92400e;
+    }
+
+    .status-badge-pill.red {
+      background: var(--accent-coral-light);
+      color: #991b1b;
+    }
+
+    /* Estimated Delivery Stepper */
+    .delivery-timeline-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--slate-200);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .delivery-timeline-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .delivery-timeline-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .delivery-timeline-title i {
+      color: var(--primary);
+    }
+
+    .delivery-date-highlight {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+    }
+
+    .timeline-steps-track {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      position: relative;
+      margin-top: 1rem;
+    }
+
+    .timeline-steps-track::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 12%;
+      right: 12%;
+      height: 3px;
+      background: var(--slate-200);
+      z-index: 1;
+    }
+
+    .timeline-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .node-bullet {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid var(--slate-300);
+      color: var(--slate-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .timeline-node.done .node-bullet {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .node-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--slate-600);
+    }
+
+    .timeline-node.done .node-text {
+      color: var(--slate-900);
+    }
+
+    /* Content 2-Column Grid */
+    .confirmation-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .detail-block-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--slate-200);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .detail-card-head {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0 0 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--slate-100);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .detail-card-head i {
+      color: var(--primary);
+    }
+
+    /* Address Details */
+    .address-info-block {
+      font-size: 0.92rem;
+      color: var(--slate-600);
+      line-height: 1.6;
+    }
+
+    .address-recipient-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 0.25rem;
+    }
+
+    .phone-contact-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+
+    /* Financial Rows */
+    .summary-line-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.45rem 0;
+      font-size: 0.92rem;
+      color: var(--slate-600);
+    }
+
+    .summary-line-item.discount-line {
+      color: var(--accent-emerald);
+      font-weight: 700;
+    }
+
+    .summary-line-item.total-line {
+      border-top: 1px solid var(--slate-200);
+      padding-top: 0.85rem;
+      margin-top: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--slate-900);
+    }
+
+    .savings-pill-banner {
+      background: var(--accent-emerald-light);
+      border: 1px dashed var(--accent-emerald);
+      color: #065f46;
+      border-radius: var(--radius-md);
+      padding: 0.65rem 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+
+    /* Items Purchased Section */
+    .items-purchased-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--slate-200);
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .items-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .purchased-item-row {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 0.85rem;
+      border-radius: var(--radius-md);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+    }
+
+    .purchased-item-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: var(--slate-200);
+      flex-shrink: 0;
+    }
+
+    .purchased-item-content {
+      flex: 1;
+    }
+
+    .purchased-item-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .purchased-item-title:hover {
+      color: var(--primary);
+    }
+
+    .purchased-variant-chips {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--slate-500);
+    }
+
+    .chip-pill {
+      background: white;
+      border: 1px solid var(--slate-200);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .purchased-item-subtotal {
+      text-align: right;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Failure Diagnostic Box */
+    .failure-diagnostics-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--slate-200);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .diagnostics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .diagnostic-tip-card {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      text-align: left;
+    }
+
+    .diagnostic-tip-card i {
+      font-size: 1.35rem;
+      color: #d97706;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .diagnostic-tip-card h5 {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0 0 0.35rem;
+    }
+
+    .diagnostic-tip-card p {
+      font-size: 0.8rem;
+      color: var(--slate-500);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    /* Actions Hub Card */
+    .actions-hub-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .btn-action-primary {
+      background: var(--primary);
+      color: white;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 0.95rem 1.85rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: var(--shadow-teal);
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-action-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(8, 129, 120, 0.3);
+      color: white;
+    }
+
+    .btn-action-retry {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      font-weight: 800;
+      font-size: 1.05rem;
+      padding: 1.05rem 2.25rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-action-retry:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35);
+      color: white;
+    }
+
+    .btn-action-outline {
+      background: white;
+      color: var(--slate-700);
+      border: 1px solid var(--slate-300);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 0.9rem 1.5rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-outline:hover {
+      background: var(--slate-100);
+      border-color: var(--slate-400);
+      color: var(--slate-900);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .metrics-ribbon-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+      }
+      .confirmation-details-grid {
+        grid-template-columns: 1fr;
+      }
+      .diagnostics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-status-card {
+        padding: 2rem 1.25rem;
+      }
+      .metrics-ribbon-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-status-title {
+        font-size: 1.6rem;
+      }
+      .timeline-steps-track {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .timeline-steps-track::before {
+        display: none;
+      }
+      .purchased-item-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .purchased-item-subtotal {
+        width: 100%;
+        text-align: left;
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <main class="confirm-page-wrapper">
+
+    <!-- Stepper Navigation -->
+    <div class="checkout-stepper">
+      <a href="{% url 'cart_view' %}" class="step-item completed">
+        <div class="step-circle"><i class="fas fa-check"></i></div>
+        <span>1. Cart</span>
+      </a>
+      <div class="step-divider"></div>
+      <a href="{% url 'place_order' %}" class="step-item completed">
+        <div class="step-circle"><i class="fas fa-check"></i></div>
+        <span>2. Checkout</span>
+      </a>
+      <div class="step-divider"></div>
+      {% if is_success %}
+        <div class="step-item active-success">
+          <div class="step-circle"><i class="fas fa-check-circle"></i></div>
+          <span>3. Order Confirmed 🎉</span>
+        </div>
+      {% else %}
+        <div class="step-item active-failed">
+          <div class="step-circle"><i class="fas fa-times-circle"></i></div>
+          <span>3. Payment Incomplete ⚠️</span>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if is_success %}
+      <!-- ================= SUCCESS HERO STATE ================= -->
+      <div class="hero-status-card status-success">
+        <div class="status-icon-animated">
+          <i class="fas fa-check"></i>
+        </div>
+        <h1 class="hero-status-title">Order Placed Successfully!</h1>
+        <p class="hero-status-subtitle">
+          Thank you for choosing <strong>Jamilah</strong>! Your order has been placed and confirmed. We have sent an email receipt to <strong>{{ request.user.email }}</strong>.
+        </p>
+
+        <!-- Quick Info Metrics Ribbon -->
+        <div class="metrics-ribbon-grid">
+          <div class="metric-ribbon-item">
+            <span class="metric-label">Order Reference</span>
+            <span class="metric-val">
+              <span id="orderIdText">{{ order_number }}</span>
+              <button type="button" class="copy-id-btn" title="Copy Order ID" onclick="copyOrderId('{{ order_number }}')">
+                <i class="far fa-copy"></i>
+              </button>
+            </span>
+          </div>
+
+          <div class="metric-ribbon-item">
+            <span class="metric-label">Date Placed</span>
+            <span class="metric-val">{{ order_date|date:"M d, Y" }}</span>
+          </div>
+
+          <div class="metric-ribbon-item">
+            <span class="metric-label">Payment Method</span>
+            <span class="metric-val">
+              {% if payment_method == 'COD' %}
+                Cash on Delivery
+              {% elif payment_method == 'wallet' %}
+                Jamilah Wallet
+              {% else %}
+                Online Payment
+              {% endif %}
+            </span>
+          </div>
+
+          <div class="metric-ribbon-item">
+            <span class="metric-label">Payment Status</span>
+            <span class="metric-val">
+              {% if payment_status == 'Paid' %}
+                <span class="status-badge-pill green"><i class="fas fa-check-circle me-1"></i> Paid</span>
+              {% elif payment_method == 'COD' %}
+                <span class="status-badge-pill amber"><i class="fas fa-clock me-1"></i> Due on Delivery</span>
+              {% else %}
+                <span class="status-badge-pill amber">{{ payment_status }}</span>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estimated Delivery Timeline Tracker -->
+      <div class="delivery-timeline-card">
+        <div class="delivery-timeline-head">
+          <h3 class="delivery-timeline-title">
+            <i class="fas fa-shipping-fast"></i> Delivery Progress Tracker
+          </h3>
+          <span class="delivery-date-highlight">
+            <i class="far fa-calendar-alt me-1"></i> Expected: {{ est_delivery_start }} - {{ est_delivery_end }}
+          </span>
+        </div>
+
+        <div class="timeline-steps-track">
+          <div class="timeline-node done">
+            <div class="node-bullet"><i class="fas fa-check"></i></div>
+            <span class="node-text">Order Confirmed</span>
+          </div>
+          <div class="timeline-node done">
+            <div class="node-bullet"><i class="fas fa-box"></i></div>
+            <span class="node-text">Preparing Shipment</span>
+          </div>
+          <div class="timeline-node">
+            <div class="node-bullet"><i class="fas fa-truck"></i></div>
+            <span class="node-text">Out for Delivery</span>
+          </div>
+          <div class="timeline-node">
+            <div class="node-bullet"><i class="fas fa-home"></i></div>
+            <span class="node-text">Delivered</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Purchased Items Showcase -->
+      <div class="items-purchased-card">
+        <div class="detail-card-head">
+          <i class="fas fa-shopping-bag"></i> Items in This Order ({{ total_units }} unit{{ total_units|pluralize }})
+        </div>
+
+        <div class="items-list-container">
+          {% for item in order_items %}
+          <div class="purchased-item-row">
+            {% if item.product.images.first %}
+              <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="purchased-item-thumb" />
+            {% else %}
+              <img src="/static/images/default-product.jpg" alt="Product Image" class="purchased-item-thumb" />
+            {% endif %}
+
+            <div class="purchased-item-content">
+              <a href="{% url 'product_details' item.product.id %}" class="purchased-item-title">
+                {{ item.product.name }}
+              </a>
+              <div class="purchased-variant-chips">
+                {% if item.product_variant %}
+                  <span class="chip-pill"><i class="fas fa-palette me-1"></i> {{ item.product_variant.color }}</span>
+                  <span class="chip-pill"><i class="fas fa-ruler me-1"></i> {{ item.product_variant.size }}</span>
+                {% endif %}
+                <span class="chip-pill"><i class="fas fa-boxes me-1"></i> Qty: {{ item.quantity }}</span>
+                <span class="chip-pill">₹{{ item.unit_offer_price|floatformat:2 }} each</span>
+              </div>
+            </div>
+
+            <div class="purchased-item-subtotal">
+              ₹{{ item.subtotal|floatformat:2 }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 2-Column: Delivery Address + Financial Summary -->
+      <div class="confirmation-details-grid">
+
+        <!-- Shipping Address Card -->
+        <div class="detail-block-card">
+          <div class="detail-card-head">
+            <i class="fas fa-map-marker-alt"></i> Shipping Address
+          </div>
+
+          {% if shipping_address %}
+            <div class="address-info-block">
+              <div class="address-recipient-name">{{ shipping_address.name }}</div>
+              <div>{{ shipping_address.address }}</div>
+              <div>{{ shipping_address.city }}, {{ shipping_address.state }} - {{ shipping_address.postcode }}</div>
+              <div>{{ shipping_address.country }}</div>
+              <div class="phone-contact-row">
+                <i class="fas fa-phone-alt" style="color: var(--primary);"></i>
+                <span>{{ shipping_address.phone }}</span>
+              </div>
+            </div>
+          {% else %}
+            <p style="color: var(--slate-400);">No specific delivery address recorded.</p>
+          {% endif %}
+        </div>
+
+        <!-- Financial Summary Card -->
+        <div class="detail-block-card">
+          <div class="detail-card-head">
+            <i class="fas fa-receipt"></i> Payment Breakdown
+          </div>
+
+          <div class="summary-line-item">
+            <span>Items Listed Price</span>
+            <span>₹{{ total_listed_price|floatformat:2 }}</span>
+          </div>
+
+          {% if store_savings and store_savings > 0 %}
+          <div class="summary-line-item discount-line">
+            <span>Store Offer Savings</span>
+            <span>-₹{{ store_savings|floatformat:2 }}</span>
+          </div>
+          {% endif %}
+
+          {% if coupon_savings and coupon_savings > 0 %}
+          <div class="summary-line-item discount-line">
+            <span>Coupon Discount ({{ order.coupon.coupon_code|default:"COUPON" }})</span>
+            <span>-₹{{ coupon_savings|floatformat:2 }}</span>
+          </div>
+          {% endif %}
+
+          <div class="summary-line-item">
+            <span>Delivery Fee</span>
+            <span>
+              {% if delivery_charge == 0 %}
+                <strong style="color: var(--accent-emerald);">FREE</strong>
+              {% else %}
+                ₹{{ delivery_charge|floatformat:2 }}
+              {% endif %}
+            </span>
+          </div>
+
+          <div class="summary-line-item total-line">
+            <span>Amount Paid</span>
+            <span>₹{{ grand_total|floatformat:2 }}</span>
+          </div>
+
+          {% if total_savings and total_savings > 0 %}
+          <div class="savings-pill-banner">
+            <i class="fas fa-badge-percent"></i>
+            <span>Total savings on this order: <strong>₹{{ total_savings|floatformat:2 }}</strong></span>
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <!-- Action Buttons Hub -->
+      <div class="actions-hub-card">
+        <a href="{% url 'order_items' order_number %}" class="btn-action-primary">
+          <i class="fas fa-box-open"></i> View Order Details
+        </a>
+        <a href="{% url 'user_orders' %}" class="btn-action-outline">
+          <i class="fas fa-list-alt"></i> My Orders
+        </a>
+        <a href="{% url 'all_products' %}" class="btn-action-outline">
+          <i class="fas fa-shopping-bag"></i> Continue Shopping
+        </a>
+        {% if has_invoice %}
+        <a href="{% url 'download_invoice' order_number %}" class="btn-action-outline">
+          <i class="fas fa-download"></i> Download Invoice
+        </a>
+        {% endif %}
+      </div>
+
+    {% else %}
+      <!-- ================= FAILURE HERO STATE ================= -->
+      <div class="hero-status-card status-failed">
+        <div class="status-icon-animated">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h1 class="hero-status-title">Payment Could Not Be Processed</h1>
+        <p class="hero-status-subtitle">
+          We encountered an issue while finalizing your online transaction. Don't worry—if any funds were debited, your bank will refund them within <strong>3-5 business days</strong>.
+        </p>
+
+        <!-- Quick Info Metrics Ribbon -->
+        <div class="metrics-ribbon-grid">
+          <div class="metric-ribbon-item">
+            <span class="metric-label">Order Reference</span>
+            <span class="metric-val">
+              <span>{{ order_number }}</span>
+              <button type="button" class="copy-id-btn" title="Copy Order ID" onclick="copyOrderId('{{ order_number }}')">
+                <i class="far fa-copy"></i>
+              </button>
+            </span>
+          </div>
+
+          <div class="metric-ribbon-item">
+            <span class="metric-label">Amount Payable</span>
+            <span class="metric-val" style="color: var(--accent-coral); font-weight: 900;">₹{{ grand_total|floatformat:2 }}</span>
+          </div>
+
+          <div class="metric-ribbon-item">
+            <span class="metric-label">Payment Gateway</span>
+            <span class="metric-val">Razorpay</span>
+          </div>
+
+          <div class="metric-ribbon-item">
+            <span class="metric-label">Payment Status</span>
+            <span class="metric-val">
+              <span class="status-badge-pill red"><i class="fas fa-times-circle me-1"></i> Pending / Unpaid</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagnostic Tips Card -->
+      <div class="failure-diagnostics-card">
+        <div class="detail-card-head" style="color: var(--slate-900);">
+          <i class="fas fa-info-circle"></i> Why did the payment fail?
+        </div>
+        <p style="color: var(--slate-500); font-size: 0.9rem; margin: 0 0 1rem;">Here are the most common reasons online transactions are interrupted:</p>
+
+        <div class="diagnostics-grid">
+          <div class="diagnostic-tip-card">
+            <i class="fas fa-university"></i>
+            <h5>Bank Server Delay</h5>
+            <p>Your bank or UPI provider was temporarily unable to authorize the charge. A quick retry often succeeds.</p>
+          </div>
+
+          <div class="diagnostic-tip-card">
+            <i class="fas fa-window-close"></i>
+            <h5>Window Cancelled</h5>
+            <p>The Razorpay payment modal or OTP verification timed out or was accidentally closed.</p>
+          </div>
+
+          <div class="diagnostic-tip-card">
+            <i class="fas fa-credit-card"></i>
+            <h5>Card Limit / Details</h5>
+            <p>Card credentials, CVV, or daily electronic transaction limits prevented processing.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons Hub with Retry Trigger -->
+      <div class="actions-hub-card">
+        {% if show_retry_button %}
+          <button type="button" class="btn-action-retry" id="retryPaymentBtn" onclick="triggerRetryPayment('{{ order_number }}')">
+            <i class="fas fa-redo"></i> Retry Payment Now
+          </button>
+        {% endif %}
+
+        <a href="{% url 'user_orders' %}" class="btn-action-outline">
+          <i class="fas fa-box"></i> View In My Orders
+        </a>
+        <a href="{% url 'cart_view' %}" class="btn-action-outline">
+          <i class="fas fa-arrow-left"></i> Back to Cart
+        </a>
+        <a href="{% url 'contact' %}" class="btn-action-outline">
+          <i class="fas fa-headset"></i> Contact Support
+        </a>
+      </div>
+    {% endif %}
+
+  </main>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    const csrfToken = '{{ csrf_token }}';
+
+    /**
+     * Copy Order ID to Clipboard
+     */
+    function copyOrderId(orderId) {
+      navigator.clipboard.writeText(orderId).then(() => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Order ID copied!',
+          showConfirmButton: false,
+          timer: 1800
+        });
+      }).catch(err => {
+        console.error('Copy failed:', err);
+      });
+    }
+
+    /**
+     * Interactive Retry Payment
+     */
+    function triggerRetryPayment(orderId) {
+      const retryBtn = document.getElementById('retryPaymentBtn');
+      if (retryBtn) {
+        retryBtn.disabled = true;
+        retryBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing Gateway...';
+      }
+
+      fetch("{% url 'payments:retry_payment' order_number %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrfToken
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.razorpay_order_id) {
+          const options = {
+            key: data.razorpay_merchant_key,
+            amount: data.razorpay_amount,
+            currency: data.currency,
+            name: "Jamilah",
+            description: "Retry Payment for Order #" + (data.django_order_id || orderId),
+            order_id: data.razorpay_order_id,
+            handler: function (response) {
+              fetch(data.callback_url, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  "X-CSRFToken": csrfToken
+                },
+                body: new URLSearchParams({
+                  'razorpay_payment_id': response.razorpay_payment_id,
+                  'razorpay_order_id': response.razorpay_order_id,
+                  'razorpay_signature': response.razorpay_signature
+                })
+              })
+              .then(resp => {
+                const contentType = resp.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                  return resp.json().then(resData => {
+                    window.location.href = resData.redirect_url || `/payments/success/${orderId}/`;
+                  });
+                } else {
+                  if (resp.ok) {
+                    window.location.href = `/payments/success/${orderId}/`;
+                  } else {
+                    window.location.href = `/payments/failure/${orderId}/`;
+                  }
+                }
+              })
+              .catch(err => {
+                console.error('Callback error:', err);
+                window.location.href = `/payments/failure/${orderId}/`;
+              });
+            },
+            modal: {
+              ondismiss: function () {
+                if (retryBtn) {
+                  retryBtn.disabled = false;
+                  retryBtn.innerHTML = '<i class="fas fa-redo"></i> Retry Payment Now';
+                }
+              }
+            },
+            prefill: {
+              name: "{{ request.user.username }}",
+              email: "{{ request.user.email }}",
+              contact: "{{ shipping_address.phone|default:'9995160852' }}"
+            },
+            theme: {
+              color: "#088178"
+            }
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', function (resp) {
+            console.error('Payment failed again:', resp.error);
+            window.location.href = `/payments/failure/${orderId}/`;
+          });
+          rzp.open();
+        } else {
+          if (retryBtn) {
+            retryBtn.disabled = false;
+            retryBtn.innerHTML = '<i class="fas fa-redo"></i> Retry Payment Now';
+          }
+          Swal.fire({
+            icon: 'error',
+            title: 'Gateway Error',
+            text: data.error || 'Failed to initialize payment gateway.'
+          });
+        }
+      })
+      .catch(err => {
+        console.error('Retry fetch error:', err);
+        if (retryBtn) {
+          retryBtn.disabled = false;
+          retryBtn.innerHTML = '<i class="fas fa-redo"></i> Retry Payment Now';
+        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Network Error',
+          text: 'Could not connect to payment gateway.'
+        });
+      });
+    }
+  </script>
+
+</body>
+</html>

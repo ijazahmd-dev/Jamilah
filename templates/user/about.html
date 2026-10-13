@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us - Jamilah | Contemporary Modest Fashion & Sacred Wear</title>
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+
+  <!-- Base Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-hover: #06665f;
+      --zy-primary-subtle: #f0fdf9;
+      --zy-primary-border: #a7f3d0;
+      --zy-dark: #0f172a;
+      --zy-slate: #334155;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-surface: #ffffff;
+      --zy-bg: #f8fafc;
+      --zy-gold: #f59e0b;
+      --zy-radius-sm: 8px;
+      --zy-radius-md: 14px;
+      --zy-radius-lg: 20px;
+      --zy-shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.04);
+      --zy-shadow-md: 0 10px 30px -4px rgba(15, 23, 42, 0.08);
+      --zy-shadow-lg: 0 20px 40px -8px rgba(15, 23, 42, 0.12);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--zy-bg);
+      color: var(--zy-slate);
+      line-height: 1.7;
+    }
+
+    /* Breadcrumbs */
+    .zy-breadcrumb-bar {
+      background: var(--zy-surface);
+      border-bottom: 1px solid var(--zy-border);
+      padding: 14px 0;
+      font-size: 0.88rem;
+    }
+
+    .zy-breadcrumb-bar a {
+      color: var(--zy-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .zy-breadcrumb-bar a:hover {
+      color: var(--zy-primary);
+    }
+
+    .zy-breadcrumb-bar .sep {
+      margin: 0 10px;
+      color: #cbd5e1;
+    }
+
+    .zy-breadcrumb-bar .current {
+      color: var(--zy-dark);
+      font-weight: 600;
+    }
+
+    /* Hero Banner */
+    .about-hero-section {
+      position: relative;
+      background: linear-gradient(135deg, #094d48 0%, #088178 50%, #0d9488 100%);
+      color: #ffffff;
+      padding: 90px 0 120px;
+      overflow: hidden;
+    }
+
+    .about-hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .about-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .about-hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 22px;
+      letter-spacing: -0.5px;
+    }
+
+    .about-hero-subtitle {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 680px;
+      margin: 0 auto;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    /* Stats Floating Strip */
+    .stats-floating-strip {
+      margin-top: -55px;
+      position: relative;
+      z-index: 10;
+      margin-bottom: 70px;
+    }
+
+    .stats-card-row {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      padding: 30px 40px;
+      box-shadow: var(--zy-shadow-lg);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .stat-metric-cell {
+      text-align: center;
+      padding: 10px;
+      position: relative;
+    }
+
+    .stat-metric-cell:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 15%;
+      height: 70%;
+      width: 1px;
+      background: var(--zy-border);
+    }
+
+    .stat-number {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--zy-primary);
+      line-height: 1.1;
+      margin-bottom: 6px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .stat-label {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--zy-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Section Styling */
+    .section-wrap {
+      padding: 60px 0;
+    }
+
+    .section-kicker {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--zy-primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .section-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      line-height: 1.25;
+      margin-bottom: 20px;
+    }
+
+    /* "Who We Are" Showcase Box */
+    .who-we-are-card {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      overflow: hidden;
+      box-shadow: var(--zy-shadow-md);
+      padding: 50px;
+    }
+
+    .atelier-image-wrapper {
+      position: relative;
+      border-radius: var(--zy-radius-md);
+      overflow: hidden;
+      box-shadow: var(--zy-shadow-md);
+    }
+
+    .atelier-image-wrapper img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .atelier-image-wrapper:hover img {
+      transform: scale(1.03);
+    }
+
+    .atelier-badge-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .atelier-badge-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .atelier-badge-sub {
+      font-size: 0.76rem;
+      color: #cbd5e1;
+    }
+
+    .feature-check-list {
+      list-style: none;
+      padding: 0;
+      margin: 24px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .feature-check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: var(--zy-slate);
+    }
+
+    .feature-check-list i {
+      color: var(--zy-primary);
+      font-size: 1.2rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Core Values Grid */
+    .value-card-box {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      padding: 36px 30px;
+      height: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--zy-shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .value-card-box:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--zy-shadow-lg);
+      border-color: var(--zy-primary-border);
+    }
+
+    .value-icon-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 22px;
+      border: 1px solid var(--zy-primary-border);
+    }
+
+    .value-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 10px;
+    }
+
+    .value-desc {
+      font-size: 0.92rem;
+      color: var(--zy-muted);
+      line-height: 1.6;
+    }
+
+    /* Design & Craftsmanship Banner */
+    .craft-showcase-card {
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: var(--zy-radius-lg);
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+      margin: 40px 0;
+    }
+
+    .craft-showcase-card::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(8, 129, 120, 0.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .step-pill-badge {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--zy-primary);
+      color: #ffffff;
+      font-weight: 800;
+      text-align: center;
+      line-height: 32px;
+      margin-bottom: 14px;
+    }
+
+    /* Team Section */
+    .team-member-card {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      overflow: hidden;
+      text-align: center;
+      padding: 30px 20px;
+      transition: all 0.3s ease;
+      box-shadow: var(--zy-shadow-sm);
+    }
+
+    .team-member-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--zy-shadow-md);
+      border-color: var(--zy-primary-border);
+    }
+
+    .team-avatar-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 18px;
+      border: 4px solid #ffffff;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+    }
+
+    .team-member-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 4px;
+    }
+
+    .team-member-role {
+      font-size: 0.85rem;
+      color: var(--zy-primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    /* CTA Banner */
+    .about-cta-banner {
+      background: linear-gradient(135deg, var(--zy-primary) 0%, #06665f 100%);
+      color: #ffffff;
+      border-radius: var(--zy-radius-lg);
+      padding: 60px 40px;
+      text-align: center;
+      box-shadow: var(--zy-shadow-lg);
+      position: relative;
+    }
+
+    .btn-zy-cta-light {
+      background: #ffffff;
+      color: var(--zy-primary);
+      font-weight: 700;
+      padding: 14px 34px;
+      border-radius: 30px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-zy-cta-light:hover {
+      background: #f8fafc;
+      transform: translateY(-2px);
+      color: var(--zy-dark);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-zy-cta-outline {
+      background: transparent;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 14px 34px;
+      border-radius: 30px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.25s ease;
+    }
+
+    .btn-zy-cta-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #ffffff;
+      color: #ffffff;
+    }
+
+    @media (max-width: 991px) {
+      .about-hero-title {
+        font-size: 2.5rem;
+      }
+      .stats-card-row {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 24px;
+      }
+      .stat-metric-cell:nth-child(2)::after {
+        display: none;
+      }
+      .who-we-are-card {
+        padding: 30px;
+      }
+      .atelier-image-wrapper img {
+        height: 360px;
+      }
+      .craft-showcase-card {
+        padding: 36px 24px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .stats-card-row {
+        grid-template-columns: 1fr;
+      }
+      .stat-metric-cell::after {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== BREADCRUMB ===============-->
+  <nav class="zy-breadcrumb-bar" aria-label="breadcrumb">
+    <div class="container">
+      <div class="d-flex align-items-center">
+        <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+        <span class="sep">/</span>
+        <span class="current">About Jamilah</span>
+      </div>
+    </div>
+  </nav>
+
+  <!--=============== HERO BANNER ===============-->
+  <section class="about-hero-section text-center">
+    <div class="container position-relative">
+      <div class="about-hero-badge">
+        <i class="bi bi-gem"></i> THE ART OF ELEVATED MODESTY
+      </div>
+      <h1 class="about-hero-title">Weaving Grace, Faith & Modern Devotion</h1>
+      <p class="about-hero-subtitle">
+        Jamilah is an authentic modest fashion house dedicated to crafting premium prayer dresses, jilbabs, and contemporary silhouettes that celebrate Islamic elegance without compromise.
+      </p>
+    </div>
+  </section>
+
+  <!--=============== STATS STRIP ===============-->
+  <div class="container stats-floating-strip">
+    <div class="stats-card-row">
+      <div class="stat-metric-cell">
+        <div class="stat-number">50K+</div>
+        <div class="stat-label">Delighted Customers</div>
+      </div>
+      <div class="stat-metric-cell">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Combed Fine Fabrics</div>
+      </div>
+      <div class="stat-metric-cell">
+        <div class="stat-number">4.9 ★</div>
+        <div class="stat-label">Verified Rating</div>
+      </div>
+      <div class="stat-metric-cell">
+        <div class="stat-number">7-Day</div>
+        <div class="stat-label">Easy Returns</div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== WHO WE ARE SECTION ===============-->
+  <section class="section-wrap pt-0">
+    <div class="container">
+      <div class="who-we-are-card">
+        <div class="row align-items-center g-5">
+          <!-- Text Column -->
+          <div class="col-lg-6">
+            <span class="section-kicker">OUR HERITAGE & ORIGIN</span>
+            <h2 class="section-headline">Who We Are</h2>
+            
+            <p class="lead text-dark fw-semibold" style="font-size: 1.05rem;">
+              Welcome to <strong>Jamilah</strong>, where sacred devotion meets haute-couture modest design.
+            </p>
+            
+            <p class="text-secondary">
+              Born in 2024 in the heritage textile heart of Calicut (Kozhikode, Kerala), Jamilah was founded by <strong>Ijaz Ahmed</strong> with a clear calling: to bridge the gap between traditional modest wear and contemporary executive luxury. We observed that modern Muslim women sought prayer dresses and modest silhouettes that were breathable, graceful, and crafted to last a lifetime.
+            </p>
+
+            <p class="text-secondary">
+              From our flagship design atelier, our master artisans drape whisper-soft modal silks, fine twills, and combed cottons into seamless prayer jilbabs and daily abayas. Each collection is engineered to provide full coverage, effortless flow, and soothing comfort during prayer and daily life.
+            </p>
+
+            <ul class="feature-check-list">
+              <li>
+                <i class="bi bi-patch-check-fill"></i>
+                <span><strong>Thoughtful Devotional Ergonomics:</strong> Non-slip headpieces, gentle wrist ruffles, and generous lengths that stay securely in place during Sujood.</span>
+              </li>
+              <li>
+                <i class="bi bi-patch-check-fill"></i>
+                <span><strong>Pure, Ethical Fibers:</strong> Certified skin-friendly, breathable textiles with color-locking dyes that never bleed or shrink.</span>
+              </li>
+              <li>
+                <i class="bi bi-patch-check-fill"></i>
+                <span><strong>Direct Atelier Value:</strong> Transparent pricing without retail middlemen, bringing luxury prayer wear directly to your doorstep.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Image Column with Generated Atelier Image -->
+          <div class="col-lg-6">
+            <div class="atelier-image-wrapper">
+              <img src="{% static 'assets/img/jamilah_about_atelier.jpg' %}" alt="Jamilah Luxury Modest Fashion Atelier" class="img-fluid">
+              <div class="atelier-badge-overlay">
+                <div class="atelier-badge-title">Jamilah Haute Couture Atelier</div>
+                <div class="atelier-badge-sub"><i class="bi bi-geo-alt-fill text-warning me-1"></i>Calicut Design Studio & Workshop</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== OUR MISSION & VISION ===============-->
+  <section class="section-wrap bg-white border-top border-bottom">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Mission -->
+        <div class="col-lg-6">
+          <div class="p-4 p-md-5 rounded-4 h-100 border bg-light">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="value-icon-circle mb-0" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                <i class="bi bi-compass-fill"></i>
+              </div>
+              <h3 class="fw-bold text-dark mb-0 font-monospace fs-4">OUR MISSION</h3>
+            </div>
+            <p class="text-secondary mb-3">
+              To empower women with modest attire that celebrates their faith, amplifies their dignity, and provides unmatched peace of mind.
+            </p>
+            <ul class="feature-check-list mt-2">
+              <li><i class="bi bi-arrow-right-circle text-primary"></i> <span>Elevating everyday prayer moments with ceremonial-grade luxury fabrics.</span></li>
+              <li><i class="bi bi-arrow-right-circle text-primary"></i> <span>Promoting sustainable, ethical atelier manufacturing with fair living wages.</span></li>
+              <li><i class="bi bi-arrow-right-circle text-primary"></i> <span>Ensuring exceptional customer happiness through transparent, caring service.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Vision -->
+        <div class="col-lg-6">
+          <div class="p-4 p-md-5 rounded-4 h-100 border bg-light">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="value-icon-circle mb-0" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                <i class="bi bi-eye-fill"></i>
+              </div>
+              <h3 class="fw-bold text-dark mb-0 font-monospace fs-4">OUR VISION</h3>
+            </div>
+            <p class="text-secondary mb-3">
+              To be the most trusted global house of modest design, recognized for timeless aesthetics, uncompromising ethical standards, and cultural reverence.
+            </p>
+            <ul class="feature-check-list mt-2">
+              <li><i class="bi bi-arrow-right-circle text-primary"></i> <span>Expanding sustainable zero-waste cutting and botanical garment dyeing.</span></li>
+              <li><i class="bi bi-arrow-right-circle text-primary"></i> <span>Nurturing an inclusive global sisterhood united in spiritual grace.</span></li>
+              <li><i class="bi bi-arrow-right-circle text-primary"></i> <span>Redefining modest fashion by proving that modesty and high design are symbiotic.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== OUR CORE VALUES ===============-->
+  <section class="section-wrap">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="section-kicker">GUIDING PRINCIPLES</span>
+        <h2 class="section-headline">Values That Define Jamilah</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px;">
+          Every garment we sketch, cut, and package carries the sacred commitments that make our brand unique.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card-box">
+            <div class="value-icon-circle">
+              <i class="bi bi-award-fill"></i>
+            </div>
+            <h4 class="value-title">Sacred Quality</h4>
+            <p class="value-desc">
+              We never compromise on fiber purity. Every roll of fabric is checked for breathability, opacity, and sensory softness against the skin.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card-box">
+            <div class="value-icon-circle">
+              <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <h4 class="value-title">Devotional Fit</h4>
+            <p class="value-desc">
+              Designed with generous drapes and ergonomic wrist/neck closures that remain perfectly poised through every prayer movement.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card-box">
+            <div class="value-icon-circle">
+              <i class="bi bi-flower1"></i>
+            </div>
+            <h4 class="value-title">Ethical Craft</h4>
+            <p class="value-desc">
+              Proudly crafted in Kerala under fair, transparent artisan conditions. We value the gifted hands of our tailors as partners in our story.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card-box">
+            <div class="value-icon-circle">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <h4 class="value-title">Customer First</h4>
+            <p class="value-desc">
+              From instant WhatsApp support to hassle-free 7-day returns and immediate wallet refunds, your peace of mind is our prime priority.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== CRAFTSMANSHIP & ATELIER SHOWCASE ===============-->
+  <div class="container">
+    <div class="craft-showcase-card">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-4">
+          <span class="text-warning fw-bold text-uppercase small letter-spacing-1">BEHIND THE SCENES</span>
+          <h3 class="font-serif fw-bold text-white fs-2 mt-2 mb-3">The Jamilah Atelier Standard</h3>
+          <p class="text-white-50 mb-0">
+            Every prayer dress journeys through four meticulous stages before it is delicately folded into our signature Jamilah gift box.
+          </p>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="p-3 rounded-3 bg-white bg-opacity-10 h-100">
+                <span class="step-pill-badge">1</span>
+                <h5 class="text-white fw-bold fs-6 mb-2">Natural Fabric Selection</h5>
+                <p class="text-white-50 small mb-0">Fine combed cotton, viscose silk, and featherlight georgette sourced for thermal comfort.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 rounded-3 bg-white bg-opacity-10 h-100">
+                <span class="step-pill-badge">2</span>
+                <h5 class="text-white fw-bold fs-6 mb-2">Ergonomic Precision Draping</h5>
+                <p class="text-white-50 small mb-0">Cut generously to offer elegant drape with absolute opacity under bright lighting.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 rounded-3 bg-white bg-opacity-10 h-100">
+                <span class="step-pill-badge">3</span>
+                <h5 class="text-white fw-bold fs-6 mb-2">Artisan Hand-Finishing</h5>
+                <p class="text-white-50 small mb-0">Reinforced seams, concealed zippers, and smooth hems inspected by hand.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== LEADERSHIP & TEAM ===============-->
+  <section class="section-wrap">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="section-kicker">THE MINDS BEHIND THE BRAND</span>
+        <h2 class="section-headline">Meet Our Leadership</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px;">
+          Passionate pioneers driving our design atelier, operations, and technology from Calicut to the world.
+        </p>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <!-- Founder -->
+        <div class="col-6 col-lg-3">
+          <div class="team-member-card">
+            <img src="{% static 'assets/img/ijaz9.jpg' %}" alt="Ijaz Ahmed" class="team-avatar-img">
+            <h4 class="team-member-name">Ijaz Ahmed</h4>
+            <div class="team-member-role">Founder & CEO</div>
+            <p class="small text-muted mb-0">Visionary founder guiding brand design, ethics, and strategic expansion.</p>
+          </div>
+        </div>
+
+        <!-- Operations -->
+        <div class="col-6 col-lg-3">
+          <div class="team-member-card">
+            <img src="{% static 'assets/img/fathima.jpeg' %}" alt="Fathima Raihana" class="team-avatar-img">
+            <h4 class="team-member-name">Fathima Raihana</h4>
+            <div class="team-member-role">Operations Director</div>
+            <p class="small text-muted mb-0">Oversees supply chains, atelier quality benchmarks, and logistics.</p>
+          </div>
+        </div>
+
+        <!-- Creative Director -->
+        <div class="col-6 col-lg-3">
+          <div class="team-member-card">
+            <img src="{% static 'assets/img/niha2.png' %}" alt="Niha Fathima" class="team-avatar-img">
+            <h4 class="team-member-name">Niha Fathima</h4>
+            <div class="team-member-role">Creative Director</div>
+            <p class="small text-muted mb-0">Directs seasonal silhouettes, color palettes, and editorial aesthetic.</p>
+          </div>
+        </div>
+
+        <!-- Tech Lead -->
+        <div class="col-6 col-lg-3">
+          <div class="team-member-card">
+            <div class="team-avatar-img d-flex align-items-center justify-content-center bg-dark text-white fs-1 fw-bold">
+              S
+            </div>
+            <h4 class="team-member-name">Shamil</h4>
+            <div class="team-member-role">Technology Lead</div>
+            <p class="small text-muted mb-0">Spearheads our seamless digital store, security, and checkout experience.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== CTA BANNER ===============-->
+  <section class="section-wrap pb-5">
+    <div class="container">
+      <div class="about-cta-banner">
+        <h2 class="font-serif fw-bold text-white fs-1 mb-3">Ready to Experience the Jamilah Difference?</h2>
+        <p class="text-white-50 fs-5 mb-4 mx-auto" style="max-width: 650px;">
+          Explore our award-winning prayer collections, exquisite jilbabs, and modest staples crafted with love.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="{% url 'all_products' %}" class="btn-zy-cta-light">
+            <i class="bi bi-bag-heart-fill"></i> Explore Collection
+          </a>
+          <a href="{% url 'contact' %}" class="btn-zy-cta-outline">
+            <i class="bi bi-chat-text-fill"></i> Contact Our Atelier
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- External JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

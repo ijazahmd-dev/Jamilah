@@ -1,0 +1,548 @@
+{% load static %}
+
+<!--=============== LUXURY ATELIER FOOTER STYLES ===============-->
+<style>
+  .zy-footer {
+    background: #061d19;
+    color: #94a3b8;
+    font-family: 'Outfit', sans-serif;
+    border-top: 1px solid rgba(8, 129, 120, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .zy-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    width: 600px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(8, 129, 120, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .zy-footer-top {
+    padding: 60px 0 40px;
+  }
+
+  .zy-footer-brand-title {
+    color: #ffffff;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zy-footer-tagline {
+    color: #5eead4;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .zy-footer-desc {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin-bottom: 18px;
+  }
+
+  .zy-footer-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+  }
+
+  .zy-footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+  }
+
+  .zy-footer-contact-item a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .zy-footer-contact-item a:hover {
+    color: #5eead4;
+  }
+
+  .zy-footer-contact-item i {
+    color: #5eead4;
+    font-size: 0.95rem;
+  }
+
+  .zy-footer-social-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zy-footer-social-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #cbd5e1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  .zy-footer-social-btn:hover {
+    background: var(--zy-primary);
+    border-color: var(--zy-primary);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(8, 129, 120, 0.3);
+  }
+
+  .zy-footer-col-title {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    margin-bottom: 18px;
+    position: relative;
+    padding-bottom: 8px;
+  }
+
+  .zy-footer-col-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 28px;
+    height: 2px;
+    background: var(--zy-primary);
+    border-radius: 2px;
+  }
+
+  .zy-footer-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .zy-footer-nav-item {
+    margin-bottom: 10px;
+  }
+
+  .zy-footer-nav-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .zy-footer-nav-link:hover {
+    color: #5eead4;
+    transform: translateX(3px);
+  }
+
+  .zy-footer-newsletter-wrap {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+
+  .zy-footer-nl-form {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .zy-footer-nl-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+    color: #ffffff;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .zy-footer-nl-input:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #5eead4;
+  }
+
+  .zy-footer-nl-input::placeholder {
+    color: #64748b;
+  }
+
+  .zy-footer-nl-btn {
+    background: var(--zy-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .zy-footer-nl-btn:hover {
+    background: #066d65;
+  }
+
+  .zy-footer-trust-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.785rem;
+    color: #cbd5e1;
+  }
+
+  .zy-footer-trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zy-footer-trust-badge i {
+    color: #5eead4;
+    font-size: 0.9rem;
+  }
+
+  /* FOOTER BOTTOM BAR */
+  .zy-footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px 0;
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  .zy-back-to-top-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .zy-back-to-top-btn:hover {
+    background: var(--zy-primary);
+    border-color: var(--zy-primary);
+    transform: translateY(-2px);
+  }
+</style>
+
+<!--=============== LUXURY ATELIER FOOTER ===============-->
+<footer class="zy-footer">
+  <div class="zy-footer-top">
+    <div class="container">
+      <div class="row g-4">
+        
+        <!-- Column 1: Atelier Philosophy & Concierge -->
+        <div class="col-lg-4 col-md-6">
+          <div class="mb-3">
+            <a href="{% url 'home' %}" class="d-inline-block">
+              <img src="{% static 'assets/img/jamilah_logo_white.png' %}?v=2" alt="Jamilah Haute Modest Couture" style="height: 48px; width: auto; object-fit: contain;">
+            </a>
+          </div>
+          <p class="zy-footer-tagline">Grace in Every Drape. Devotion in Every Stitch.</p>
+          <p class="zy-footer-desc">
+            An artisanal couture atelier dedicated to fluid modest silhouettes, pure Turkish crepes, and breathable ceremonial prayer gowns engineered for poise and elegance.
+          </p>
+
+          <ul class="zy-footer-contact-list">
+            <li class="zy-footer-contact-item">
+              <i class="bi bi-geo-alt"></i>
+              <span>Atelier Suite 32, Malabar Modest Heritage Lane, Kerala, India</span>
+            </li>
+            <li class="zy-footer-contact-item">
+              <i class="bi bi-telephone"></i>
+              <a href="tel:+919895582131">(+91) 98955 82131</a>
+            </li>
+            <li class="zy-footer-contact-item">
+              <i class="bi bi-envelope"></i>
+              <a href="mailto:concierge@jamilah.com">concierge@jamilah.com</a>
+            </li>
+            <li class="zy-footer-contact-item">
+              <i class="bi bi-clock"></i>
+              <span>Mon – Sat: 9:00 AM – 7:00 PM IST</span>
+            </li>
+          </ul>
+
+          <div class="zy-footer-social-links">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="zy-footer-social-btn" title="Instagram" aria-label="Instagram">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="zy-footer-social-btn" title="Facebook" aria-label="Facebook">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="zy-footer-social-btn" title="Pinterest" aria-label="Pinterest">
+              <i class="bi bi-pinterest"></i>
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="zy-footer-social-btn" title="YouTube" aria-label="YouTube">
+              <i class="bi bi-youtube"></i>
+            </a>
+            <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" class="zy-footer-social-btn" title="WhatsApp Concierge" aria-label="WhatsApp Concierge">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 2: Curated Silhouettes -->
+        <div class="col-lg-2 col-md-6 col-6">
+          <h4 class="zy-footer-col-title">Curated Silhouettes</h4>
+          <ul class="zy-footer-nav-list">
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'all_products' %}?categories=1" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Prayer Dresses
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'all_products' %}?categories=6" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Turkish Abayas
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'all_products' %}?categories=3" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Silk Co-Ords
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'all_products' %}?categories=5" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Chiffon Hijabs
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'all_products' %}?categories=2" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Kid Collection
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'all_products' %}" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> All Atelier Pieces
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Client Services & Concierge -->
+        <div class="col-lg-2 col-md-6 col-6">
+          <h4 class="zy-footer-col-title">Client Services</h4>
+          <ul class="zy-footer-nav-list">
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'about' %}" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> About Atelier
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'contact' %}" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Concierge Contact
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'user_orders' %}" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Track My Order
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'wallet_view' %}" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Jamilah Wallet
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'view_coupons' %}" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Exclusive Coupons
+              </a>
+            </li>
+            <li class="zy-footer-nav-item">
+              <a href="{% url 'wishlist' %}" class="zy-footer-nav-link">
+                <i class="bi bi-chevron-right fs-xs"></i> Saved Wishlist
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 4: The Sisterhood Newsletter & Guarantees -->
+        <div class="col-lg-4 col-md-6">
+          <h4 class="zy-footer-col-title">The Sisterhood Circle</h4>
+          <div class="zy-footer-newsletter-wrap">
+            <p class="m-0 text-light" style="font-size: 0.825rem; line-height: 1.5;">
+              Subscribe to receive private salon preview invitations, seasonal release alerts, and 10% off your inaugural order.
+            </p>
+            <form onsubmit="handleFooterNewsletter(event, this)" class="zy-footer-nl-form">
+              {% csrf_token %}
+              <input type="email" name="email" required placeholder="Enter your email address" class="zy-footer-nl-input" autocomplete="email" />
+              <button type="submit" class="zy-footer-nl-btn">Join Circle</button>
+            </form>
+          </div>
+
+          <div class="zy-footer-trust-badges">
+            <div class="zy-footer-trust-badge">
+              <i class="bi bi-shield-check"></i>
+              <span>256-Bit SSL Razorpay Protected Checkout</span>
+            </div>
+            <div class="zy-footer-trust-badge">
+              <i class="bi bi-arrow-repeat"></i>
+              <span>7-Day Easy Returns &amp; Instant Wallet Reconciliation</span>
+            </div>
+            <div class="zy-footer-trust-badge">
+              <i class="bi bi-flower1"></i>
+              <span>100% Breathable &amp; Certified Halal Modest Fabrics</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="zy-footer-bottom">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div>
+        <p class="m-0">&copy; 2026 Jamilah Modest Couture Atelier. All rights reserved.</p>
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-secondary small d-none d-md-inline">Secured Payment Gateways:</span>
+        <div class="d-inline-flex align-items-center gap-2">
+          <span class="badge bg-dark text-white-50 border border-secondary px-2 py-1" style="font-size: 0.7rem;">Razorpay</span>
+          <span class="badge bg-dark text-white-50 border border-secondary px-2 py-1" style="font-size: 0.7rem;">UPI</span>
+          <span class="badge bg-dark text-white-50 border border-secondary px-2 py-1" style="font-size: 0.7rem;">Visa / MC</span>
+          <span class="badge bg-dark text-white-50 border border-secondary px-2 py-1" style="font-size: 0.7rem;">NetBanking</span>
+        </div>
+
+        <button type="button" class="zy-back-to-top-btn ms-2" id="zyBackToTop" title="Scroll to Top" aria-label="Scroll to Top" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+          <i class="bi bi-arrow-up"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function handleFooterNewsletter(e, form) {
+    e.preventDefault();
+    const input = form.querySelector('input[type="email"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (!input || !input.value.trim()) return;
+
+    const email = input.value.trim();
+    const originalText = submitBtn ? submitBtn.innerText : 'Join Circle';
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Joining...';
+    }
+
+    const csrfInput = form.querySelector('[name=csrfmiddlewaretoken]');
+    const csrfToken = csrfInput ? csrfInput.value : (document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '');
+
+    fetch('/sisterhood/subscribe/', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": csrfToken,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: new URLSearchParams({ email: email })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
+      }
+      if (data.status === 'success') {
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            icon: 'success',
+            title: 'Welcome to The Sisterhood!',
+            html: `
+              <p style="font-size: 0.92rem; color: #4a5568; margin-bottom: 10px; line-height: 1.5;">${data.message}</p>
+              <div style="background: #f7fafc; border: 1.5px dashed #d4b872; border-radius: 8px; padding: 12px; margin-top: 10px;">
+                <span style="font-size: 0.72rem; text-transform: uppercase; color: #718096; display: block; font-weight: 700;">Your 10% Welcome Gift</span>
+                <strong style="font-size: 1.25rem; color: #05201f; letter-spacing: 2px; font-family: monospace;">${data.coupon_code || 'SISTERHOOD10'}</strong>
+                <div style="font-size: 0.75rem; color: #718096; margin-top: 4px;">Apply at checkout on orders above ₹500</div>
+              </div>
+            `,
+            confirmButtonColor: '#05201f'
+          });
+        } else {
+          alert(data.message);
+        }
+        input.value = '';
+      } else if (data.status === 'info') {
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            icon: 'info',
+            title: 'Already in The Sisterhood',
+            html: `
+              <p style="font-size: 0.92rem; color: #4a5568; line-height: 1.5;">${data.message}</p>
+              <div style="background: #f7fafc; border: 1px dashed #d4b872; border-radius: 8px; padding: 10px; margin-top: 8px;">
+                <span style="font-size: 0.72rem; text-transform: uppercase; color: #718096; display: block; font-weight: 700;">Your 10% Member Voucher</span>
+                <strong style="font-size: 1.15rem; color: #05201f; letter-spacing: 2px; font-family: monospace;">${data.coupon_code || 'SISTERHOOD10'}</strong>
+              </div>
+            `,
+            confirmButtonColor: '#05201f'
+          });
+        } else {
+          alert(data.message);
+        }
+      } else {
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Notice',
+            text: data.message || 'Please check your email address.',
+            confirmButtonColor: '#05201f'
+          });
+        } else {
+          alert(data.message || 'Please check your email address.');
+        }
+      }
+    })
+    .catch(err => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
+      }
+      if (typeof Swal !== 'undefined') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Connection Issue',
+          text: 'Unable to subscribe right now. Please try again shortly.',
+          confirmButtonColor: '#05201f'
+        });
+      } else {
+        alert('Unable to subscribe right now. Please try again shortly.');
+      }
+    });
+  }
+</script>

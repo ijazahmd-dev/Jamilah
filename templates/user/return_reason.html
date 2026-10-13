@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Return - {{ order_item.product.name }} | Jamilah</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css" />
+
+  <!-- Base Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-hover: #06665f;
+      --zy-primary-subtle: #f0fdf9;
+      --zy-primary-border: #a7f3d0;
+      --zy-dark: #0f172a;
+      --zy-slate: #334155;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-surface: #ffffff;
+      --zy-bg: #f8fafc;
+      --zy-amber: #d97706;
+      --zy-amber-subtle: #fffbeb;
+      --zy-amber-border: #fde68a;
+      --zy-radius-sm: 8px;
+      --zy-radius-md: 14px;
+      --zy-radius-lg: 20px;
+      --zy-shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.04);
+      --zy-shadow-md: 0 10px 30px -4px rgba(15, 23, 42, 0.08);
+      --zy-shadow-lg: 0 20px 40px -8px rgba(15, 23, 42, 0.12);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--zy-bg);
+      color: var(--zy-slate);
+      line-height: 1.7;
+    }
+
+    /* Breadcrumbs */
+    .zy-breadcrumb-bar {
+      background: var(--zy-surface);
+      border-bottom: 1px solid var(--zy-border);
+      padding: 14px 0;
+      font-size: 0.88rem;
+    }
+
+    .zy-breadcrumb-bar a {
+      color: var(--zy-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .zy-breadcrumb-bar a:hover {
+      color: var(--zy-primary);
+    }
+
+    .zy-breadcrumb-bar .sep {
+      margin: 0 10px;
+      color: #cbd5e1;
+    }
+
+    .zy-breadcrumb-bar .current {
+      color: var(--zy-dark);
+      font-weight: 600;
+    }
+
+    /* Page Wrap */
+    .return-page-wrap {
+      padding: 40px 0 80px;
+    }
+
+    /* Card Panels */
+    .return-card {
+      background: var(--zy-surface);
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      box-shadow: var(--zy-shadow-md);
+      padding: 36px;
+      margin-bottom: 24px;
+    }
+
+    .return-header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--zy-amber-subtle);
+      border: 1px solid var(--zy-amber-border);
+      color: var(--zy-amber);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 5px 14px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+
+    .return-page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 8px;
+    }
+
+    .return-page-subtitle {
+      color: var(--zy-muted);
+      font-size: 0.96rem;
+      margin-bottom: 0;
+    }
+
+    /* Item Summary Box */
+    .item-return-showcase {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      background: #f8fafc;
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      margin-bottom: 28px;
+    }
+
+    .item-img-preview {
+      width: 95px;
+      height: 95px;
+      border-radius: var(--zy-radius-sm);
+      object-fit: cover;
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      flex-shrink: 0;
+    }
+
+    .item-meta-info {
+      flex: 1;
+    }
+
+    .item-meta-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 4px;
+    }
+
+    .item-meta-specs {
+      font-size: 0.85rem;
+      color: var(--zy-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .item-meta-specs span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .item-price-tag {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--zy-primary);
+    }
+
+    /* Refund Callout Card */
+    .refund-callout-card {
+      border-radius: var(--zy-radius-md);
+      padding: 24px;
+      margin-bottom: 28px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    .refund-amount-display {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin: 8px 0;
+      font-family: 'Playfair Display', serif;
+      color: #047857;
+    }
+
+    /* Preset Reason Grid */
+    .reason-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .reason-option-cell {
+      border: 2px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      user-select: none;
+    }
+
+    .reason-option-cell:hover {
+      border-color: var(--zy-primary);
+      background: #f8fafc;
+    }
+
+    .reason-option-cell.active {
+      border-color: var(--zy-primary);
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.15);
+    }
+
+    .reason-radio-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.2s;
+    }
+
+    .reason-option-cell.active .reason-radio-indicator {
+      border-color: var(--zy-primary);
+      background: var(--zy-primary);
+    }
+
+    .reason-option-cell.active .reason-radio-indicator::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+    }
+
+    .reason-text-group {
+      flex: 1;
+    }
+
+    .reason-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--zy-dark);
+      margin-bottom: 2px;
+    }
+
+    .reason-option-cell.active .reason-title {
+      color: var(--zy-primary);
+    }
+
+    .reason-desc {
+      font-size: 0.78rem;
+      color: var(--zy-muted);
+      line-height: 1.35;
+    }
+
+    /* Textarea & Live Count */
+    .return-textarea {
+      border: 2px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      padding: 16px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      resize: vertical;
+      min-height: 120px;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .return-textarea:focus {
+      outline: none;
+      border-color: var(--zy-primary);
+      box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.12);
+    }
+
+    .char-counter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--zy-muted);
+    }
+
+    .char-count.valid {
+      color: var(--zy-primary);
+      font-weight: 600;
+    }
+
+    .char-count.invalid {
+      color: #ef4444;
+      font-weight: 600;
+    }
+
+    /* Quality Guidelines Checklist */
+    .guidelines-box {
+      background: #f8fafc;
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .guideline-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 0.88rem;
+    }
+
+    .guideline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .guideline-icon {
+      font-size: 1.1rem;
+      color: var(--zy-primary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Policy Agreement */
+    .terms-box {
+      background: #ffffff;
+      border: 1px dashed var(--zy-border);
+      border-radius: var(--zy-radius-md);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+
+    .form-check-input:checked {
+      background-color: var(--zy-primary);
+      border-color: var(--zy-primary);
+    }
+
+    /* Action Buttons */
+    .action-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-top: 10px;
+    }
+
+    .btn-submit-return {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: var(--zy-radius-md);
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+
+    .btn-submit-return:hover:not(:disabled) {
+      background: var(--zy-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(8, 129, 120, 0.25);
+      color: #ffffff;
+    }
+
+    .btn-submit-return:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-keep-item {
+      background: #ffffff;
+      color: var(--zy-slate);
+      border: 1px solid var(--zy-border);
+      padding: 14px 24px;
+      border-radius: var(--zy-radius-md);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-keep-item:hover {
+      background: #f1f5f9;
+      color: var(--zy-dark);
+      border-color: #cbd5e1;
+    }
+
+    /* Side Information Card */
+    .side-info-card {
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: var(--zy-radius-lg);
+      padding: 28px;
+      box-shadow: var(--zy-shadow-sm);
+    }
+
+    .step-item {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--zy-dark);
+      margin-bottom: 2px;
+    }
+
+    .step-desc {
+      font-size: 0.82rem;
+      color: var(--zy-muted);
+      line-height: 1.4;
+    }
+
+    /* Modal Styling */
+    .modal-return-success .modal-content {
+      border: none;
+      border-radius: var(--zy-radius-lg);
+      padding: 20px;
+      box-shadow: var(--zy-shadow-lg);
+    }
+
+    .success-celebrate-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: var(--zy-primary-subtle);
+      color: var(--zy-primary);
+      font-size: 2.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    @media (max-width: 768px) {
+      .reason-preset-grid {
+        grid-template-columns: 1fr;
+      }
+      .item-return-showcase {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .action-btn-group {
+        flex-direction: column;
+        width: 100%;
+      }
+      .action-btn-group button,
+      .action-btn-group a {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  {% include 'header.html' %}
+
+  <!-- BREADCRUMBS -->
+  <div class="zy-breadcrumb-bar">
+    <div class="container">
+      <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+      <span class="sep">/</span>
+      <a href="{% url 'user_orders' %}">My Orders</a>
+      <span class="sep">/</span>
+      <a href="{% url 'user_order_details' order_item.id %}">Order #{{ order.id }}</a>
+      <span class="sep">/</span>
+      <span class="current">Return Request</span>
+    </div>
+  </div>
+
+  <!-- MAIN RETURN CONTENT -->
+  <main class="return-page-wrap">
+    <div class="container">
+      <div class="row g-4">
+        
+        <!-- Left: Return Form & Item Details -->
+        <div class="col-lg-8">
+          <div class="return-card">
+            
+            <!-- Header Badge & Title -->
+            <div class="return-header-badge">
+              <i class="bi bi-arrow-return-left"></i>
+              <span>7-Day Return Policy &bull; {{ remaining_days }} Day{{ remaining_days|pluralize }} Left</span>
+            </div>
+            
+            <h1 class="return-page-title">Request Item Return</h1>
+            <p class="return-page-subtitle">
+              We want you to be completely delighted with your Jamilah purchase. If this piece isn't ideal, please share your reason below to initiate a return.
+            </p>
+
+            <hr class="my-4" style="border-color: var(--zy-border);" />
+
+            <!-- Item Showcase Box -->
+            <div class="item-return-showcase">
+              {% if order_item.product.images.first %}
+                <img src="{{ order_item.product.images.first.image.url }}" alt="{{ order_item.product.name }}" class="item-img-preview" />
+              {% else %}
+                <div class="item-img-preview d-flex align-items-center justify-content-center text-muted">
+                  <i class="bi bi-image fs-3"></i>
+                </div>
+              {% endif %}
+
+              <div class="item-meta-info">
+                <div class="item-meta-name">{{ order_item.product.name }}</div>
+                <div class="item-meta-specs">
+                  {% if order_item.product_variant %}
+                    <span><i class="bi bi-palette text-secondary"></i>Color: <strong>{{ order_item.product_variant.color }}</strong></span>
+                    <span><i class="bi bi-rulers text-secondary"></i>Size: <strong>{{ order_item.product_variant.size }}</strong></span>
+                  {% endif %}
+                  <span><i class="bi bi-box-seam text-secondary"></i>Qty: <strong>{{ order_item.quantity }}</strong></span>
+                  <span><i class="bi bi-check-circle-fill text-success"></i>Delivered: <strong>{{ order_item.updated_at|date:"d M Y" }}</strong></span>
+                </div>
+                <div class="item-price-tag">₹{{ order_item.final_offer_price|default:order_item.price }}</div>
+              </div>
+            </div>
+
+            <!-- Estimated Refund Callout -->
+            <div class="refund-callout-card">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                  <span class="badge bg-success bg-opacity-25 text-success fw-bold px-3 py-1 rounded-pill mb-1">
+                    <i class="bi bi-wallet2 me-1"></i>Wallet Refund
+                  </span>
+                  <div class="fw-semibold text-dark fs-6 mt-1">Estimated Net Refund Credit</div>
+                </div>
+                <div class="text-end">
+                  <div class="refund-amount-display">₹{{ estimated_refund }}</div>
+                </div>
+              </div>
+              <div class="small mt-2 text-muted" style="border-top: 1px dashed #a7f3d0; padding-top: 10px;">
+                <i class="bi bi-info-circle-fill text-success me-1"></i>
+                Upon physical pickup and quality verification, <strong>₹{{ estimated_refund }}</strong> will be credited directly to your 
+                <a href="{% url 'wallet_view' %}" class="fw-bold text-success text-decoration-underline" target="_blank">Jamilah Digital Wallet</a>.
+                {% if order.coupon %}
+                  <span class="d-block mt-1 fst-italic text-secondary">
+                    * Note: This refund accounts for the proportional coupon deduction applied across your order.
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Return Submission Form -->
+            <form id="returnOrderForm" method="POST" action="{% url 'request_return' order_item.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="ajax" value="1">
+
+              <div class="mb-3">
+                <label class="fw-bold text-dark mb-2 fs-6">
+                  Select a Reason for Return <span class="text-danger">*</span>
+                </label>
+                <p class="text-muted small mb-3">Please choose the option that best describes your situation:</p>
+
+                <!-- 6 Preset Reason Option Cards -->
+                <div class="reason-preset-grid">
+                  <div class="reason-option-cell" data-reason="Defective or Damaged product (fabric tear, stitching defect, or stain)" onclick="selectReturnPreset(this)">
+                    <div class="reason-radio-indicator"></div>
+                    <div class="reason-text-group">
+                      <div class="reason-title">Defective or Damaged</div>
+                      <div class="reason-desc">Stitching flaw, tear, stain, or broken zipper upon unboxing</div>
+                    </div>
+                  </div>
+
+                  <div class="reason-option-cell" data-reason="Size or Fit issue (garment runs larger or smaller than standard sizing)" onclick="selectReturnPreset(this)">
+                    <div class="reason-radio-indicator"></div>
+                    <div class="reason-text-group">
+                      <div class="reason-title">Size or Fit Issue</div>
+                      <div class="reason-desc">Item does not fit as expected (runs too loose / tight)</div>
+                    </div>
+                  </div>
+
+                  <div class="reason-option-cell" data-reason="Wrong item delivered (received incorrect color, size, or different style)" onclick="selectReturnPreset(this)">
+                    <div class="reason-radio-indicator"></div>
+                    <div class="reason-text-group">
+                      <div class="reason-title">Wrong Item Delivered</div>
+                      <div class="reason-desc">Received different style, color, or size from what was ordered</div>
+                    </div>
+                  </div>
+
+                  <div class="reason-option-cell" data-reason="Fabric quality not as expected (material thickness, texture, or feel differs)" onclick="selectReturnPreset(this)">
+                    <div class="reason-radio-indicator"></div>
+                    <div class="reason-text-group">
+                      <div class="reason-title">Quality Not as Expected</div>
+                      <div class="reason-desc">Material feel, drape, or fabric finish differs from expectations</div>
+                    </div>
+                  </div>
+
+                  <div class="reason-option-cell" data-reason="Product looks different from website images (color shade or embellishments differ)" onclick="selectReturnPreset(this)">
+                    <div class="reason-radio-indicator"></div>
+                    <div class="reason-text-group">
+                      <div class="reason-title">Different from Images</div>
+                      <div class="reason-desc">Color shade, embroidery, or cut varies significantly from photos</div>
+                    </div>
+                  </div>
+
+                  <div class="reason-option-cell" data-reason="Changed my mind / No longer required" onclick="selectReturnPreset(this)">
+                    <div class="reason-radio-indicator"></div>
+                    <div class="reason-text-group">
+                      <div class="reason-title">Changed Mind / Other</div>
+                      <div class="reason-desc">Decided not to keep this item or personal reasons</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Detailed Return Reason Textarea -->
+              <div class="mb-4">
+                <label for="return_reason" class="fw-bold text-dark mb-1">
+                  Additional Details & Comments <span class="text-danger">*</span>
+                </label>
+                <textarea 
+                  class="return-textarea" 
+                  id="return_reason" 
+                  name="return_reason" 
+                  rows="4" 
+                  placeholder="Please describe why you wish to return this item in detail (minimum 5 characters)..."
+                  maxlength="500"
+                  required
+                ></textarea>
+
+                <div class="char-counter-bar">
+                  <span id="charCountHint" class="text-muted">Minimum 5 characters required</span>
+                  <span id="charCounter" class="char-count">0 / 500 characters</span>
+                </div>
+                <div id="clientErrorMsg" class="text-danger small mt-2 fw-semibold" style="display: none;"></div>
+              </div>
+
+              <!-- Quality Condition Agreement -->
+              <div class="terms-box">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="returnTermsCheck" required>
+                  <label class="form-check-label text-dark fw-medium small" for="returnTermsCheck">
+                    I confirm that the item is <strong>unworn, unwashed</strong>, free from perfume or marks, and has all <strong>original brand tags intact</strong> in its packaging.
+                  </label>
+                </div>
+              </div>
+
+              <!-- Ajax Server Error Banner -->
+              <div id="ajaxErrorBanner" class="alert alert-danger py-2 small mb-4" style="display: none;"></div>
+
+              <!-- Action Buttons -->
+              <div class="action-btn-group">
+                <button type="submit" class="btn-submit-return" id="btnSubmitReturn">
+                  <i class="bi bi-arrow-return-left"></i>
+                  <span id="submitReturnText">Submit Return Request</span>
+                </button>
+
+                <a href="{% url 'user_order_details' order_item.id %}" class="btn-keep-item">
+                  <i class="bi bi-x-circle"></i>
+                  <span>Keep Item (Go Back)</span>
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right: How Returns Work & Policy Guidelines -->
+        <div class="col-lg-4">
+          
+          <!-- Return Steps Timeline -->
+          <div class="side-info-card mb-4">
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-clock-history text-primary me-2"></i>How It Works
+            </h5>
+
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div>
+                <div class="step-title">Submit Return Request</div>
+                <div class="step-desc">Pick your reason and submit the request. Our support team reviews it within a few hours.</div>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div>
+                <div class="step-title">Doorstep Courier Pickup</div>
+                <div class="step-desc">A delivery partner will collect the packaged garment from your doorstep within 24–48 hours.</div>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div>
+                <div class="step-title">Quality Inspection</div>
+                <div class="step-desc">Our atelier verifies that tags are attached and the garment is in unwashed, original condition.</div>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div>
+                <div class="step-title">Instant Wallet Refund</div>
+                <div class="step-desc">Upon approval, ₹{{ estimated_refund }} is credited immediately to your Jamilah Wallet for immediate use.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quality Guidelines Box -->
+          <div class="side-info-card">
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-shield-check text-success me-2"></i>Return Guidelines
+            </h5>
+
+            <div class="guidelines-box mb-0">
+              <div class="guideline-item">
+                <i class="bi bi-tag guideline-icon"></i>
+                <div><strong>Brand Tags Attached:</strong> Original price tag and fabric care labels must remain securely fastened.</div>
+              </div>
+              <div class="guideline-item">
+                <i class="bi bi-stars guideline-icon"></i>
+                <div><strong>Unworn & Unwashed:</strong> Items must be free from scents, makeup, deodorant stains, or wear marks.</div>
+              </div>
+              <div class="guideline-item">
+                <i class="bi bi-box guideline-icon"></i>
+                <div><strong>Original Polybag:</strong> Please pack the garment safely inside the original protective packaging.</div>
+              </div>
+              <div class="guideline-item">
+                <i class="bi bi-calendar2-check guideline-icon"></i>
+                <div><strong>7-Day Eligibility:</strong> Returns are accepted within 7 days from the confirmed delivery date.</div>
+              </div>
+            </div>
+
+            <div class="mt-3 text-center">
+              <a href="{% url 'contact' %}" class="small text-muted text-decoration-underline">
+                <i class="bi bi-question-circle me-1"></i>Need assistance? Contact Concierge
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SUCCESS MODAL -->
+  <div class="modal fade modal-return-success" id="returnSuccessModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-body p-4">
+          <div class="success-celebrate-icon">
+            <i class="bi bi-check-lg"></i>
+          </div>
+
+          <h3 class="fw-bold text-dark mb-2">Return Request Submitted!</h3>
+          <p class="text-muted mb-3" id="modalSuccessMessage">
+            Your return request has been submitted successfully. Our team will review and assign doorstep pickup shortly.
+          </p>
+
+          <div class="p-3 bg-light rounded-3 text-start small mb-4 border">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted">Item:</span>
+              <span class="fw-bold text-dark">{{ order_item.product.name }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted">Expected Refund:</span>
+              <span class="fw-bold text-success">₹{{ estimated_refund }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Refund Destination:</span>
+              <span class="fw-bold text-primary">Jamilah Digital Wallet</span>
+            </div>
+          </div>
+
+          <div class="d-flex flex-column gap-2">
+            <button type="button" class="btn btn-primary py-2 fw-bold rounded-3" id="btnRedirectOrder">
+              <i class="bi bi-bag-check me-1"></i>View Order Details
+            </button>
+            <a href="{% url 'wallet_view' %}" class="btn btn-outline-secondary py-2 fw-semibold rounded-3">
+              <i class="bi bi-wallet2 me-1"></i>Check Wallet Balance
+            </a>
+            <a href="{% url 'all_products' %}" class="btn btn-link text-muted small text-decoration-none">
+              Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  {% include 'footer.html' %}
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const CSRF_TOKEN = "{{ csrf_token }}";
+    const textarea = document.getElementById("return_reason");
+    const charCounter = document.getElementById("charCounter");
+    const charHint = document.getElementById("charCountHint");
+    const clientError = document.getElementById("clientErrorMsg");
+    const ajaxError = document.getElementById("ajaxErrorBanner");
+    const form = document.getElementById("returnOrderForm");
+    const submitBtn = document.getElementById("btnSubmitReturn");
+    const submitText = document.getElementById("submitReturnText");
+    const termsCheck = document.getElementById("returnTermsCheck");
+    let redirectUrl = "{% url 'user_order_details' order_item.id %}";
+
+    // 1. Preset Reason Card Selection
+    function selectReturnPreset(card) {
+      document.querySelectorAll(".reason-option-cell").forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
+
+      const presetReason = card.getAttribute("data-reason");
+      if (presetReason) {
+        textarea.value = presetReason;
+        updateCharCounter();
+        if (clientError) clientError.style.display = "none";
+      }
+    }
+
+    // 2. Live Character Counter
+    function updateCharCounter() {
+      const len = textarea.value.trim().length;
+      charCounter.innerText = `${len} / 500 characters`;
+
+      if (len >= 5 && len <= 500) {
+        charCounter.className = "char-count valid";
+        charHint.innerText = "Character count is valid";
+        charHint.className = "text-success fw-semibold";
+      } else if (len > 500) {
+        charCounter.className = "char-count invalid";
+        charHint.innerText = "Exceeds 500 characters maximum limit";
+        charHint.className = "text-danger fw-semibold";
+      } else {
+        charCounter.className = "char-count";
+        charHint.innerText = "Minimum 5 characters required";
+        charHint.className = "text-muted";
+      }
+    }
+
+    if (textarea) {
+      textarea.addEventListener("input", updateCharCounter);
+    }
+
+    // 3. Form Submission with AJAX
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Validation
+        if (termsCheck && !termsCheck.checked) {
+          showError("Please acknowledge the return condition guidelines before submitting.");
+          termsCheck.focus();
+          return;
+        }
+
+        const reasonVal = textarea.value.trim();
+        textarea.value = reasonVal;
+
+        if (!reasonVal) {
+          showError("Please select or describe a reason for return.");
+          textarea.focus();
+          return;
+        }
+
+        if (reasonVal.length < 5) {
+          showError("Return reason must be at least 5 characters long.");
+          textarea.focus();
+          return;
+        }
+
+        if (reasonVal.length > 500) {
+          showError("Return reason cannot exceed 500 characters.");
+          textarea.focus();
+          return;
+        }
+
+        // Hide previous errors
+        if (clientError) clientError.style.display = "none";
+        if (ajaxError) ajaxError.style.display = "none";
+
+        // Loading state
+        submitBtn.disabled = true;
+        submitText.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting Request...';
+
+        const formData = new URLSearchParams(new FormData(form));
+
+        fetch(form.action, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": CSRF_TOKEN,
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Requested-With": "XMLHttpRequest",
+            "Accept": "application/json"
+          },
+          body: formData
+        })
+        .then(async function (res) {
+          let data;
+          try {
+            data = await res.json();
+          } catch (e) {
+            data = null;
+          }
+
+          submitBtn.disabled = false;
+          submitText.innerText = "Submit Return Request";
+
+          if (res.ok && data && data.success) {
+            if (data.message) {
+              document.getElementById("modalSuccessMessage").innerText = data.message;
+            }
+            if (data.redirect_url) {
+              redirectUrl = data.redirect_url;
+            }
+
+            const successModal = new bootstrap.Modal(document.getElementById("returnSuccessModal"));
+            successModal.show();
+
+            document.getElementById("btnRedirectOrder").addEventListener("click", function () {
+              window.location.href = redirectUrl;
+            });
+          } else {
+            const err = (data && data.error) ? data.error : ("Failed to submit return request (" + res.status + "). Please try again.");
+            showServerError(err);
+          }
+        })
+        .catch(function (err) {
+          submitBtn.disabled = false;
+          submitText.innerText = "Submit Return Request";
+          showServerError("A network error occurred while submitting your return request. Please try again.");
+        });
+      });
+    }
+
+    function showError(msg) {
+      if (clientError) {
+        clientError.innerText = msg;
+        clientError.style.display = "block";
+      }
+    }
+
+    function showServerError(msg) {
+      if (ajaxError) {
+        ajaxError.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${msg}`;
+        ajaxError.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

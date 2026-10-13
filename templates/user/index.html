@@ -1,0 +1,1871 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jamilah — Luxury Modest Couture & Prayer Wear</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Outfit (luxury headers) & Plus Jakarta Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Flaticon & Swiper -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- Core Theme Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=7" />
+
+  <meta name="csrf-token" content="{{ csrf_token }}">
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-dark: #06635c;
+      --zy-primary-light: #e8f5f4;
+      --zy-primary-border: #b2dedb;
+      --zy-gold: #c59b27;
+      --zy-gold-light: #fef8e7;
+      --zy-dark: #0f172a;
+      --zy-slate: #1e293b;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-card-bg: #ffffff;
+      --zy-surface: #f8fafc;
+    }
+
+    body {
+      background-color: #fbfbfa;
+      color: var(--zy-slate);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Hero Section */
+    .home-hero-wrap {
+      background: linear-gradient(135deg, #091e1c 0%, #133a35 60%, #0d2723 100%);
+      padding: 36px 0 42px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .home-hero-wrap::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -80px;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(8, 129, 120, 0.35) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-collection-pill {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #5eead4;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 50px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+
+    .hero-main-title {
+      color: #ffffff;
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+    }
+
+    .hero-main-title span {
+      background: linear-gradient(135deg, #a7f3d0 0%, #5eead4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-main-desc {
+      color: #cbd5e1;
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      max-width: 460px;
+      margin-bottom: 22px;
+    }
+
+    .hero-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .btn-hero-primary {
+      background: linear-gradient(135deg, #088178 0%, #066d65 100%);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(8, 129, 120, 0.3);
+      transition: all 0.25s ease;
+    }
+
+    .btn-hero-primary:hover {
+      background: linear-gradient(135deg, #066d65 0%, #044b45 100%);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(8, 129, 120, 0.4);
+    }
+
+    .btn-hero-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-hero-secondary:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .hero-social-proof {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .social-proof-stars {
+      color: #f59e0b;
+      font-size: 0.85rem;
+    }
+
+    .social-proof-text {
+      color: #94a3b8;
+      font-size: 0.8125rem;
+      margin: 0;
+    }
+
+    .social-proof-text strong {
+      color: #ffffff;
+    }
+
+    /* Hero 3D Card Showcase Refined Sizing */
+    .home__hero-showcase {
+      max-width: 360px;
+      margin: 0 auto;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-card-wrap {
+      max-width: 290px !important;
+      margin: 0 auto;
+    }
+
+    .hero-arch-frame {
+      height: 380px !important;
+      border-radius: 145px 145px 20px 20px !important;
+    }
+
+    .hero-ring {
+      width: 330px !important;
+      height: 330px !important;
+    }
+
+    .hero-badge--rating {
+      padding: 6px 10px !important;
+      bottom: 18px !important;
+      left: -14px !important;
+      border-radius: 12px !important;
+    }
+
+    .hero-badge--feature {
+      padding: 6px 10px !important;
+      top: 24px !important;
+      right: -14px !important;
+      border-radius: 12px !important;
+    }
+
+    .hero-seal {
+      width: 66px !important;
+      height: 66px !important;
+      top: -8px !important;
+      right: -8px !important;
+    }
+
+    .hero-seal-percent {
+      font-size: 0.9rem !important;
+    }
+
+    .hero-seal-label {
+      font-size: 0.55rem !important;
+    }
+
+    /* Pillars Strip */
+    .pillars-strip {
+      background: #ffffff;
+      border-bottom: 1px solid var(--zy-border);
+      padding: 16px 0;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .pillar-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 8px;
+    }
+
+    .pillar-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .pillar-title {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin-bottom: 1px;
+    }
+
+    .pillar-sub {
+      font-size: 0.72rem;
+      color: var(--zy-muted);
+      margin: 0;
+    }
+
+    /* Category Showcase Cards - Compact & Refined */
+    .section-eyebrow {
+      color: var(--zy-primary);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .section-headline {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--zy-dark);
+      letter-spacing: -0.3px;
+      margin-bottom: 18px;
+    }
+
+    .cat-arch-card {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 235px;
+      min-height: 235px;
+      width: 100%;
+      background: #1e293b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 12px 14px;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @media (max-width: 576px) {
+      .cat-arch-card {
+        height: 195px;
+        min-height: 195px;
+        padding: 10px 12px;
+      }
+    }
+
+    .cat-arch-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+    }
+
+    .cat-arch-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition: transform 0.6s ease;
+    }
+
+    .cat-arch-card:hover .cat-arch-img {
+      transform: scale(1.06);
+    }
+
+    .cat-arch-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0) 50%, rgba(15, 23, 42, 0.88) 100%);
+      pointer-events: none;
+    }
+
+    .cat-arch-content {
+      position: relative;
+      z-index: 2;
+      color: #ffffff;
+    }
+
+    .cat-arch-count {
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(4px);
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 3px;
+    }
+
+    .cat-arch-title {
+      color: #ffffff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+      line-height: 1.25;
+    }
+
+    .cat-arch-link-text {
+      color: #5eead4;
+      font-size: 0.72rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: gap 0.2s;
+    }
+
+    .cat-arch-card:hover .cat-arch-link-text {
+      gap: 6px;
+    }
+
+    /* Geometric Circle Slider Arrow Buttons */
+    .btn-slider-circle {
+      width: 38px !important;
+      height: 38px !important;
+      min-width: 38px !important;
+      min-height: 38px !important;
+      max-width: 38px !important;
+      max-height: 38px !important;
+      border-radius: 50% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: 1.5px solid #cbd5e1 !important;
+      background: #ffffff !important;
+      color: #334155 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box !important;
+      aspect-ratio: 1 / 1 !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      outline: none !important;
+    }
+
+    .btn-slider-circle i {
+      font-size: 0.9rem !important;
+      line-height: 1 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .btn-slider-circle:hover {
+      background: var(--zy-primary) !important;
+      border-color: var(--zy-primary) !important;
+      color: #ffffff !important;
+      transform: scale(1.06) !important;
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.25) !important;
+    }
+
+    .btn-slider-circle:active {
+      transform: scale(0.94) !important;
+    }
+
+    /* Product Tabs Section */
+    .products-tabs-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .product-tab-btn {
+      background: #ffffff;
+      color: var(--zy-slate);
+      border: 1.5px solid var(--zy-border);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .product-tab-btn:hover {
+      border-color: var(--zy-primary);
+      color: var(--zy-primary);
+    }
+
+    .product-tab-btn.active {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border-color: var(--zy-primary);
+      box-shadow: 0 2px 10px rgba(8, 129, 120, 0.22);
+    }
+
+    /* Luxury Product Card - Compact & Refined */
+    .product-luxury-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid var(--zy-border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      height: 100%;
+    }
+
+    .product-luxury-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+      border-color: #cbd5e1;
+    }
+
+    .card-image-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1.15;
+      background: #f1f5f9;
+      overflow: hidden;
+    }
+
+    .card-image-wrap a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease, opacity 0.4s ease;
+    }
+
+    .card-product-img.img-secondary {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+    }
+
+    .product-luxury-card:hover .card-product-img.img-primary {
+      transform: scale(1.05);
+    }
+
+    .product-luxury-card:hover .card-product-img.img-secondary {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .card-floating-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .card-action-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #334155;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .card-action-btn:hover {
+      background: #ffffff;
+      color: var(--zy-primary);
+      transform: scale(1.08);
+    }
+
+    .card-action-btn.active-wishlist {
+      color: #ef4444 !important;
+      background: #fff5f5;
+      border-color: #fecaca;
+    }
+
+    .card-badge-box {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 2;
+    }
+
+    .badge-offer-discount {
+      background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+      color: #ffffff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      box-shadow: 0 2px 6px rgba(225, 29, 72, 0.25);
+      letter-spacing: 0.2px;
+    }
+
+    .badge-stock-out {
+      background: rgba(15, 23, 42, 0.85);
+      color: #ffffff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .badge-stock-low {
+      background: #f59e0b;
+      color: #ffffff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+
+    .card-details-box {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-category-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--zy-primary);
+      margin-bottom: 2px;
+    }
+
+    .card-product-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--zy-dark);
+      margin-bottom: 4px;
+      line-height: 1.25;
+      text-decoration: none;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.1rem;
+      transition: color 0.2s;
+    }
+
+    .card-product-title:hover {
+      color: var(--zy-primary);
+    }
+
+    .card-rating-stars {
+      color: #f59e0b;
+      font-size: 0.6875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      margin-bottom: 6px;
+    }
+
+    .card-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 6px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .price-current {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--zy-primary);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .price-original {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
+
+    /* Atelier Story Banner */
+    .atelier-story-banner {
+      background: linear-gradient(135deg, #f0f7f6 0%, #e2eeed 100%);
+      border-radius: 16px;
+      border: 1px solid var(--zy-primary-border);
+      overflow: hidden;
+      margin: 36px 0;
+    }
+
+    .atelier-story-img {
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      object-fit: cover;
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .testimonial-quote {
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      color: #334155;
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .author-avatar-initials {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8125rem;
+    }
+
+    /* Newsletter Box */
+    .newsletter-vip-box {
+      background: linear-gradient(135deg, #091e1c 0%, #133a35 100%);
+      border-radius: 18px;
+      padding: 32px 24px;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .newsletter-vip-box::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(94, 234, 212, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .newsletter-form-wrap {
+      max-width: 440px;
+      margin: 16px auto 0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .newsletter-input {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      color: #ffffff;
+      padding: 8px 14px;
+      flex-grow: 1;
+      font-size: 0.8125rem;
+    }
+
+    .newsletter-input::placeholder {
+      color: #cbd5e1;
+    }
+
+    .newsletter-input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #5eead4;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.2);
+      color: #ffffff;
+    }
+
+    .newsletter-submit-btn {
+      background: #5eead4;
+      color: #091e1c;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      font-size: 0.8125rem;
+    }
+
+    .newsletter-submit-btn:hover {
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .newsletter-submit-btn:hover {
+      background: #ffffff;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== HERO SECTION WITH 3D SHOWCASE ===============-->
+  <section class="home-hero-wrap">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        
+        <!-- Hero Left Content -->
+        <div class="col-lg-6">
+          <span class="hero-collection-pill">
+            <i class="bi bi-stars"></i> Haute Modest Couture 2026
+          </span>
+
+          <h1 class="hero-main-title">
+            Grace in Every Drape. <br>
+            <span>Devotion in Every Stitch.</span>
+          </h1>
+
+          <p class="hero-main-desc">
+            Discover artisanal jilbabs, pure silk-blend prayer dresses, and fluid Turkish crepe abayas engineered for breathable modesty and ceremonial poise.
+          </p>
+
+          <div class="hero-btn-group">
+            <a href="{% url 'shop' %}" class="btn-hero-primary">
+              <i class="bi bi-bag-check-fill"></i> Explore Atelier
+            </a>
+            <a href="{% url 'shop' %}?sort=newest" class="btn-hero-secondary">
+              <i class="bi bi-sparkles"></i> New Season Pieces
+            </a>
+          </div>
+
+          <div class="hero-social-proof">
+            <div class="social-proof-stars">
+              ★★★★★
+            </div>
+            <p class="social-proof-text">
+              <strong>4.9 / 5.0 Rating</strong> by 12,000+ sisters worldwide &bull; <strong>100% Breathable</strong>
+            </p>
+          </div>
+        </div>
+
+        <!-- Hero Right 3D Showcase -->
+        <div class="col-lg-6">
+          <div class="home__hero-showcase" id="heroShowcase">
+            <div class="hero-glow hero-glow--primary" id="glowPrimary"></div>
+            <div class="hero-glow hero-glow--gold" id="glowGold"></div>
+
+            <div class="hero-ring" id="showcaseRing">
+              <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="200" cy="200" r="190" stroke="url(#emeraldGrad)" stroke-width="1.5" stroke-dasharray="8 12" opacity="0.45"/>
+                <circle cx="200" cy="200" r="160" stroke="#d4af37" stroke-width="0.8" stroke-dasharray="4 8" opacity="0.35"/>
+                <defs>
+                  <linearGradient id="emeraldGrad" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#088178" stop-opacity="0.8"/>
+                    <stop offset="1" stop-color="#2ca58d" stop-opacity="0.1"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+
+            <div class="hero-sparkle sp-1">✨</div>
+            <div class="hero-sparkle sp-2">✦</div>
+            <div class="hero-sparkle sp-3">✧</div>
+
+            <div class="hero-card-wrap" id="heroCardWrap">
+              <div class="hero-arch-frame">
+                <div class="hero-slides">
+                  <div class="hero-slide active" data-index="0">
+                    <img src="{% static 'assets/img/hero_prayer_dress_sage.jpg' %}" alt="Sage Silk Prayer Dress" class="hero-slide-img" loading="eager" />
+                    <div class="hero-slide-info">
+                      <div class="hero-slide-info-content">
+                        <span class="hero-pill">New Season</span>
+                        <h3 class="hero-slide-title">Aisha Sage Silk Prayer Set</h3>
+                        <p class="hero-slide-meta">Includes Matching Khimar &amp; Tasbih</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="hero-slide" data-index="1">
+                    <img src="{% static 'assets/img/hero_prayer_dress_rose.jpg' %}" alt="Rose Satin Prayer Dress" class="hero-slide-img" loading="lazy" />
+                    <div class="hero-slide-info">
+                      <div class="hero-slide-info-content">
+                        <span class="hero-pill">Best Seller</span>
+                        <h3 class="hero-slide-title">Jamilah Rose Satin Khimar Set</h3>
+                        <p class="hero-slide-meta">Ultra-Soft Breathable Drape</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="hero-slide" data-index="2">
+                    <img src="{% static 'assets/img/hero_prayer_dress_ivory.jpg' %}" alt="Ivory Gold Embroidered Prayer Dress" class="hero-slide-img" loading="lazy" />
+                    <div class="hero-slide-info">
+                      <div class="hero-slide-info-content">
+                        <span class="hero-pill">Signature Edition</span>
+                        <h3 class="hero-slide-title">Jamilah Royal Pearl Gown</h3>
+                        <p class="hero-slide-meta">Artisan Gold Thread Detailing</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hero-indicators">
+                  <button type="button" class="hero-dot active" data-slide="0" aria-label="Slide 1"><span class="dot__fill"></span></button>
+                  <button type="button" class="hero-dot" data-slide="1" aria-label="Slide 2"><span class="dot__fill"></span></button>
+                  <button type="button" class="hero-dot" data-slide="2" aria-label="Slide 3"><span class="dot__fill"></span></button>
+                </div>
+              </div>
+
+              <div class="hero-seal" id="badgeSeal" title="Limited Time Offer">
+                <svg class="hero-seal-text" viewBox="0 0 100 100">
+                  <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent"/>
+                  <text font-size="8.2" letter-spacing="2.2" fill="#088178" font-weight="700">
+                    <textPath href="#circlePath">
+                      • SPECIAL OFFER • {{ best_discount }}% OFF • JAMILAH
+                    </textPath>
+                  </text>
+                </svg>
+                <div class="hero-seal-core">
+                  <span class="hero-seal-percent">{{ best_discount }}%</span>
+                  <span class="hero-seal-label">OFF</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!--=============== TRUST PILLARS STRIP ===============-->
+  <section class="pillars-strip">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-3 col-sm-6">
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <i class="bi bi-flower1"></i>
+            </div>
+            <div>
+              <div class="pillar-title">Artisanal Modest Fabrics</div>
+              <p class="pillar-sub">Certified breathable silks &amp; crepes</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6">
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <i class="bi bi-truck"></i>
+            </div>
+            <div>
+              <div class="pillar-title">Free Express Shipping</div>
+              <p class="pillar-sub">Complimentary over ₹1,000</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6">
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </div>
+            <div>
+              <div class="pillar-title">7-Day Easy Returns</div>
+              <p class="pillar-sub">Instant wallet refund reconciliation</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-sm-6">
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <div>
+              <div class="pillar-title">100% Secure Checkout</div>
+              <p class="pillar-sub">Razorpay &amp; Jamilah Wallet protected</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== CATEGORIES SLIDER SHOWCASE ===============-->
+  <section class="py-4 my-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-end mb-3">
+        <div>
+          <span class="section-eyebrow">Explore Our Silhouettes</span>
+          <h2 class="section-headline mb-0">Curated Atelier Collections</h2>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-slider-circle" id="catSwiperPrev" aria-label="Previous Category">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button type="button" class="btn-slider-circle" id="catSwiperNext" aria-label="Next Category">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="swiper categories-swiper">
+        <div class="swiper-wrapper">
+          {% for cat in categories %}
+          <div class="swiper-slide">
+            <a href="{% url 'shop' %}?categories={{ cat.id }}" class="cat-arch-card">
+              {% if cat.image %}
+                <img src="{{ cat.image.url }}" alt="{{ cat.category_name }}" class="cat-arch-img">
+              {% else %}
+                <div class="cat-arch-img d-flex align-items-center justify-content-center bg-dark text-white">
+                  <i class="bi bi-image fs-1"></i>
+                </div>
+              {% endif %}
+              <div class="cat-arch-overlay"></div>
+              <div class="cat-arch-content">
+                {% if cat.product_count %}
+                  <span class="cat-arch-count">{{ cat.product_count }} Designer Pieces</span>
+                {% endif %}
+                <h3 class="cat-arch-title">{{ cat.category_name }}</h3>
+                <span class="cat-arch-link-text">
+                  Explore Atelier <i class="bi bi-arrow-right"></i>
+                </span>
+              </div>
+            </a>
+          </div>
+          {% endfor %}
+          {% if categories|length < 12 %}
+          {% for cat in categories %}
+          <div class="swiper-slide">
+            <a href="{% url 'shop' %}?categories={{ cat.id }}" class="cat-arch-card">
+              {% if cat.image %}
+                <img src="{{ cat.image.url }}" alt="{{ cat.category_name }}" class="cat-arch-img">
+              {% else %}
+                <div class="cat-arch-img d-flex align-items-center justify-content-center bg-dark text-white">
+                  <i class="bi bi-image fs-1"></i>
+                </div>
+              {% endif %}
+              <div class="cat-arch-overlay"></div>
+              <div class="cat-arch-content">
+                {% if cat.product_count %}
+                  <span class="cat-arch-count">{{ cat.product_count }} Designer Pieces</span>
+                {% endif %}
+                <h3 class="cat-arch-title">{{ cat.category_name }}</h3>
+                <span class="cat-arch-link-text">
+                  Explore Atelier <i class="bi bi-arrow-right"></i>
+                </span>
+              </div>
+            </a>
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== CURATED TABS PRODUCT SHOWCASE ===============-->
+  <section class="py-4" style="background: #ffffff; border-top: 1px solid var(--zy-border); border-bottom: 1px solid var(--zy-border);">
+    <div class="container">
+      <div class="text-center mb-3">
+        <span class="section-eyebrow">Hand-Finished Pieces</span>
+        <h2 class="section-headline">Couture Highlights</h2>
+
+        <div class="products-tabs-bar">
+          <button type="button" class="product-tab-btn active" data-target="#tabFeatured">
+            <i class="bi bi-stars me-1"></i> Featured
+          </button>
+          <button type="button" class="product-tab-btn" data-target="#tabPopular">
+            <i class="bi bi-fire me-1"></i> Popular Styles
+          </button>
+          <button type="button" class="product-tab-btn" data-target="#tabBestseller">
+            <i class="bi bi-trophy-fill me-1"></i> All-Time Bestsellers
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Featured -->
+      <div class="tab-pane-content" id="tabFeatured">
+        <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4">
+          {% for item in featured_products %}
+          <div class="col">
+            <div class="product-luxury-card">
+              <div class="card-image-wrap">
+                <a href="{% url 'product_details' item.product.id %}">
+                  {% if item.first_image and item.first_image.image %}
+                    <img src="{{ item.first_image.image.url }}" alt="{{ item.product.name }}" class="card-product-img img-primary">
+                  {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image fs-1"></i></div>
+                  {% endif %}
+
+                  {% if item.second_image and item.second_image.image %}
+                    <img src="{{ item.second_image.image.url }}" alt="{{ item.product.name }} Alternate" class="card-product-img img-secondary">
+                  {% endif %}
+                </a>
+
+                <div class="card-badge-box">
+                  {% if item.product.has_offer %}
+                    <span class="badge-offer-discount">{{ item.product.best_offer_percentage }}% OFF</span>
+                  {% endif %}
+                </div>
+
+                <div class="card-floating-actions">
+                  <button type="button" class="card-action-btn wishlist-btn {% if item.in_wishlist %}active-wishlist{% endif %}"
+                          title="{% if item.in_wishlist %}In Wishlist{% else %}Add to Wishlist{% endif %}"
+                          onclick="handleHomeWishlistToggle({{ item.product.id }}, this, event)">
+                    <i class="bi {% if item.in_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                  </button>
+                  <button type="button" class="card-action-btn" title="Quick View" onclick="openQuickView({{ item.product.id }}, event)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-details-box">
+                <div class="card-category-label">{{ item.product.category.category_name }}</div>
+                <a href="{% url 'product_details' item.product.id %}" class="card-product-title">{{ item.product.name }}</a>
+                <div class="card-rating-stars">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <span class="text-muted ms-1 small">({{ item.product.review_count|default:"4" }})</span>
+                </div>
+                <div class="card-price-row">
+                  {% if item.product.has_offer %}
+                    <span class="price-current">₹{{ item.product.best_offer_price|floatformat:2 }}</span>
+                    <span class="price-original">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% else %}
+                    <span class="price-current">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Tab 2: Popular -->
+      <div class="tab-pane-content d-none" id="tabPopular">
+        <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4">
+          {% for item in popular_products %}
+          <div class="col">
+            <div class="product-luxury-card">
+              <div class="card-image-wrap">
+                <a href="{% url 'product_details' item.product.id %}">
+                  {% if item.first_image and item.first_image.image %}
+                    <img src="{{ item.first_image.image.url }}" alt="{{ item.product.name }}" class="card-product-img img-primary">
+                  {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image fs-1"></i></div>
+                  {% endif %}
+                  {% if item.second_image and item.second_image.image %}
+                    <img src="{{ item.second_image.image.url }}" alt="{{ item.product.name }} Alternate" class="card-product-img img-secondary">
+                  {% endif %}
+                </a>
+                <div class="card-badge-box">
+                  {% if item.product.has_offer %}
+                    <span class="badge-offer-discount">{{ item.product.best_offer_percentage }}% OFF</span>
+                  {% endif %}
+                </div>
+                <div class="card-floating-actions">
+                  <button type="button" class="card-action-btn wishlist-btn {% if item.in_wishlist %}active-wishlist{% endif %}"
+                          title="{% if item.in_wishlist %}In Wishlist{% else %}Add to Wishlist{% endif %}"
+                          onclick="handleHomeWishlistToggle({{ item.product.id }}, this, event)">
+                    <i class="bi {% if item.in_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                  </button>
+                  <button type="button" class="card-action-btn" title="Quick View" onclick="openQuickView({{ item.product.id }}, event)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-details-box">
+                <div class="card-category-label">{{ item.product.category.category_name }}</div>
+                <a href="{% url 'product_details' item.product.id %}" class="card-product-title">{{ item.product.name }}</a>
+                <div class="card-rating-stars">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <span class="text-muted ms-1 small">({{ item.product.review_count|default:"5" }})</span>
+                </div>
+                <div class="card-price-row">
+                  {% if item.product.has_offer %}
+                    <span class="price-current">₹{{ item.product.best_offer_price|floatformat:2 }}</span>
+                    <span class="price-original">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% else %}
+                    <span class="price-current">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Tab 3: Bestseller -->
+      <div class="tab-pane-content d-none" id="tabBestseller">
+        <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4">
+          {% for item in bestseller_products %}
+          <div class="col">
+            <div class="product-luxury-card">
+              <div class="card-image-wrap">
+                <a href="{% url 'product_details' item.product.id %}">
+                  {% if item.first_image and item.first_image.image %}
+                    <img src="{{ item.first_image.image.url }}" alt="{{ item.product.name }}" class="card-product-img img-primary">
+                  {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image fs-1"></i></div>
+                  {% endif %}
+                  {% if item.second_image and item.second_image.image %}
+                    <img src="{{ item.second_image.image.url }}" alt="{{ item.product.name }} Alternate" class="card-product-img img-secondary">
+                  {% endif %}
+                </a>
+                <div class="card-badge-box">
+                  {% if item.product.has_offer %}
+                    <span class="badge-offer-discount">{{ item.product.best_offer_percentage }}% OFF</span>
+                  {% endif %}
+                </div>
+                <div class="card-floating-actions">
+                  <button type="button" class="card-action-btn wishlist-btn {% if item.in_wishlist %}active-wishlist{% endif %}"
+                          title="{% if item.in_wishlist %}In Wishlist{% else %}Add to Wishlist{% endif %}"
+                          onclick="handleHomeWishlistToggle({{ item.product.id }}, this, event)">
+                    <i class="bi {% if item.in_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                  </button>
+                  <button type="button" class="card-action-btn" title="Quick View" onclick="openQuickView({{ item.product.id }}, event)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-details-box">
+                <div class="card-category-label">{{ item.product.category.category_name }}</div>
+                <a href="{% url 'product_details' item.product.id %}" class="card-product-title">{{ item.product.name }}</a>
+                <div class="card-rating-stars">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <span class="text-muted ms-1 small">({{ item.product.review_count|default:"8" }})</span>
+                </div>
+                <div class="card-price-row">
+                  {% if item.product.has_offer %}
+                    <span class="price-current">₹{{ item.product.best_offer_price|floatformat:2 }}</span>
+                    <span class="price-original">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% else %}
+                    <span class="price-current">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <a href="{% url 'shop' %}" class="btn-hero-primary px-4 py-2">
+          Explore All Atelier Pieces <i class="bi bi-arrow-right ms-2"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!--=============== ATELIER CRAFTSMANSHIP STORY BANNER ===============-->
+  <div class="container">
+    <div class="atelier-story-banner">
+      <div class="row align-items-center g-0">
+        <div class="col-lg-6 p-3 p-md-4">
+          <span class="section-eyebrow">The Jamilah Standard</span>
+          <h2 class="section-headline mb-2" style="font-size: 1.5rem;">Designed for Devotion, Tailored for Grace</h2>
+          <p class="text-muted mb-3" style="font-size: 0.875rem; line-height: 1.55;">
+            At Jamilah, every jilbab and prayer dress is engineered to elevate your moments of worship. We source ethical, ultra-breathable silks and Turkish crepes that stay cool against the skin during long prayers and humid climates.
+          </p>
+          <div class="d-flex flex-wrap gap-3 mb-3">
+            <div>
+              <div class="fw-bold fs-5 text-dark font-monospace">100%</div>
+              <div class="small text-muted">Opaque &amp; Non-Sheer</div>
+            </div>
+            <div>
+              <div class="fw-bold fs-5 text-dark font-monospace">Double-Stitched</div>
+              <div class="small text-muted">Reinforced Seams</div>
+            </div>
+            <div>
+              <div class="fw-bold fs-5 text-dark font-monospace">Built-In Khimar</div>
+              <div class="small text-muted">Non-Slip Headband</div>
+            </div>
+          </div>
+          <a href="{% url 'about' %}" class="btn-hero-primary" style="padding: 8px 18px; font-size: 0.8125rem;">
+            Read Our Story <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+        <div class="col-lg-6">
+          <img src="{% static 'assets/img/jamilah_about_atelier.jpg' %}" alt="Jamilah Atelier Craftsmanship" class="atelier-story-img">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== NEW ARRIVALS SWIPER SECTION ===============-->
+  <section class="py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-end mb-3">
+        <div>
+          <span class="section-eyebrow">Fresh Off The Atelier</span>
+          <h2 class="section-headline mb-0">Trending New Arrivals</h2>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn-slider-circle" id="newSwiperPrev" aria-label="Previous New Arrival">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button type="button" class="btn-slider-circle" id="newSwiperNext" aria-label="Next New Arrival">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="swiper new-arrivals-swiper">
+        <div class="swiper-wrapper">
+          {% for item in newarrival_products %}
+          <div class="swiper-slide">
+            <div class="product-luxury-card">
+              <div class="card-image-wrap">
+                <a href="{% url 'product_details' item.product.id %}">
+                  {% if item.first_image and item.first_image.image %}
+                    <img src="{{ item.first_image.image.url }}" alt="{{ item.product.name }}" class="card-product-img img-primary">
+                  {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image fs-1"></i></div>
+                  {% endif %}
+                  {% if item.second_image and item.second_image.image %}
+                    <img src="{{ item.second_image.image.url }}" alt="{{ item.product.name }} Alternate" class="card-product-img img-secondary">
+                  {% endif %}
+                </a>
+                <div class="card-badge-box">
+                  <span class="badge bg-dark text-white rounded-pill px-2 py-1" style="font-size: 0.65rem;">New Arrival</span>
+                </div>
+                <div class="card-floating-actions">
+                  <button type="button" class="card-action-btn wishlist-btn {% if item.in_wishlist %}active-wishlist{% endif %}"
+                          title="Wishlist"
+                          onclick="handleHomeWishlistToggle({{ item.product.id }}, this, event)">
+                    <i class="bi {% if item.in_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                  </button>
+                  <button type="button" class="card-action-btn" title="Quick View" onclick="openQuickView({{ item.product.id }}, event)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-details-box">
+                <div class="card-category-label">{{ item.product.category.category_name }}</div>
+                <a href="{% url 'product_details' item.product.id %}" class="card-product-title">{{ item.product.name }}</a>
+                <div class="card-price-row">
+                  {% if item.product.has_offer %}
+                    <span class="price-current">₹{{ item.product.best_offer_price|floatformat:2 }}</span>
+                    <span class="price-original">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% else %}
+                    <span class="price-current">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% if newarrival_products|length < 12 %}
+          {% for item in newarrival_products %}
+          <div class="swiper-slide">
+            <div class="product-luxury-card">
+              <div class="card-image-wrap">
+                <a href="{% url 'product_details' item.product.id %}">
+                  {% if item.first_image and item.first_image.image %}
+                    <img src="{{ item.first_image.image.url }}" alt="{{ item.product.name }}" class="card-product-img img-primary">
+                  {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image fs-1"></i></div>
+                  {% endif %}
+                  {% if item.second_image and item.second_image.image %}
+                    <img src="{{ item.second_image.image.url }}" alt="{{ item.product.name }} Alternate" class="card-product-img img-secondary">
+                  {% endif %}
+                </a>
+                <div class="card-badge-box">
+                  <span class="badge bg-dark text-white rounded-pill px-2 py-1" style="font-size: 0.65rem;">New Arrival</span>
+                </div>
+                <div class="card-floating-actions">
+                  <button type="button" class="card-action-btn wishlist-btn {% if item.in_wishlist %}active-wishlist{% endif %}"
+                          title="Wishlist"
+                          onclick="handleHomeWishlistToggle({{ item.product.id }}, this, event)">
+                    <i class="bi {% if item.in_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                  </button>
+                  <button type="button" class="card-action-btn" title="Quick View" onclick="openQuickView({{ item.product.id }}, event)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-details-box">
+                <div class="card-category-label">{{ item.product.category.category_name }}</div>
+                <a href="{% url 'product_details' item.product.id %}" class="card-product-title">{{ item.product.name }}</a>
+                <div class="card-price-row">
+                  {% if item.product.has_offer %}
+                    <span class="price-current">₹{{ item.product.best_offer_price|floatformat:2 }}</span>
+                    <span class="price-original">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% else %}
+                    <span class="price-current">₹{{ item.product.price|floatformat:2 }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== TESTIMONIALS ===============-->
+  <section class="py-4" style="background: #ffffff; border-top: 1px solid var(--zy-border);">
+    <div class="container">
+      <div class="text-center mb-4">
+        <span class="section-eyebrow">Real Sisters. Real Experiences.</span>
+        <h2 class="section-headline">Loved Across The Sisterhood</h2>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="testimonial-card">
+            <div>
+              <div class="text-warning mb-2" style="font-size: 0.85rem;">★★★★★</div>
+              <p class="testimonial-quote">
+                "The fabric quality of the Aisha Sage set is beyond anything I expected. It stays cool even in humid weather and doesn't cling at all."
+              </p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar-initials">MK</div>
+              <div>
+                <div class="fw-bold text-dark" style="font-size: 0.875rem;">Maryam K.</div>
+                <div class="small text-muted" style="font-size: 0.75rem;"><i class="bi bi-patch-check-fill text-success"></i> Verified Customer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="testimonial-card">
+            <div>
+              <div class="text-warning mb-2" style="font-size: 0.85rem;">★★★★★</div>
+              <p class="testimonial-quote">
+                "I wore this during Umrah and it was an absolute blessing. Lightweight, fully opaque, and the built-in zippered sleeves made wudu effortless."
+              </p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar-initials">FZ</div>
+              <div>
+                <div class="fw-bold text-dark" style="font-size: 0.875rem;">Fatima Z.</div>
+                <div class="small text-muted" style="font-size: 0.75rem;"><i class="bi bi-patch-check-fill text-success"></i> Verified Customer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="testimonial-card">
+            <div>
+              <div class="text-warning mb-2" style="font-size: 0.85rem;">★★★★★</div>
+              <p class="testimonial-quote">
+                "The drape is sublime. My prayer dresses arrived beautifully boxed in 2 days. Jamilah is now my only destination for modest gifts."
+              </p>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar-initials">AR</div>
+              <div>
+                <div class="fw-bold text-dark" style="font-size: 0.875rem;">Aisha R.</div>
+                <div class="small text-muted" style="font-size: 0.75rem;"><i class="bi bi-patch-check-fill text-success"></i> Verified Customer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--=============== VIP NEWSLETTER BOX ===============-->
+  <div class="container my-4">
+    <div class="newsletter-vip-box">
+      <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-bold mb-2" style="font-size: 0.75rem;">Jamilah VIP Circle</span>
+      <h2 class="fw-bold fs-4 mb-2 text-white">Join The Atelier Sisterhood</h2>
+      <p class="text-white-50" style="max-width: 440px; margin: 0 auto; font-size: 0.85rem;">
+        Enjoy 10% off your initial purchase, private collection invitations, and modest fashion lookbooks delivered to your inbox.
+      </p>
+
+      <form class="newsletter-form-wrap" onsubmit="event.preventDefault(); handleNewsletterSubmit(this)">
+        {% csrf_token %}
+        <input type="email" name="email" class="newsletter-input" placeholder="Enter your email address..." required autocomplete="email">
+        <button type="submit" class="newsletter-submit-btn">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- Quick View Modal Component -->
+  {% include 'user/quick_view_modal.html' %}
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    /**
+     * Interactive Wishlist Toggle with Toast Feedback
+     */
+    function handleHomeWishlistToggle(productId, btnEl, event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token }}';
+
+      fetch(`/wishlist/add/${productId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrfToken,
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: new URLSearchParams({
+          "action": "toggle"
+        })
+      })
+      .then(response => {
+        if (response.status === 401 || response.status === 403 || response.redirected) {
+          window.location.href = "{% url 'login' %}?next={% url 'home' %}";
+          return null;
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!data) return;
+
+        const icon = btnEl.querySelector('i');
+        if (data.in_wishlist) {
+          btnEl.classList.add('active-wishlist');
+          if (icon) {
+            icon.classList.remove('bi-heart');
+            icon.classList.add('bi-heart-fill');
+          }
+          btnEl.setAttribute('title', 'Remove from Wishlist');
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: data.message || 'Added to your Wishlist!',
+            showConfirmButton: false,
+            timer: 2000
+          });
+        } else {
+          btnEl.classList.remove('active-wishlist');
+          if (icon) {
+            icon.classList.remove('bi-heart-fill');
+            icon.classList.add('bi-heart');
+          }
+          btnEl.setAttribute('title', 'Add to Wishlist');
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'info',
+            title: data.message || 'Removed from Wishlist',
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Wishlist toggle error:", err);
+      });
+    }
+
+    /**
+     * Product Tabs Controller
+     */
+    document.addEventListener("DOMContentLoaded", function () {
+      const tabBtns = document.querySelectorAll(".product-tab-btn");
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", function () {
+          tabBtns.forEach(b => b.classList.remove("active"));
+          this.classList.add("active");
+
+          const targetSelector = this.getAttribute("data-target");
+          document.querySelectorAll(".tab-pane-content").forEach(pane => {
+            pane.classList.add("d-none");
+          });
+
+          const activePane = document.querySelector(targetSelector);
+          if (activePane) {
+            activePane.classList.remove("d-none");
+          }
+        });
+      });
+
+      // Initialize Categories Swiper (Infinite loop, responsive, compact)
+      new Swiper('.categories-swiper', {
+        loop: true,
+        slidesPerView: 2.2,
+        spaceBetween: 12,
+        navigation: {
+          nextEl: '#catSwiperNext',
+          prevEl: '#catSwiperPrev',
+        },
+        breakpoints: {
+          480: {
+            slidesPerView: 3,
+            spaceBetween: 12
+          },
+          768: {
+            slidesPerView: 4,
+            spaceBetween: 14
+          },
+          992: {
+            slidesPerView: 5,
+            spaceBetween: 14
+          },
+          1200: {
+            slidesPerView: 6,
+            spaceBetween: 14
+          },
+          1400: {
+            slidesPerView: 7,
+            spaceBetween: 16
+          }
+        }
+      });
+
+      // Initialize New Arrivals Swiper (Infinite loop, compact view)
+      new Swiper('.new-arrivals-swiper', {
+        loop: true,
+        slidesPerView: 2,
+        spaceBetween: 12,
+        navigation: {
+          nextEl: '#newSwiperNext',
+          prevEl: '#newSwiperPrev',
+        },
+        breakpoints: {
+          576: {
+            slidesPerView: 2,
+            spaceBetween: 12
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 14
+          },
+          992: {
+            slidesPerView: 4,
+            spaceBetween: 14
+          },
+          1200: {
+            slidesPerView: 4,
+            spaceBetween: 16
+          },
+          1400: {
+            slidesPerView: 5,
+            spaceBetween: 16
+          }
+        }
+      });
+    });
+
+    /**
+     * The Atelier Sisterhood Subscriber Handler (Real API + Live Email)
+     */
+    function handleNewsletterSubmit(form) {
+      const input = form.querySelector('input[type="email"]');
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (!input || !input.value.trim()) return;
+
+      const email = input.value.trim();
+      const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Subscribe';
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" style="width: 0.85rem; height: 0.85rem;"></span> Joining...';
+      }
+
+      const csrfInput = form.querySelector('[name=csrfmiddlewaretoken]');
+      const csrfToken = csrfInput ? csrfInput.value : (document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token }}');
+
+      fetch("{% url 'sisterhood_subscribe' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrfToken,
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: new URLSearchParams({ email: email })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
+
+        if (data.status === 'success') {
+          if (typeof Swal !== 'undefined') {
+            Swal.fire({
+              icon: 'success',
+              title: 'Welcome to The Sisterhood!',
+              html: `
+                <p style="font-size: 0.95rem; color: #4a5568; margin-bottom: 12px; line-height: 1.5;">${data.message}</p>
+                <div style="background: #f7fafc; border: 1.5px dashed #d4b872; border-radius: 10px; padding: 14px; margin-top: 10px;">
+                  <span style="font-size: 0.72rem; text-transform: uppercase; color: #718096; display: block; font-weight: 700; letter-spacing: 1px;">Your Inaugural 10% Welcome Gift</span>
+                  <strong style="font-size: 1.35rem; color: #05201f; letter-spacing: 2.5px; font-family: monospace;">${data.coupon_code || 'SISTERHOOD10'}</strong>
+                  <div style="font-size: 0.75rem; color: #718096; margin-top: 4px;">Apply at checkout on orders above ₹500</div>
+                </div>
+              `,
+              confirmButtonText: 'Shop Couture Collection',
+              confirmButtonColor: '#05201f'
+            });
+          } else {
+            alert(data.message);
+          }
+          input.value = '';
+        } else if (data.status === 'info') {
+          if (typeof Swal !== 'undefined') {
+            Swal.fire({
+              icon: 'info',
+              title: 'Already in The Sisterhood',
+              html: `
+                <p style="font-size: 0.95rem; color: #4a5568; line-height: 1.5;">${data.message}</p>
+                <div style="background: #f7fafc; border: 1px dashed #d4b872; border-radius: 10px; padding: 12px; margin-top: 10px;">
+                  <span style="font-size: 0.72rem; text-transform: uppercase; color: #718096; display: block; font-weight: 700;">Your 10% Member Voucher</span>
+                  <strong style="font-size: 1.25rem; color: #05201f; letter-spacing: 2px; font-family: monospace;">${data.coupon_code || 'SISTERHOOD10'}</strong>
+                </div>
+              `,
+              confirmButtonColor: '#05201f'
+            });
+          } else {
+            alert(data.message);
+          }
+        } else {
+          if (typeof Swal !== 'undefined') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Notice',
+              text: data.message || 'Please check your email address and try again.',
+              confirmButtonColor: '#05201f'
+            });
+          } else {
+            alert(data.message || 'Please check your email address.');
+          }
+        }
+      })
+      .catch(err => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Connection Issue',
+            text: 'Unable to connect to the atelier server. Please try again in a moment.',
+            confirmButtonColor: '#05201f'
+          });
+        } else {
+          alert('Unable to subscribe. Please try again.');
+        }
+      });
+    }
+
+    /*=============== HERO SHOWCASE CONTROLLER ===============*/
+    document.addEventListener("DOMContentLoaded", function () {
+      const showcase = document.getElementById("heroShowcase");
+      if (!showcase) return;
+
+      const cardWrap = document.getElementById("heroCardWrap");
+      const slides = showcase.querySelectorAll(".hero-slide");
+      const dots = showcase.querySelectorAll(".hero-dot");
+      const totalSlides = slides.length;
+
+      let currentIndex = 0;
+      let autoSlideTimer = null;
+      let isHovered = false;
+
+      function goToSlide(index) {
+        if (index === currentIndex) return;
+        slides[currentIndex].classList.remove("active");
+        dots[currentIndex].classList.remove("active");
+
+        currentIndex = (index + totalSlides) % totalSlides;
+
+        slides[currentIndex].classList.add("active");
+        dots[currentIndex].classList.add("active");
+      }
+
+      function startAutoSlide() {
+        clearInterval(autoSlideTimer);
+        autoSlideTimer = setInterval(() => {
+          if (!isHovered) {
+            goToSlide(currentIndex + 1);
+          }
+        }, 5500);
+      }
+
+      dots.forEach((dot, idx) => {
+        dot.addEventListener("click", function (e) {
+          e.preventDefault();
+          goToSlide(idx);
+          startAutoSlide();
+        });
+      });
+
+      showcase.addEventListener("mouseenter", function () {
+        isHovered = true;
+      });
+
+      showcase.addEventListener("mouseleave", function () {
+        isHovered = false;
+        if (cardWrap) {
+          cardWrap.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
+        }
+      });
+
+      if (window.matchMedia("(min-width: 992px)").matches && cardWrap) {
+        showcase.addEventListener("mousemove", function (e) {
+          const rect = showcase.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          const rotX = -y * 10;
+          const rotY = x * 12;
+          cardWrap.style.transform = `perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateZ(6px)`;
+        });
+      }
+
+      startAutoSlide();
+    });
+  </script>
+
+</body>
+</html>

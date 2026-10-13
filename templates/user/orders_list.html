@@ -1,0 +1,1272 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Orders — Jamilah | Modest Couture &amp; Prayer Wear</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Outfit (luxury headings) & Plus Jakarta Sans (body) matching Shop page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Flaticon & Swiper -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- Core Theme Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-dark: #06635c;
+      --zy-primary-light: #e8f5f4;
+      --zy-primary-border: #b2dedb;
+      --zy-gold: #c59b27;
+      --zy-gold-light: #fef8e7;
+      --zy-dark: #0f172a;
+      --zy-slate: #1e293b;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-card-bg: #ffffff;
+      --zy-surface: #f8fafc;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: var(--zy-slate);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* ── SHOP-MATCHING HERO HEADER ── */
+    .shop-hero {
+      background: linear-gradient(135deg, #091e1c 0%, #133a35 100%);
+      padding: 28px 0 24px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 20px rgba(8, 129, 120, 0.1);
+    }
+
+    .shop-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(8, 129, 120, 0.35) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.72rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-breadcrumb a {
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .hero-breadcrumb a:hover {
+      color: #ffffff;
+    }
+
+    .hero-breadcrumb .sep {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .hero-breadcrumb .current {
+      color: #5eead4;
+      font-weight: 600;
+    }
+
+    .shop-hero-title {
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      font-size: 1.75rem;
+      margin-bottom: 4px;
+    }
+
+    .shop-hero-subtitle {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      max-width: 580px;
+      margin-bottom: 0;
+    }
+
+    .hero-chip {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 30px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ── ACCOUNT SIDEBAR ── */
+    .account-sidebar {
+      position: sticky;
+      top: 24px;
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 20px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .user-mini-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .user-mini-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: 2px solid var(--zy-primary-border);
+      flex-shrink: 0;
+    }
+
+    .account-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .account-nav .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--zy-slate);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .account-nav .nav-link .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .account-nav .nav-link i {
+      font-size: 1.1rem;
+      color: var(--zy-muted);
+      width: 20px;
+      text-align: center;
+      transition: color 0.2s;
+    }
+
+    .account-nav .nav-link:hover {
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      transform: translateX(2px);
+    }
+
+    .account-nav .nav-link:hover i {
+      color: var(--zy-primary);
+    }
+
+    .account-nav .nav-link.active {
+      background: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 3px 12px rgba(8, 129, 120, 0.22);
+    }
+
+    .account-nav .nav-link.active i {
+      color: #ffffff;
+    }
+
+    .nav-badge-count {
+      background: rgba(0, 0, 0, 0.06);
+      padding: 1px 7px;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--zy-muted);
+    }
+
+    .account-nav .nav-link.active .nav-badge-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .logout-nav-link {
+      color: #dc2626 !important;
+      margin-top: 10px;
+      border-top: 1px dashed var(--zy-border);
+      padding-top: 14px !important;
+    }
+
+    .logout-nav-link:hover {
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
+    }
+
+    .logout-nav-link i {
+      color: #dc2626 !important;
+    }
+
+    /* ── QUICK STAT CHIPS (SHOP CARD STYLE) ── */
+    .stat-chip {
+      background: #ffffff;
+      border: 1.5px solid var(--zy-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-chip:hover {
+      border-color: var(--zy-primary-border);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(8, 129, 120, 0.08);
+      color: inherit;
+    }
+
+    .stat-chip.active-chip {
+      border: 2px solid var(--zy-primary);
+      background: #ffffff;
+      box-shadow: 0 4px 16px rgba(8, 129, 120, 0.12);
+    }
+
+    .stat-chip.active-chip::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--zy-primary);
+    }
+
+    .stat-chip-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .stat-chip:hover .stat-chip-icon {
+      transform: scale(1.05);
+    }
+
+    .stat-chip-icon.total { background: #e0f2fe; color: #0284c7; }
+    .stat-chip-icon.processing { background: #fef3c7; color: #d97706; }
+    .stat-chip-icon.completed { background: #dcfce7; color: #16a34a; }
+    .stat-chip-icon.canceled { background: #fee2e2; color: #dc2626; }
+
+    .stat-number {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--zy-dark);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--zy-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    /* ── MAIN CONTENT CARD ── */
+    .profile-card {
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .profile-card:hover {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .card-title-shop {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .card-title-shop i {
+      color: var(--zy-primary);
+      font-size: 1.25rem;
+    }
+
+    .card-subtitle-shop {
+      color: var(--zy-muted);
+      font-size: 0.81rem;
+      margin-top: 3px;
+      margin-bottom: 0;
+    }
+
+    /* ── SEARCH & FILTER CONTROLS (SHOP STYLE) ── */
+    .search-box-wrap {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1.5px solid var(--zy-border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .search-box-wrap:focus-within {
+      border-color: var(--zy-primary);
+      box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.12);
+    }
+
+    .search-box-wrap .form-control {
+      border: none;
+      box-shadow: none;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      color: var(--zy-dark);
+      background: transparent;
+    }
+
+    .search-box-wrap .btn-search {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      transition: background 0.2s ease;
+    }
+
+    .search-box-wrap .btn-search:hover {
+      background: var(--zy-primary-dark);
+    }
+
+    /* Filter Tabs matching shop category pills */
+    .filter-tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .filter-tab-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      color: #475569;
+      background: #f1f5f9;
+      border: 1px solid transparent;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tab-btn:hover {
+      color: var(--zy-primary);
+      background: var(--zy-primary-light);
+      border-color: var(--zy-primary-border);
+    }
+
+    .filter-tab-btn.active {
+      background: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(8, 129, 120, 0.25);
+    }
+
+    .filter-count-badge {
+      background: rgba(0, 0, 0, 0.08);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+
+    .filter-tab-btn.active .filter-count-badge {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .time-filter-select {
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1.5px solid var(--zy-border);
+      border-radius: 8px;
+      padding: 5px 28px 5px 10px;
+      color: var(--zy-slate);
+      background-color: #ffffff;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .time-filter-select:focus {
+      border-color: var(--zy-primary);
+    }
+
+    /* ── ORDER CARDS ── */
+    .order-card-card {
+      background: #ffffff;
+      border: 1.5px solid var(--zy-border);
+      border-radius: 14px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .order-card-card:hover {
+      box-shadow: 0 8px 24px rgba(8, 129, 120, 0.08);
+      border-color: var(--zy-primary-border);
+      transform: translateY(-2px);
+    }
+
+    .order-card-header {
+      background: #f8fafc;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--zy-border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .order-id-badge {
+      font-family: 'Outfit', monospace;
+      font-weight: 700;
+      font-size: 0.88rem;
+      letter-spacing: 0.4px;
+      color: var(--zy-primary-dark);
+      background: #e8f5f4;
+      border: 1px solid var(--zy-primary-border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-copy-id {
+      color: var(--zy-muted);
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .btn-copy-id:hover {
+      color: var(--zy-primary);
+    }
+
+    .order-card-body {
+      padding: 20px;
+    }
+
+    .item-thumbnail {
+      width: 68px;
+      height: 68px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid var(--zy-border);
+      background: #f8fafc;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .item-thumbnail:hover {
+      transform: scale(1.04);
+    }
+
+    .item-thumbnail-placeholder {
+      width: 68px;
+      height: 68px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      border: 1px solid var(--zy-border);
+      flex-shrink: 0;
+    }
+
+    .product-title-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--zy-dark);
+      text-decoration: none;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      max-width: 240px;
+    }
+
+    .more-items-pill {
+      background: var(--zy-surface);
+      border: 1px dashed var(--zy-border);
+      color: var(--zy-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .price-total-tag {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--zy-dark);
+    }
+
+    /* ── ACTION BUTTONS (SHOP MATCHING) ── */
+    .btn-apply-shop {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-apply-shop:hover {
+      background: var(--zy-primary-dark);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.2);
+    }
+
+    .btn-outline-shop {
+      background: #ffffff;
+      color: var(--zy-slate);
+      border: 1.5px solid var(--zy-border);
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-shop:hover {
+      border-color: var(--zy-primary);
+      color: var(--zy-primary);
+      background: var(--zy-primary-light);
+    }
+
+    .btn-invoice-download {
+      background-color: #f0fdf4;
+      color: #16a34a;
+      border: 1.5px solid #bbf7d0;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      font-family: 'Outfit', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-invoice-download:hover {
+      background-color: #16a34a;
+      color: #ffffff;
+      border-color: #16a34a;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+    }
+
+    .btn-retry-payment {
+      background-color: #fef3c7;
+      color: #b45309;
+      border: 1.5px solid #fde68a;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      font-family: 'Outfit', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      animation: pulseAttention 2s infinite;
+      transition: all 0.2s ease;
+    }
+
+    .btn-retry-payment:hover {
+      background-color: #d97706;
+      color: #ffffff;
+      border-color: #d97706;
+    }
+
+    @keyframes pulseAttention {
+      0% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(217, 119, 6, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+    }
+
+    /* ── STATUS BADGES ── */
+    .status-chip {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.76rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      letter-spacing: 0.2px;
+    }
+
+    .status-chip.delivered {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .status-chip.canceled {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .status-chip.returned {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+
+    .status-chip.confirmed {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    .status-chip.processing {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    .status-chip.pending {
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #ffedd5;
+    }
+
+    /* ── PAGINATION MATCHING SHOP ── */
+    .pagination-custom .page-link {
+      color: var(--zy-slate);
+      border-radius: 8px;
+      margin: 0 3px;
+      border: 1.5px solid var(--zy-border);
+      padding: 7px 14px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .pagination-custom .page-link:hover {
+      border-color: var(--zy-primary);
+      color: var(--zy-primary);
+      background: var(--zy-primary-light);
+    }
+
+    .pagination-custom .page-item.active .page-link {
+      background-color: var(--zy-primary);
+      border-color: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(8, 129, 120, 0.25);
+    }
+
+    @media (max-width: 991px) {
+      .account-sidebar {
+        position: static;
+        margin-bottom: 24px;
+      }
+      .search-box-wrap {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== SHOP-STYLE HERO HEADER ===============-->
+  <section class="shop-hero">
+    <div class="container position-relative">
+      <div class="hero-breadcrumb">
+        <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+        <span class="sep">/</span>
+        <a href="{% url 'user_profile' %}">Account</a>
+        <span class="sep">/</span>
+        <span class="current">My Orders</span>
+      </div>
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+          <h1 class="shop-hero-title">My Orders</h1>
+          <p class="shop-hero-subtitle">Track packages, view transaction receipts, download tax invoices, and manage returns.</p>
+        </div>
+        {% if total_orders_count > 0 %}
+        <div class="hero-chip d-none d-md-inline-flex align-items-center">
+          <i class="bi bi-bag-check-fill text-warning me-2"></i>
+          <span><strong>{{ total_orders_count }}</strong> Order{{ total_orders_count|pluralize }} Recorded</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!--=============== MAIN ORDERS CONTAINER ===============-->
+  <div class="container pb-5">
+    <div class="row g-4">
+
+      <!-- Left Column: Unified Account Sidebar -->
+      <div class="col-lg-3">
+        <div class="account-sidebar">
+          <!-- User Mini Profile -->
+          <div class="user-mini-badge">
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-mini-avatar">
+            {% else %}
+              <div class="user-mini-avatar">
+                {{ user.first_name|default:user.username|slice:":1"|upper }}
+              </div>
+            {% endif %}
+            <div class="overflow-hidden">
+              <div class="fw-bold text-truncate brand-font" style="font-size: 0.95rem; color: var(--zy-dark);">
+                {{ user.get_full_name|default:user.username }}
+              </div>
+              <small class="text-muted d-block text-truncate">@{{ user.username }}</small>
+            </div>
+          </div>
+
+          <!-- Account Navigation Links -->
+          <nav class="account-nav">
+            <a class="nav-link" href="{% url 'user_profile' %}">
+              <span class="nav-left">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </span>
+            </a>
+            <a class="nav-link" href="{% url 'addresses' %}">
+              <span class="nav-left">
+                <i class="bi bi-geo-alt"></i>
+                <span>My Addresses</span>
+              </span>
+            </a>
+            <a class="nav-link active" href="{% url 'user_orders' %}">
+              <span class="nav-left">
+                <i class="bi bi-bag-check-fill"></i>
+                <span>My Orders</span>
+              </span>
+              {% if total_orders_count > 0 %}
+                <span class="nav-badge-count">{{ total_orders_count }}</span>
+              {% endif %}
+            </a>
+            <a class="nav-link" href="{% url 'wallet_view' %}">
+              <span class="nav-left">
+                <i class="bi bi-wallet2"></i>
+                <span>My Wallet</span>
+              </span>
+            </a>
+            <a class="nav-link" href="{% url 'view_coupons' %}">
+              <span class="nav-left">
+                <i class="bi bi-ticket-perforated"></i>
+                <span>Coupons</span>
+              </span>
+            </a>
+            <a class="nav-link" href="{% url 'wishlist' %}">
+              <span class="nav-left">
+                <i class="bi bi-heart"></i>
+                <span>My Wishlist</span>
+              </span>
+            </a>
+            <a class="nav-link logout-nav-link" href="{% url 'userlogout' %}">
+              <span class="nav-left">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+              </span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Right Column: Orders Content -->
+      <div class="col-lg-9">
+
+        <!-- Quick KPI Stats Cards matching Shop aesthetic -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <a href="?status=all{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter and time_filter != 'all' %}&time={{ time_filter }}{% endif %}"
+               class="stat-chip {% if status_filter == 'all' or not status_filter %}active-chip{% endif %}">
+              <div class="stat-chip-icon total"><i class="bi bi-boxes"></i></div>
+              <div>
+                <div class="stat-label">All Orders</div>
+                <div class="stat-number">{{ total_orders_count }}</div>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="?status=active{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter and time_filter != 'all' %}&time={{ time_filter }}{% endif %}"
+               class="stat-chip {% if status_filter == 'active' %}active-chip{% endif %}">
+              <div class="stat-chip-icon processing"><i class="bi bi-hourglass-split"></i></div>
+              <div>
+                <div class="stat-label">In Progress</div>
+                <div class="stat-number">{{ processing_count|add:pending_count }}</div>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="?status=completed{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter and time_filter != 'all' %}&time={{ time_filter }}{% endif %}"
+               class="stat-chip {% if status_filter == 'completed' %}active-chip{% endif %}">
+              <div class="stat-chip-icon completed"><i class="bi bi-check2-circle"></i></div>
+              <div>
+                <div class="stat-label">Delivered</div>
+                <div class="stat-number">{{ completed_count }}</div>
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-3">
+            <a href="?status=canceled_returned{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter and time_filter != 'all' %}&time={{ time_filter }}{% endif %}"
+               class="stat-chip {% if status_filter == 'canceled_returned' %}active-chip{% endif %}">
+              <div class="stat-chip-icon canceled"><i class="bi bi-arrow-return-left"></i></div>
+              <div>
+                <div class="stat-label">Canceled</div>
+                <div class="stat-number">{{ canceled_count }}</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Main Orders Panel -->
+        <div class="profile-card">
+          <!-- Header and Universal Search Toolbar -->
+          <div class="card-header-bar">
+            <div>
+              <h2 class="card-title-shop">
+                <i class="bi bi-box-seam"></i> Order History
+              </h2>
+              <p class="card-subtitle-shop">
+                Review shipments, download invoices, or initiate returns &amp; refunds.
+              </p>
+            </div>
+
+            <!-- Search Form -->
+            <form method="GET" action="{% url 'user_orders' %}" class="search-box-wrap">
+              {% if status_filter and status_filter != 'all' %}
+                <input type="hidden" name="status" value="{{ status_filter }}">
+              {% endif %}
+              {% if time_filter and time_filter != 'all' %}
+                <input type="hidden" name="time" value="{{ time_filter }}">
+              {% endif %}
+              <input type="text" name="q" class="form-control" placeholder="Search by Order ID or item..." value="{{ search_query }}">
+              <button type="submit" class="btn-search" title="Search Orders">
+                <i class="bi bi-search"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Filter Pills & Time Filter Dropdown -->
+          <div class="filter-tab-bar justify-content-between">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <a href="?status=all{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter and time_filter != 'all' %}&time={{ time_filter }}{% endif %}"
+                 class="filter-tab-btn {% if status_filter == 'all' or not status_filter %}active{% endif %}">
+                All Orders <span class="filter-count-badge">{{ total_orders_count }}</span>
+              </a>
+              <a href="?status=active{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter and time_filter != 'all' %}&time={{ time_filter }}{% endif %}"
+                 class="filter-tab-btn {% if status_filter == 'active' %}active{% endif %}">
+                <i class="bi bi-clock-history"></i> In Progress <span class="filter-count-badge">{{ processing_count|add:pending_count }}</span>
+              </a>
+              <a href="?status=completed{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter and time_filter != 'all' %}&time={{ time_filter }}{% endif %}"
+                 class="filter-tab-btn {% if status_filter == 'completed' %}active{% endif %}">
+                <i class="bi bi-check2-circle"></i> Delivered <span class="filter-count-badge">{{ completed_count }}</span>
+              </a>
+              <a href="?status=canceled_returned{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter and time_filter != 'all' %}&time={{ time_filter }}{% endif %}"
+                 class="filter-tab-btn {% if status_filter == 'canceled_returned' %}active{% endif %}">
+                <i class="bi bi-arrow-return-left"></i> Canceled / Returned <span class="filter-count-badge">{{ canceled_count }}</span>
+              </a>
+            </div>
+
+            <!-- Time Filter & Clear Options -->
+            <div class="d-flex align-items-center gap-2 ms-auto mt-2 mt-md-0">
+              <form method="GET" action="{% url 'user_orders' %}" id="timeFilterForm" class="d-inline-flex align-items-center">
+                {% if status_filter and status_filter != 'all' %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+                {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+                <select name="time" class="time-filter-select" onchange="document.getElementById('timeFilterForm').submit()">
+                  <option value="all" {% if not time_filter or time_filter == 'all' %}selected{% endif %}>All Time</option>
+                  <option value="30_days" {% if time_filter == '30_days' %}selected{% endif %}>Last 30 Days</option>
+                  <option value="6_months" {% if time_filter == '6_months' %}selected{% endif %}>Past 6 Months</option>
+                  <option value="this_year" {% if time_filter == 'this_year' %}selected{% endif %}>This Year</option>
+                </select>
+              </form>
+
+              {% if search_query or status_filter != 'all' or time_filter != 'all' and time_filter %}
+              <a href="{% url 'user_orders' %}" class="btn-outline-shop py-1 px-2" style="font-size: 0.76rem;" title="Reset Filters">
+                <i class="bi bi-x-circle text-danger"></i> Reset
+              </a>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Orders List Feed -->
+          {% if orders %}
+            {% for order in orders %}
+            <div class="order-card-card">
+              <!-- Order Header Details -->
+              <div class="order-card-header">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                  <span class="order-id-badge">
+                    #{{ order.id }}
+                    <button type="button" class="btn-copy-id" title="Copy Order ID" onclick="copyText('{{ order.id }}')">
+                      <i class="bi bi-copy"></i>
+                    </button>
+                  </span>
+                  <span class="text-muted small">
+                    <i class="bi bi-calendar3 me-1"></i>{{ order.created_at|date:"M d, Y" }} at {{ order.created_at|date:"h:i A" }}
+                  </span>
+                </div>
+
+                <!-- Order Status Badges -->
+                <div>
+                  {% if order.status == 'completed' %}
+                    <span class="status-chip delivered">
+                      <i class="bi bi-check-circle-fill"></i> Delivered
+                    </span>
+                  {% elif order.status == 'canceled' %}
+                    <span class="status-chip canceled">
+                      <i class="bi bi-x-circle-fill"></i> Canceled
+                    </span>
+                  {% elif order.status == 'returned' %}
+                    <span class="status-chip returned">
+                      <i class="bi bi-arrow-counterclockwise"></i> Returned
+                    </span>
+                  {% elif order.payment_status == 'Paid' %}
+                    <span class="status-chip delivered">
+                      <i class="bi bi-check-circle-fill"></i> Confirmed
+                    </span>
+                  {% elif order.payment_status == 'Refunded' %}
+                    <span class="status-chip confirmed">
+                      <i class="bi bi-arrow-return-left"></i> Refunded
+                    </span>
+                  {% elif order.payment_status == 'Pending' and order.payment_method == 'COD' %}
+                    <span class="status-chip confirmed">
+                      <i class="bi bi-cash-stack"></i> Confirmed (COD)
+                    </span>
+                  {% elif order.payment_status == 'Pending' %}
+                    <span class="status-chip pending">
+                      <i class="bi bi-hourglass-split"></i> Awaiting Payment
+                    </span>
+                  {% elif order.status == 'processing' %}
+                    <span class="status-chip processing">
+                      <i class="bi bi-truck"></i> Processing
+                    </span>
+                  {% else %}
+                    <span class="status-chip returned">
+                      {{ order.get_status_display }}
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Order Card Body -->
+              <div class="order-card-body">
+                <div class="row align-items-center g-3">
+                  <!-- Product Thumbnails & Titles -->
+                  <div class="col-lg-6 col-md-12">
+                    <div class="d-flex flex-column gap-2">
+                      {% for item in order.items.all|slice:":2" %}
+                      <div class="d-flex align-items-center gap-3">
+                        {% if item.product.images.first %}
+                          <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="item-thumbnail">
+                        {% else %}
+                          <div class="item-thumbnail-placeholder"><i class="bi bi-image"></i></div>
+                        {% endif %}
+                        <div class="overflow-hidden">
+                          <a href="{% url 'order_items' order.id %}" class="product-title-text" title="{{ item.product.name }}">
+                            {{ item.product.name }}
+                          </a>
+                          <div class="small text-muted d-flex align-items-center gap-2 mt-1">
+                            <span>Qty: <strong class="text-dark">{{ item.quantity }}</strong></span>
+                            {% if item.variant %}
+                              <span class="badge bg-light text-dark border py-1 px-2" style="font-size: 0.72rem;">{{ item.variant.size }}</span>
+                            {% endif %}
+                            <span class="fw-bold" style="color: var(--zy-primary); font-family: 'Outfit', sans-serif;">
+                              ₹{{ item.final_offer_price|floatformat:2 }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+
+                      {% if order.items.count > 2 %}
+                      <div class="d-inline-flex mt-1">
+                        <span class="more-items-pill">
+                          <i class="bi bi-plus-circle me-1"></i>+{{ order.items.count|add:"-2" }} more item{{ order.items.count|add:"-2"|pluralize }}
+                        </span>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <!-- Price & Payment Summary Column -->
+                  <div class="col-lg-3 col-sm-6 text-lg-center">
+                    <div class="small text-muted fw-semibold mb-1" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                      Total Amount
+                    </div>
+                    <div class="price-total-tag">₹{{ order.total_price|floatformat:2 }}</div>
+                    <div class="d-flex flex-wrap justify-content-lg-center align-items-center gap-1 mt-2">
+                      <span class="badge bg-light text-secondary border font-monospace px-2 py-1" style="font-size: 0.72rem;">
+                        {{ order.payment_method|upper }}
+                      </span>
+                      {% if order.payment_status == 'Paid' %}
+                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem; font-weight: 700;">
+                          <i class="bi bi-check-circle-fill me-1"></i>PAID
+                        </span>
+                      {% elif order.payment_status == 'Pending' and order.payment_method == 'COD' %}
+                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem; font-weight: 700;">
+                          <i class="bi bi-cash-stack me-1"></i>COD DUE
+                        </span>
+                      {% elif order.payment_status == 'Pending' %}
+                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem; font-weight: 700;">
+                          <i class="bi bi-hourglass-split me-1"></i>UNPAID
+                        </span>
+                      {% elif order.payment_status == 'Refunded' %}
+                        <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem; font-weight: 700;">
+                          <i class="bi bi-arrow-return-left me-1"></i>REFUNDED
+                        </span>
+                      {% else %}
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem; font-weight: 700;">
+                          {{ order.payment_status|upper }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <!-- Actions Column -->
+                  <div class="col-lg-3 col-sm-6 text-lg-end d-flex flex-column gap-2 justify-content-center">
+                    <a href="{% url 'order_items' order.id %}" class="btn-apply-shop justify-content-center">
+                      <i class="bi bi-eye"></i> View Order Details
+                    </a>
+
+                    {% if order.status == 'completed' %}
+                    <a href="{% url 'download_invoice' order.id %}" class="btn-invoice-download justify-content-center">
+                      <i class="bi bi-file-earmark-pdf-fill"></i> Download Invoice
+                    </a>
+                    {% elif order.payment_status != 'Paid' and order.payment_status != 'Refunded' and order.payment_method != 'COD' and order.status != 'canceled' %}
+                    <a href="{% url 'payments:retry_payment' order.id %}" class="btn-retry-payment justify-content-center">
+                      <i class="bi bi-arrow-repeat"></i> Retry Payment
+                    </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            <!-- Pagination Toolbar -->
+            {% if orders.paginator.num_pages > 1 %}
+            <div class="d-flex justify-content-center mt-4 pt-2">
+              <nav aria-label="Order pagination">
+                <ul class="pagination pagination-custom mb-0">
+                  {% if orders.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ orders.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter %}&time={{ time_filter }}{% endif %}">
+                      <i class="bi bi-chevron-left me-1"></i> Prev
+                    </a>
+                  </li>
+                  {% endif %}
+
+                  {% for num in orders.paginator.page_range %}
+                    {% if orders.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > orders.number|add:'-3' and num < orders.number|add:'3' %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter %}&time={{ time_filter }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if orders.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ orders.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}{% if time_filter %}&time={{ time_filter }}{% endif %}">
+                      Next <i class="bi bi-chevron-right ms-1"></i>
+                    </a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            </div>
+            {% endif %}
+
+          {% else %}
+            <!-- Empty State Display -->
+            <div class="text-center py-5 my-3">
+              <div class="d-inline-flex p-4 rounded-circle bg-light mb-3 text-muted" style="font-size: 3.2rem; border: 1.5px dashed var(--zy-border);">
+                <i class="bi bi-bag-x" style="color: var(--zy-primary);"></i>
+              </div>
+              <h4 class="brand-font fw-bold text-dark mb-2">No Orders Found</h4>
+              <p class="text-muted small mb-4 mx-auto" style="max-width: 420px; line-height: 1.6;">
+                {% if search_query or status_filter != 'all' or time_filter != 'all' and time_filter %}
+                  We couldn't find any orders matching your selected filters. Try adjusting your query or reset filters.
+                {% else %}
+                  You haven't placed any orders yet. Explore our curated modest couture and abaya collections!
+                {% endif %}
+              </p>
+              {% if search_query or status_filter != 'all' or time_filter != 'all' and time_filter %}
+                <a href="{% url 'user_orders' %}" class="btn-outline-shop px-4 py-2">
+                  <i class="bi bi-arrow-repeat me-1"></i> Reset All Filters
+                </a>
+              {% else %}
+                <a href="{% url 'shop' %}" class="btn-apply-shop px-4 py-2">
+                  <i class="bi bi-bag-heart me-1"></i> Explore Shop Collections
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text);
+      } else {
+        const el = document.createElement('textarea');
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      }
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Order ID copied to clipboard!',
+        showConfirmButton: false,
+        timer: 1800,
+        background: '#ffffff',
+        color: '#0f172a'
+      });
+    }
+  </script>
+</body>
+</html>

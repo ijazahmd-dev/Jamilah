@@ -1,0 +1,739 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Customer Accounts | Admin Dashboard</title>
+
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="{% static 'adminuser/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'adminuser/vendors/css/vendor.bundle.base.css' %}">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066a63;
+            --brand-primary-light: #e6f3f2;
+            --brand-primary-subtle: rgba(8, 129, 120, 0.12);
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container-scroller {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-panel {
+            flex: 1;
+            padding: 28px 32px;
+            background-color: var(--bg-page);
+            min-width: 0;
+            overflow-y: auto;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumb-trail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb-trail a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .breadcrumb-trail a:hover {
+            color: var(--brand-primary);
+        }
+
+        /* Page Header */
+        .page-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title-group h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin: 0;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title-group p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 4px 0 0 0;
+        }
+
+        /* KPI Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            flex-shrink: 0;
+        }
+
+        .metric-icon.total { background: #e0f2fe; color: #0284c7; }
+        .metric-icon.active { background: #ecfdf5; color: #059669; }
+        .metric-icon.blocked { background: #fef2f2; color: #dc2626; }
+        .metric-icon.new { background: #fdf4ff; color: #a855f7; }
+
+        .metric-info h3 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .metric-info span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Filter Panel */
+        .filter-panel {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 16px 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .filter-panel .form-control,
+        .filter-panel .form-select {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            color: var(--text-body);
+        }
+
+        .filter-panel .form-control:focus,
+        .filter-panel .form-select:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-subtle);
+            outline: none;
+        }
+
+        /* Content Table Card */
+        .content-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 0;
+        }
+
+        .custom-table thead th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .custom-table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .custom-table tbody td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.875rem;
+            vertical-align: middle;
+            color: var(--text-body);
+        }
+
+        .custom-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* User Avatar */
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #475569;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 2px solid #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .user-avatar.active-avatar {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .user-avatar.blocked-avatar {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .user-name-title {
+            font-weight: 600;
+            color: var(--text-heading);
+            margin-bottom: 2px;
+        }
+
+        .user-fullname {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Balance & Stats Pills */
+        .wallet-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: #f0fdf4;
+            color: #16a34a;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1px solid rgba(22, 163, 74, 0.2);
+        }
+
+        .orders-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 0.78rem;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        /* Status Badge */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 600;
+        }
+
+        .status-pill.active {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid rgba(5, 150, 105, 0.25);
+        }
+
+        .status-pill.blocked {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid rgba(220, 38, 38, 0.25);
+        }
+
+        /* Action Buttons */
+        .action-btn-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-wallet-link {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            background: #ffffff;
+            color: var(--brand-primary);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .btn-wallet-link:hover {
+            background: var(--brand-primary-light);
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .btn-status-toggle {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-status-toggle.block {
+            background: #fff1f2;
+            color: #e11d48;
+            border-color: #fecdd3;
+        }
+
+        .btn-status-toggle.block:hover {
+            background: #ffe4e6;
+            color: #be123c;
+        }
+
+        .btn-status-toggle.unblock {
+            background: #ecfdf5;
+            color: #059669;
+            border-color: #a7f3d0;
+        }
+
+        .btn-status-toggle.unblock:hover {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        /* Pagination */
+        .pagination-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .page-link-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            color: var(--text-body);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .page-link-btn:hover {
+            background: #f8fafc;
+            color: var(--brand-primary);
+            border-color: #cbd5e1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .main-panel {
+                padding: 16px;
+            }
+            .page-header-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+
+        <div class="main-panel">
+            <!-- Breadcrumbs -->
+            <div class="breadcrumb-trail">
+                <a href="{% url 'admin_dashboard' %}"><i class="bi bi-grid-fill"></i> Dashboard</a>
+                <span>/</span>
+                <span class="text-dark fw-semibold">Customer Accounts</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header-bar">
+                <div class="page-title-group">
+                    <h2><i class="bi bi-people-fill text-success"></i> Customer Accounts Management</h2>
+                    <p>Monitor registered users, inspect consumer wallet balances, and manage account access</p>
+                </div>
+            </div>
+
+            <!-- Messages Toast -->
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show border-0 shadow-sm rounded-3 py-2 px-3 small" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i> {{ message }}
+                    <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- KPI Metric Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon total"><i class="bi bi-people"></i></div>
+                    <div class="metric-info">
+                        <h3>{{ stats.total_users }}</h3>
+                        <span>Total Customers</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon active"><i class="bi bi-person-check"></i></div>
+                    <div class="metric-info">
+                        <h3>{{ stats.active_users }}</h3>
+                        <span>Active Accounts</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon blocked"><i class="bi bi-person-x"></i></div>
+                    <div class="metric-info">
+                        <h3>{{ stats.blocked_users }}</h3>
+                        <span>Blocked Accounts</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon new"><i class="bi bi-person-plus"></i></div>
+                    <div class="metric-info">
+                        <h3>{{ stats.new_this_month }}</h3>
+                        <span>Joined (Past 30 Days)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Panel -->
+            <div class="filter-panel">
+                <form method="GET" action="{% url 'users' %}" class="row g-2 align-items-center">
+                    <div class="col-lg-5 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                            <input type="text" name="q" class="form-control border-start-0" placeholder="Search by username, email, or name..." value="{{ query }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active Users Only</option>
+                            <option value="blocked" {% if status_filter == 'blocked' %}selected{% endif %}>Blocked Users Only</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-dark rounded-3 px-3">
+                            <i class="bi bi-funnel"></i> Filter
+                        </button>
+                        {% if query or status_filter %}
+                        <a href="{% url 'users' %}" class="btn btn-outline-secondary rounded-3 px-3">
+                            <i class="bi bi-x-circle"></i> Clear
+                        </a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+            <!-- Users Table Card -->
+            <div class="content-card">
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Email Address</th>
+                                <th>Wallet Balance</th>
+                                <th>Orders</th>
+                                <th>Account Status</th>
+                                <th>Joined Date</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in users %}
+                            <tr id="user-row-{{ u.id }}">
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar {% if u.is_active %}active-avatar{% else %}blocked-avatar{% endif %}">
+                                            {{ u.username|slice:":1"|upper }}
+                                        </div>
+                                        <div>
+                                            <div class="user-name-title">{{ u.username }}</div>
+                                            <div class="user-fullname">
+                                                {% if u.first_name or u.last_name %}
+                                                {{ u.first_name }} {{ u.last_name }}
+                                                {% else %}
+                                                Customer ID #{{ u.id }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-1 text-dark">
+                                        <i class="bi bi-envelope text-muted"></i>
+                                        <span>{{ u.email|default:"No email recorded" }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="wallet-pill">
+                                        <i class="bi bi-wallet2"></i> ₹{{ u.wallet_balance|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="orders-count-badge">
+                                        <i class="bi bi-bag"></i> {{ u.order_count }} order{% if u.order_count != 1 %}s{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if u.is_active %}
+                                    <span class="status-pill active" id="user-status-badge-{{ u.id }}">
+                                        <i class="bi bi-check-circle-fill"></i> Active
+                                    </span>
+                                    {% else %}
+                                    <span class="status-pill blocked" id="user-status-badge-{{ u.id }}">
+                                        <i class="bi bi-slash-circle-fill"></i> Blocked
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted small">
+                                    {{ u.date_joined|date:"M d, Y" }}
+                                </td>
+                                <td>
+                                    <div class="action-btn-group justify-content-end">
+                                        <!-- View Wallet Transactions for this specific user -->
+                                        <a href="{% url 'admin_wallet_transaction_list' %}?user_id={{ u.id }}" class="btn-wallet-link" title="Inspect Wallet Ledger for {{ u.username }}">
+                                            <i class="bi bi-wallet-fill text-success"></i> Wallet
+                                        </a>
+
+                                        <!-- Block / Unblock Action Button -->
+                                        {% if u.is_active %}
+                                        <button type="button" class="btn-status-toggle block" onclick="confirmToggleUser('{{ u.id }}', '{{ u.username|escapejs }}', true)" id="btn-user-toggle-{{ u.id }}">
+                                            <i class="bi bi-lock-fill"></i> Block
+                                        </button>
+                                        {% else %}
+                                        <button type="button" class="btn-status-toggle unblock" onclick="confirmToggleUser('{{ u.id }}', '{{ u.username|escapejs }}', false)" id="btn-user-toggle-{{ u.id }}">
+                                            <i class="bi bi-unlock-fill"></i> Unblock
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <div class="empty-icon"><i class="bi bi-person-x"></i></div>
+                                        <h4 class="fw-bold">No Customer Accounts Found</h4>
+                                        <p class="text-muted small">{% if query or status_filter %}No users match the search filters. Try adjusting your query.{% else %}No consumer accounts have registered yet.{% endif %}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if users.has_other_pages %}
+                <div class="pagination-bar">
+                    <span>
+                        Showing {{ users.start_index }} to {{ users.end_index }} of {{ users.paginator.count }} customers
+                    </span>
+                    <div class="d-flex gap-2">
+                        {% if users.has_previous %}
+                        <a href="?page={{ users.previous_page_number }}&q={{ query }}&status={{ status_filter }}" class="page-link-btn">
+                            <i class="bi bi-chevron-left"></i> Previous
+                        </a>
+                        {% endif %}
+
+                        <span class="page-link-btn active" style="background: var(--brand-primary); color: white; border-color: var(--brand-primary);">
+                            Page {{ users.number }} of {{ users.paginator.num_pages }}
+                        </span>
+
+                        {% if users.has_next %}
+                        <a href="?page={{ users.next_page_number }}&q={{ query }}&status={{ status_filter }}" class="page-link-btn">
+                            Next <i class="bi bi-chevron-right"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden CSRF token for AJAX -->
+    {% csrf_token %}
+
+    <script src="{% static 'adminuser/vendors/js/vendor.bundle.base.js' %}"></script>
+
+    <script>
+        const getCsrfToken = () => {
+            const input = document.querySelector('[name=csrfmiddlewaretoken]');
+            return input ? input.value : '';
+        };
+
+        function confirmToggleUser(userId, username, isCurrentlyActive) {
+            const actionText = isCurrentlyActive ? "block" : "unblock";
+            const confirmBtnColor = isCurrentlyActive ? "#dc2626" : "#059669";
+            const endpoint = isCurrentlyActive ? `/adminpanel/users/block/${userId}/` : `/adminpanel/users/unblock/${userId}/`;
+
+            Swal.fire({
+                title: `${actionText.charAt(0).toUpperCase() + actionText.slice(1)} Customer?`,
+                text: `Are you sure you want to ${actionText} access for user "${username}"?`,
+                icon: isCurrentlyActive ? 'warning' : 'question',
+                showCancelButton: true,
+                confirmButtonColor: confirmBtnColor,
+                cancelButtonColor: '#64748b',
+                confirmButtonText: `Yes, ${actionText}!`,
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCsrfToken(),
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'ajax=true'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Updated!',
+                                text: data.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', data.message || 'Action failed.', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        window.location.href = endpoint;
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

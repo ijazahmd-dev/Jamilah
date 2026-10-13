@@ -1,0 +1,856 @@
+{% load static %}
+
+<!-- Bootstrap Icons & Fonts -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+
+<!-- Existing Stylesheet -->
+<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+<!--=============== LUXURY ATELIER NAVBAR STYLES ===============-->
+<style>
+  :root {
+    --zy-primary: #088178;
+    --zy-primary-dark: #044b45;
+    --zy-primary-light: #2ca58d;
+    --zy-dark: #0f172a;
+    --zy-gold: #d4af37;
+    --zy-gold-light: #f3e5ab;
+    --zy-border: #e2e8f0;
+    --zy-surface: #f8fafc;
+  }
+
+  /* 1. TOP ANNOUNCEMENT / CONCIERGE BAR */
+  .zy-topbar {
+    background: linear-gradient(90deg, #042622 0%, #073832 50%, #042622 100%);
+    color: #cbd5e1;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .zy-topbar a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .zy-topbar a:hover {
+    color: #5eead4;
+  }
+
+  .zy-topbar-highlight {
+    color: #fcd34d;
+    font-weight: 600;
+  }
+
+  .zy-topbar-divider {
+    opacity: 0.35;
+    margin: 0 8px;
+  }
+
+  /* 2. MAIN HEADER (STICKY WITH GLASSMORPHISM) */
+  .zy-header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1040;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+  }
+
+  .zy-navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 16px;
+  }
+
+  /* BRAND LOGO */
+  .zy-nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .zy-nav-brand-img {
+    height: 46px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+  }
+
+  .zy-nav-brand:hover .zy-nav-brand-img {
+    transform: scale(1.03);
+  }
+
+  .zy-brand-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--zy-primary);
+    background: rgba(8, 129, 120, 0.08);
+    padding: 2px 7px;
+    border-radius: 20px;
+    border: 1px solid rgba(8, 129, 120, 0.2);
+  }
+
+  /* DESKTOP NAV LINKS */
+  .zy-nav-menu-desktop {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .zy-nav-link {
+    color: #334155;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 6px 2px;
+    position: relative;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .zy-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--zy-primary);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .zy-nav-link:hover {
+    color: var(--zy-primary);
+  }
+
+  .zy-nav-link:hover::after,
+  .zy-nav-link.active::after {
+    transform: scaleX(1);
+  }
+
+  .zy-nav-link.active {
+    color: var(--zy-primary);
+  }
+
+  /* SEARCH INPUT */
+  .zy-nav-search-wrap {
+    flex: 1;
+    max-width: 320px;
+    position: relative;
+  }
+
+  .zy-search-form {
+    position: relative;
+    width: 100%;
+    margin: 0;
+  }
+
+  .zy-search-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 40px 0 38px;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-family: 'Outfit', sans-serif;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .zy-search-input:focus {
+    background: #ffffff;
+    border-color: var(--zy-primary);
+    box-shadow: 0 0 0 3.5px rgba(8, 129, 120, 0.12);
+  }
+
+  .zy-search-icon-left {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.85rem;
+    pointer-events: none;
+  }
+
+  .zy-search-submit-btn {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--zy-primary);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.2s ease;
+  }
+
+  .zy-search-submit-btn:hover {
+    background: var(--zy-primary-dark);
+  }
+
+  /* USER ACTIONS (WISHLIST, CART, PROFILE) */
+  .zy-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .zy-action-icon-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .zy-action-icon-btn:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: var(--zy-primary);
+    transform: translateY(-1px);
+  }
+
+  .zy-action-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: linear-gradient(135deg, #088178 0%, #044b45 100%);
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(8, 129, 120, 0.4);
+    border: 1.5px solid #ffffff;
+  }
+
+  /* PROFILE DROPDOWN */
+  .zy-profile-dropdown {
+    position: relative;
+  }
+
+  .zy-profile-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px 4px 4px;
+    border-radius: 9999px;
+    border: 1.5px solid #e2e8f0;
+    background: #ffffff;
+    color: #1e293b;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .zy-profile-btn:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+  }
+
+  .zy-avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #088178 0%, #044b45 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(8, 129, 120, 0.3);
+  }
+
+  .zy-user-display-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    max-width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .zy-dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: 230px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    padding: 8px 0;
+    display: none;
+    z-index: 1050;
+    animation: zyFadeIn 0.2s ease;
+  }
+
+  .zy-profile-dropdown:hover .zy-dropdown-menu,
+  .zy-profile-dropdown:focus-within .zy-dropdown-menu {
+    display: block;
+  }
+
+  @keyframes zyFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .zy-dropdown-header {
+    padding: 10px 16px 8px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .zy-dropdown-greeting {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--zy-primary);
+    margin: 0;
+  }
+
+  .zy-dropdown-username {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .zy-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    color: #334155;
+    text-decoration: none;
+    font-size: 0.835rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .zy-dropdown-item i {
+    font-size: 0.95rem;
+    color: #64748b;
+    transition: color 0.15s ease;
+  }
+
+  .zy-dropdown-item:hover {
+    background: #f8fafc;
+    color: var(--zy-primary);
+  }
+
+  .zy-dropdown-item:hover i {
+    color: var(--zy-primary);
+  }
+
+  .zy-dropdown-divider {
+    height: 1px;
+    background: #f1f5f9;
+    margin: 6px 0;
+  }
+
+  .zy-dropdown-item.zy-item-danger {
+    color: #ef4444;
+  }
+
+  .zy-dropdown-item.zy-item-danger i {
+    color: #ef4444;
+  }
+
+  .zy-dropdown-item.zy-item-danger:hover {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  /* SIGN IN BUTTON */
+  .zy-btn-signin {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    background: var(--zy-primary);
+    color: #ffffff !important;
+    text-decoration: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(8, 129, 120, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  .zy-btn-signin:hover {
+    background: var(--zy-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(8, 129, 120, 0.35);
+  }
+
+  /* MOBILE TOGGLE & OFFCANVAS DRAWER */
+  .zy-mobile-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #334155;
+    font-size: 1.5rem;
+    padding: 4px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  @media (max-width: 991px) {
+    .zy-topbar {
+      display: none;
+    }
+    .zy-nav-menu-desktop {
+      display: none;
+    }
+    .zy-mobile-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .zy-nav-search-wrap {
+      display: none;
+    }
+  }
+
+  /* MOBILE OFFCANVAS DRAWER */
+  .zy-mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 1060;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .zy-mobile-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .zy-mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 290px;
+    max-width: 85vw;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 1070;
+    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.15);
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .zy-mobile-drawer.active {
+    transform: translateX(0);
+  }
+
+  .zy-mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .zy-mobile-drawer-close {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+  }
+
+  .zy-mobile-drawer-body {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .zy-mobile-search {
+    margin-bottom: 20px;
+  }
+
+  .zy-mobile-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px 0;
+  }
+
+  .zy-mobile-nav-item {
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .zy-mobile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 4px;
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .zy-mobile-nav-link.active,
+  .zy-mobile-nav-link:hover {
+    color: var(--zy-primary);
+  }
+
+  .zy-mobile-drawer-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #f1f5f9;
+    background: #f8fafc;
+  }
+</style>
+
+<!--=============== 1. TOP ANNOUNCEMENT & CONCIERGE BAR ===============-->
+<div class="zy-topbar">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <span class="zy-topbar-highlight"><i class="bi bi-stars me-1"></i> ATELIER EXCLUSIVE</span>
+      <span class="zy-topbar-divider">|</span>
+      <span>Complimentary express delivery on orders over ₹1,000</span>
+      <span class="zy-topbar-divider d-none d-md-inline">|</span>
+      <span class="d-none d-md-inline text-muted"><i class="bi bi-shield-check text-warning me-1"></i> 7-Day Easy Returns</span>
+    </div>
+
+    <div class="d-flex align-items-center">
+      <a href="tel:+919895582131" class="me-3">
+        <i class="bi bi-telephone-inbound me-1"></i> (+91) 98955 82131
+      </a>
+      <span class="zy-topbar-divider">|</span>
+      <a href="{% url 'user_orders' %}" class="me-3">Track Order</a>
+      <span class="zy-topbar-divider">|</span>
+      <a href="{% url 'about' %}">About Atelier</a>
+    </div>
+  </div>
+</div>
+
+<!--=============== 2. MAIN STICKY NAVBAR ===============-->
+<header class="zy-header-sticky">
+  <div class="container zy-navbar-container">
+    
+    <!-- Mobile Hamburger Toggle (Left on Mobile) -->
+    <button type="button" class="zy-mobile-toggle" id="zyMobileToggle" aria-label="Open Navigation Menu">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Brand Logo -->
+    <a href="{% url 'home' %}" class="zy-nav-brand">
+      <img src="{% static 'assets/img/jamilah_logo.png' %}?v=2" alt="Jamilah Haute Modest Couture" class="zy-nav-brand-img" />
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="d-none d-lg-block">
+      <ul class="zy-nav-menu-desktop">
+        <li>
+          <a href="{% url 'home' %}" class="zy-nav-link {% if request.path == '/' %}active{% endif %}">
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'all_products' %}" class="zy-nav-link {% if '/shop' in request.path or '/product' in request.path %}active{% endif %}">
+            Shop
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'user_profile' %}" class="zy-nav-link {% if '/profile' in request.path or '/orders' in request.path or '/wallet' in request.path %}active{% endif %}">
+            My Account
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'contact' %}" class="zy-nav-link {% if '/contact' in request.path %}active{% endif %}">
+            Contact
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'about' %}" class="zy-nav-link {% if '/about' in request.path %}active{% endif %}">
+            About
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Search Input Bar -->
+    <div class="zy-nav-search-wrap">
+      <form method="GET" action="{% url 'all_products' %}" class="zy-search-form">
+        <i class="bi bi-search zy-search-icon-left"></i>
+        <input
+          type="text"
+          name="search"
+          value="{{ request.GET.search|default:'' }}"
+          placeholder="Search prayer dresses, abayas..."
+          class="zy-search-input"
+          autocomplete="off"
+        />
+        <button type="submit" class="zy-search-submit-btn" aria-label="Submit Search">
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- User Action Icons (Wishlist, Cart, Profile) -->
+    <div class="zy-nav-actions">
+      <!-- Wishlist Action -->
+      <a href="{% url 'wishlist' %}" class="zy-action-icon-btn" title="Saved Wishlist">
+        <i class="bi bi-heart"></i>
+        {% if nav_wishlist_count > 0 %}
+          <span class="zy-action-badge">{{ nav_wishlist_count }}</span>
+        {% endif %}
+      </a>
+
+      <!-- Cart Action -->
+      <a href="{% url 'cart_view' %}" class="zy-action-icon-btn" title="Shopping Cart">
+        <i class="bi bi-bag"></i>
+        {% if nav_cart_count > 0 %}
+          <span class="zy-action-badge">{{ nav_cart_count }}</span>
+        {% endif %}
+      </a>
+
+      <!-- Profile Dropdown / Sign In -->
+      {% if user.is_authenticated %}
+        <div class="zy-profile-dropdown">
+          <button type="button" class="zy-profile-btn" aria-expanded="false">
+            <span class="zy-avatar-circle">
+              {{ user.username|slice:":1"|upper }}
+            </span>
+            <span class="zy-user-display-name d-none d-xl-inline">
+              {{ user.first_name|default:user.username }}
+            </span>
+            <i class="bi bi-chevron-down fs-xs text-muted"></i>
+          </button>
+
+          <div class="zy-dropdown-menu">
+            <div class="zy-dropdown-header">
+              <p class="zy-dropdown-greeting">Salam,</p>
+              <h6 class="zy-dropdown-username">{{ user.first_name|default:user.username }}</h6>
+            </div>
+            <a href="{% url 'user_profile' %}" class="zy-dropdown-item">
+              <i class="bi bi-person-circle"></i> My Profile
+            </a>
+            <a href="{% url 'user_orders' %}" class="zy-dropdown-item">
+              <i class="bi bi-box-seam"></i> My Orders
+            </a>
+            <a href="{% url 'wallet_view' %}" class="zy-dropdown-item">
+              <i class="bi bi-wallet2"></i> Jamilah Wallet
+            </a>
+            <a href="{% url 'wishlist' %}" class="zy-dropdown-item">
+              <i class="bi bi-heart"></i> Saved Wishlist
+            </a>
+            <a href="{% url 'view_coupons' %}" class="zy-dropdown-item">
+              <i class="bi bi-ticket-perforated"></i> My Coupons
+            </a>
+            <div class="zy-dropdown-divider"></div>
+            <a href="{% url 'userlogout' %}" class="zy-dropdown-item zy-item-danger">
+              <i class="bi bi-box-arrow-right"></i> Sign Out
+            </a>
+          </div>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="zy-btn-signin">
+          <i class="bi bi-person me-1"></i> Sign In
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</header>
+
+<!--=============== 3. MOBILE OFFCANVAS DRAWER ===============-->
+<div class="zy-mobile-backdrop" id="zyMobileBackdrop"></div>
+
+<aside class="zy-mobile-drawer" id="zyMobileDrawer" aria-label="Mobile Navigation">
+  <div class="zy-mobile-drawer-header">
+    <a href="{% url 'home' %}" class="zy-nav-brand">
+      <img src="{% static 'assets/img/jamilah_logo.png' %}?v=2" alt="Jamilah" style="height: 38px; width: auto; object-fit: contain;">
+    </a>
+    <button type="button" class="zy-mobile-drawer-close" id="zyMobileClose" aria-label="Close Navigation Menu">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="zy-mobile-drawer-body">
+    <!-- Mobile Search Form -->
+    <div class="zy-mobile-search">
+      <form method="GET" action="{% url 'all_products' %}" class="zy-search-form">
+        <i class="bi bi-search zy-search-icon-left"></i>
+        <input
+          type="text"
+          name="search"
+          value="{{ request.GET.search|default:'' }}"
+          placeholder="Search items..."
+          class="zy-search-input"
+        />
+        <button type="submit" class="zy-search-submit-btn">
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- Mobile Navigation Links -->
+    <ul class="zy-mobile-nav-list">
+      <li class="zy-mobile-nav-item">
+        <a href="{% url 'home' %}" class="zy-mobile-nav-link {% if request.path == '/' %}active{% endif %}">
+          <span>Home</span>
+          <i class="bi bi-chevron-right text-muted fs-xs"></i>
+        </a>
+      </li>
+      <li class="zy-mobile-nav-item">
+        <a href="{% url 'all_products' %}" class="zy-mobile-nav-link {% if '/shop' in request.path %}active{% endif %}">
+          <span>Shop Atelier</span>
+          <i class="bi bi-chevron-right text-muted fs-xs"></i>
+        </a>
+      </li>
+      <li class="zy-mobile-nav-item">
+        <a href="{% url 'user_profile' %}" class="zy-mobile-nav-link {% if '/profile' in request.path %}active{% endif %}">
+          <span>My Account</span>
+          <i class="bi bi-chevron-right text-muted fs-xs"></i>
+        </a>
+      </li>
+      <li class="zy-mobile-nav-item">
+        <a href="{% url 'user_orders' %}" class="zy-mobile-nav-link">
+          <span>My Orders</span>
+          <i class="bi bi-chevron-right text-muted fs-xs"></i>
+        </a>
+      </li>
+      <li class="zy-mobile-nav-item">
+        <a href="{% url 'wallet_view' %}" class="zy-mobile-nav-link">
+          <span>Jamilah Wallet</span>
+          <i class="bi bi-chevron-right text-muted fs-xs"></i>
+        </a>
+      </li>
+      <li class="zy-mobile-nav-item">
+        <a href="{% url 'wishlist' %}" class="zy-mobile-nav-link">
+          <span>Wishlist</span>
+          <i class="bi bi-chevron-right text-muted fs-xs"></i>
+        </a>
+      </li>
+      <li class="zy-mobile-nav-item">
+        <a href="{% url 'contact' %}" class="zy-mobile-nav-link {% if '/contact' in request.path %}active{% endif %}">
+          <span>Contact Concierge</span>
+          <i class="bi bi-chevron-right text-muted fs-xs"></i>
+        </a>
+      </li>
+      <li class="zy-mobile-nav-item">
+        <a href="{% url 'about' %}" class="zy-mobile-nav-link {% if '/about' in request.path %}active{% endif %}">
+          <span>About Atelier</span>
+          <i class="bi bi-chevron-right text-muted fs-xs"></i>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Mobile User Status -->
+    <div class="mt-auto pt-3">
+      {% if user.is_authenticated %}
+        <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded-3 mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="zy-avatar-circle" style="width: 28px; height: 28px; font-size: 0.75rem;">
+              {{ user.username|slice:":1"|upper }}
+            </span>
+            <span class="fw-semibold text-dark fs-sm">{{ user.username }}</span>
+          </div>
+          <a href="{% url 'userlogout' %}" class="text-danger fs-xs fw-bold text-decoration-none">Sign Out</a>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn w-100 rounded-pill py-2 text-white fw-bold" style="background: var(--zy-primary);">
+          <i class="bi bi-person me-1"></i> Sign In to Account
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</aside>
+
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('zyMobileToggle');
+    const closeBtn = document.getElementById('zyMobileClose');
+    const drawer = document.getElementById('zyMobileDrawer');
+    const backdrop = document.getElementById('zyMobileBackdrop');
+
+    function openDrawer() {
+      if (drawer && backdrop) {
+        drawer.classList.add('active');
+        backdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeDrawer() {
+      if (drawer && backdrop) {
+        drawer.classList.remove('active');
+        backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (toggleBtn) toggleBtn.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeDrawer);
+  })();
+</script>

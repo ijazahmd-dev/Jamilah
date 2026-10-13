@@ -1,0 +1,566 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Edit Category - Jamilah Admin</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066c65;
+            --brand-dark: #1e293b;
+            --brand-border: #e2e8f0;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #334155;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .container-fluid.page-body-wrapper {
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-panel {
+            background-color: transparent;
+            padding: 24px;
+        }
+
+        .card-custom {
+            background-color: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+            max-width: 600px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .card-custom-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--brand-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-custom-header h4 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-custom-body {
+            padding: 28px;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1.5px solid var(--brand-border);
+            padding: 11px 16px;
+            font-size: 0.9375rem;
+            color: #1e293b;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.12);
+        }
+
+        /* Image Dropzone & Preview */
+        .image-upload-dropzone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: center;
+            background-color: #f8fafc;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .image-upload-dropzone:hover {
+            border-color: var(--brand-primary);
+            background-color: #f0fdfa;
+        }
+
+        .preview-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f8fafc;
+            border: 1px solid var(--brand-border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-top: 12px;
+        }
+
+        .preview-avatar-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #e2e8f0;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
+        }
+
+        .preview-avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-info {
+            flex-grow: 1;
+        }
+
+        .preview-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+
+        .preview-status {
+            font-size: 0.78rem;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-recrop {
+            background-color: #ffffff;
+            border: 1px solid var(--brand-border);
+            color: var(--brand-primary);
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-recrop:hover {
+            background-color: #f0fdfa;
+            border-color: var(--brand-primary);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #088178 0%, #055e57 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(8, 129, 120, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #066c65 0%, #044b45 100%);
+            color: #ffffff;
+        }
+
+        .btn-cancel {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-cancel:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        /* Top-Right Floating Toasts */
+        .admin-toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100500;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            pointer-events: none;
+        }
+
+        .admin-toast {
+            pointer-events: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 16px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            animation: toastSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes toastSlideIn {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .admin-toast--success { border-left: 5px solid #10b981; }
+        .admin-toast--error { border-left: 5px solid #ef4444; }
+
+        .admin-toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .admin-toast--success .admin-toast-icon { background: #ecfdf5; color: #10b981; }
+        .admin-toast--error .admin-toast-icon { background: #fef2f2; color: #ef4444; }
+
+        .admin-toast-body { flex-grow: 1; }
+        .admin-toast-title { font-size: 0.9375rem; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
+        .admin-toast-message { font-size: 0.85rem; color: #64748b; margin: 0; }
+        .admin-toast-close { background: none; border: none; color: #94a3b8; font-size: 1.25rem; cursor: pointer; }
+
+        /* Cropper modal */
+        .cropper-workspace {
+            background-color: #0f172a;
+            border-radius: 14px;
+            overflow: hidden;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cropper-workspace img { max-width: 100%; max-height: 100%; }
+        .cropper-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--brand-border);
+        }
+        .cropper-btn {
+            background: #ffffff;
+            border: 1px solid var(--brand-border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+        }
+        .cropper-btn:hover { background: #f1f5f9; color: var(--brand-primary); }
+    </style>
+</head>
+
+<body>
+    <!-- Top-Right Floating Notifications -->
+    <div class="admin-toast-container" id="adminToastContainer">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="admin-toast {% if message.tags == 'error' %}admin-toast--error{% else %}admin-toast--success{% endif %}" role="alert">
+                <div class="admin-toast-icon">
+                    {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill"></i>{% else %}<i class="bi bi-check-circle-fill"></i>{% endif %}
+                </div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">{% if message.tags == 'error' %}Notice{% else %}Success{% endif %}</h6>
+                    <p class="admin-toast-message">{{ message }}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="this.closest('.admin-toast').remove()">&times;</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <div class="card-custom">
+                        <div class="card-custom-header">
+                            <h4><i class="bi bi-pencil-square text-success"></i> Edit Category</h4>
+                            <a href="{% url 'category_management' %}" class="btn-cancel py-1 px-3" style="font-size: 0.85rem;">
+                                <i class="bi bi-arrow-left"></i> Back to Categories
+                            </a>
+                        </div>
+
+                        <div class="card-custom-body">
+                            <form id="editCategoryForm" method="post" action="{% url 'edit_category' category.id %}" enctype="multipart/form-data" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" name="cropped_image_base64" id="croppedImageBase64">
+
+                                <div class="mb-4">
+                                    <label for="categoryName" class="form-label">
+                                        <span>Category Name <span class="text-danger">*</span></span>
+                                        <small class="text-muted fw-normal" id="charCounter">{{ category.category_name|length }}/50</small>
+                                    </label>
+                                    <input type="text" class="form-control" id="categoryName" name="category_name"
+                                        value="{{ category.category_name }}" required maxlength="50">
+                                    <div id="category_name_error" class="text-danger small mt-1" style="display:none;"></div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">
+                                        <span>Category Image</span>
+                                        <small class="text-muted fw-normal">Upload new to crop and replace</small>
+                                    </label>
+
+                                    <input type="file" class="form-control" id="imageInput" name="image" accept=".jpg,.jpeg,.png,.webp" style="display: none;">
+
+                                    <div class="image-upload-dropzone" id="dropzone" {% if category.image %}style="display:none;"{% endif %}>
+                                        <i class="bi bi-cloud-arrow-up-fill text-success fs-1 mb-2 d-block"></i>
+                                        <div class="fw-semibold text-dark">Click to upload and crop image</div>
+                                        <small class="text-muted">Supports JPG, PNG, WebP (Max 5MB)</small>
+                                    </div>
+
+                                    {% if category.image %}
+                                    <div class="preview-box" id="previewBox">
+                                        <div class="preview-avatar-circle">
+                                            <img id="previewImg" src="{{ category.image.url }}" alt="{{ category.category_name }}">
+                                        </div>
+                                        <div class="preview-info">
+                                            <div class="preview-name" id="previewFileName">{{ category.category_name }}</div>
+                                            <div class="preview-status" id="previewStatus"><i class="bi bi-check-circle-fill"></i> Current Active Photo</div>
+                                        </div>
+                                        <div class="preview-actions">
+                                            <button type="button" class="btn-recrop" id="btnChangePhoto"><i class="bi bi-upload"></i> Change</button>
+                                            <button type="button" class="btn-recrop" id="btnReCrop"><i class="bi bi-crop"></i> Re-crop</button>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="preview-box" id="previewBox" style="display:none;">
+                                        <div class="preview-avatar-circle">
+                                            <img id="previewImg" src="" alt="Cropped Preview">
+                                        </div>
+                                        <div class="preview-info">
+                                            <div class="preview-name" id="previewFileName">New Photo</div>
+                                            <div class="preview-status" id="previewStatus"><i class="bi bi-check-circle-fill"></i> Cropped & Ready</div>
+                                        </div>
+                                        <div class="preview-actions">
+                                            <button type="button" class="btn-recrop" id="btnChangePhoto"><i class="bi bi-upload"></i> Change</button>
+                                            <button type="button" class="btn-recrop" id="btnReCrop"><i class="bi bi-crop"></i> Re-crop</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <div id="category_image_error" class="text-danger small mt-1" style="display:none;"></div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-3 pt-3 border-top">
+                                    <a href="{% url 'category_management' %}" class="btn-cancel">Cancel</a>
+                                    <button type="submit" class="btn-submit" id="btnSubmit">
+                                        <i class="bi bi-check-lg"></i> Update Category
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cropping Studio Modal -->
+    <div class="modal fade" id="cropperModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="modal-header bg-dark text-white py-3 px-4 border-0">
+                    <h5 class="modal-title fs-6 fw-bold"><i class="bi bi-crop text-warning me-2"></i>Image Cropping Studio</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3 bg-light">
+                    <div class="cropper-workspace">
+                        <img id="cropperSourceImage" src="" alt="Image to crop">
+                    </div>
+                    <div class="cropper-toolbar">
+                        <button type="button" class="cropper-btn" id="btnRotateCCW"><i class="bi bi-arrow-counterclockwise"></i> 90° Left</button>
+                        <button type="button" class="cropper-btn" id="btnRotateCW"><i class="bi bi-arrow-clockwise"></i> 90° Right</button>
+                        <button type="button" class="cropper-btn" id="btnFlipH"><i class="bi bi-symmetry-vertical"></i> Flip X</button>
+                        <button type="button" class="cropper-btn" id="btnFlipV"><i class="bi bi-symmetry-horizontal"></i> Flip Y</button>
+                        <button type="button" class="cropper-btn" id="btnZoomIn"><i class="bi bi-zoom-in"></i> Zoom +</button>
+                        <button type="button" class="cropper-btn" id="btnZoomOut"><i class="bi bi-zoom-out"></i> Zoom -</button>
+                        <button type="button" class="cropper-btn" id="btnReset"><i class="bi bi-arrow-repeat"></i> Reset</button>
+                    </div>
+                </div>
+                <div class="modal-footer bg-white border-top py-3 px-4 d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="btnApplyCrop" style="background:#088178; border-color:#088178;">
+                        <i class="bi bi-check2"></i> Apply Crop
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let cropper = null;
+            let flipH = 1;
+            let flipV = 1;
+
+            const cropperModalEl = document.getElementById('cropperModal');
+            const cropperModal = new bootstrap.Modal(cropperModalEl);
+            const cropperImage = document.getElementById('cropperSourceImage');
+
+            const imageInput = document.getElementById('imageInput');
+            const dropzone = document.getElementById('dropzone');
+            const previewBox = document.getElementById('previewBox');
+            const previewImg = document.getElementById('previewImg');
+            const croppedImageBase64 = document.getElementById('croppedImageBase64');
+
+            if (dropzone) dropzone.addEventListener('click', () => imageInput.click());
+            const btnChangePhoto = document.getElementById('btnChangePhoto');
+            if (btnChangePhoto) btnChangePhoto.addEventListener('click', () => imageInput.click());
+
+            imageInput.addEventListener('change', function () {
+                if (this.files && this.files.length > 0) {
+                    const file = this.files[0];
+                    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+                        alert('Allowed formats: JPG, PNG, WebP.');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        openCropper(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            const btnReCrop = document.getElementById('btnReCrop');
+            if (btnReCrop) {
+                btnReCrop.addEventListener('click', function () {
+                    if (previewImg && previewImg.src) {
+                        openCropper(previewImg.src);
+                    }
+                });
+            }
+
+            function openCropper(url) {
+                cropperImage.src = url;
+                flipH = 1;
+                flipV = 1;
+                cropperModal.show();
+
+                cropperModalEl.addEventListener('shown.bs.modal', function onShown() {
+                    cropperModalEl.removeEventListener('shown.bs.modal', onShown);
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(cropperImage, {
+                        aspectRatio: 1,
+                        viewMode: 2,
+                        autoCropArea: 0.95,
+                    });
+                });
+            }
+
+            document.getElementById('btnRotateCCW').addEventListener('click', () => cropper && cropper.rotate(-90));
+            document.getElementById('btnRotateCW').addEventListener('click', () => cropper && cropper.rotate(90));
+            document.getElementById('btnFlipH').addEventListener('click', () => {
+                if (cropper) { flipH = -flipH; cropper.scaleX(flipH); }
+            });
+            document.getElementById('btnFlipV').addEventListener('click', () => {
+                if (cropper) { flipV = -flipV; cropper.scaleY(flipV); }
+            });
+            document.getElementById('btnZoomIn').addEventListener('click', () => cropper && cropper.zoom(0.1));
+            document.getElementById('btnZoomOut').addEventListener('click', () => cropper && cropper.zoom(-0.1));
+            document.getElementById('btnReset').addEventListener('click', () => {
+                if (cropper) { cropper.reset(); flipH = 1; flipV = 1; }
+            });
+
+            document.getElementById('btnApplyCrop').addEventListener('click', function () {
+                if (!cropper) return;
+                const canvas = cropper.getCroppedCanvas({
+                    width: 700,
+                    height: 700,
+                    imageSmoothingQuality: 'high',
+                });
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+
+                canvas.toBlob(function (blob) {
+                    const file = new File([blob], "category_cropped.jpg", { type: "image/jpeg" });
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(file);
+                        imageInput.files = dt.files;
+                    } catch (e) {}
+
+                    croppedImageBase64.value = dataUrl;
+                    previewImg.src = dataUrl;
+                    if (dropzone) dropzone.style.display = 'none';
+                    if (previewBox) previewBox.style.display = 'flex';
+                    cropperModal.hide();
+                }, 'image/jpeg', 0.92);
+            });
+
+            // Auto-dismiss toasts after 4.5s
+            document.querySelectorAll('.admin-toast').forEach(t => {
+                setTimeout(() => t.remove(), 4500);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,505 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Offers Management Hub - Jamilah Admin</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066c65;
+            --brand-dark: #1e293b;
+            --brand-light: #f8fafc;
+            --brand-border: #e2e8f0;
+            --brand-radius: 14px;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #334155;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container-scroller {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-panel {
+            flex-grow: 1;
+            padding: 24px 32px;
+            background-color: #f4f6f8;
+            overflow-x: hidden;
+        }
+
+        /* Top Header */
+        .page-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .page-title-group h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title-group p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin: 4px 0 0 0;
+        }
+
+        /* KPI Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            flex-shrink: 0;
+        }
+
+        .metric-icon.active {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+        }
+
+        .metric-icon.product {
+            background: rgba(8, 129, 120, 0.12);
+            color: var(--brand-primary);
+        }
+
+        .metric-icon.category {
+            background: rgba(99, 102, 241, 0.12);
+            color: #6366f1;
+        }
+
+        .metric-icon.discount {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+        }
+
+        .metric-info h3 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .metric-info span {
+            font-size: 0.825rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn-brand-primary {
+            background-color: var(--brand-primary);
+            color: #ffffff;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-brand-primary:hover {
+            background-color: var(--brand-primary-hover);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(8, 129, 120, 0.25);
+        }
+
+        .btn-outline-custom {
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #475569;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background: #f8fafc;
+            color: #1e293b;
+            border-color: #94a3b8;
+        }
+
+        /* Offer Hub Cards */
+        .hub-card {
+            background: #ffffff;
+            border: 1px solid var(--brand-border);
+            border-radius: 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .hub-card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hub-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hub-card-body {
+            padding: 20px 24px;
+            flex-grow: 1;
+        }
+
+        .hub-card-footer {
+            padding: 16px 24px;
+            background: #fbfcfe;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Offer Items List */
+        .offer-row-item {
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            background: #ffffff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .offer-row-item:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            transform: translateX(2px);
+        }
+
+        .discount-badge-lg {
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-size: 0.725rem;
+            font-weight: 600;
+        }
+
+        .badge-status.active {
+            background-color: #ecfdf5;
+            color: #059669;
+        }
+
+        .badge-status.inactive {
+            background-color: #f1f5f9;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+
+        <div class="main-panel">
+            <!-- Header Bar -->
+            <div class="page-header-bar">
+                <div class="page-title-group">
+                    <h2><i class="bi bi-tags-fill text-primary"></i> Promotional Offers Hub</h2>
+                    <p>Manage product-specific discount deals and storewide category campaigns</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'add_product_offer' %}" class="btn-brand-primary">
+                        <i class="bi bi-tag-fill"></i> + Product Offer
+                    </a>
+                    <a href="{% url 'add_category_offer' %}" class="btn-outline-custom">
+                        <i class="bi bi-collection-fill"></i> + Category Offer
+                    </a>
+                </div>
+            </div>
+
+            <!-- KPI Metric Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon active"><i class="bi bi-lightning-charge-fill"></i></div>
+                    <div class="metric-info">
+                        <h3>{{ stats.total_active_offers }}</h3>
+                        <span>Active Promotions</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon product"><i class="bi bi-box-seam-fill"></i></div>
+                    <div class="metric-info">
+                        <h3>{{ stats.active_product_offers }} / {{ stats.total_product_offers }}</h3>
+                        <span>Product Offers</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon category"><i class="bi bi-grid-fill"></i></div>
+                    <div class="metric-info">
+                        <h3>{{ stats.active_category_offers }} / {{ stats.total_category_offers }}</h3>
+                        <span>Category Offers</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon discount"><i class="bi bi-percent"></i></div>
+                    <div class="metric-info">
+                        <h3>{{ stats.max_product_discount }}% / {{ stats.max_category_discount }}%</h3>
+                        <span>Peak Discounts</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Banner -->
+            <div class="p-3 bg-white rounded-3 border mb-4 shadow-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-2 bg-success-subtle rounded-3 text-success fs-4">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-1">Industrial-Standard Best Discount Rule</h6>
+                        <small class="text-secondary">
+                            When an item qualifies for both a <strong>Product Offer</strong> and a <strong>Category Offer</strong>, the system automatically applies the <strong>highest (best)</strong> discount percentage for the customer. Coupons are applied on top of the final offer price at checkout.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two Hub Cards (Product Offers & Category Offers) -->
+            <div class="row g-4">
+                <!-- Product Offers Section -->
+                <div class="col-lg-6">
+                    <div class="hub-card">
+                        <div class="hub-card-header">
+                            <h3 class="hub-card-title">
+                                <i class="bi bi-tag text-primary"></i> Product-Specific Offers
+                            </h3>
+                            <a href="{% url 'add_product_offer' %}" class="btn-brand-primary btn-sm">
+                                <i class="bi bi-plus-lg"></i> New Offer
+                            </a>
+                        </div>
+                        <div class="hub-card-body">
+                            {% if recent_product_offers %}
+                                {% for po in recent_product_offers %}
+                                <div class="offer-row-item">
+                                    <div class="d-flex align-items-center gap-3">
+                                        {% if po.product.images.first %}
+                                            <img src="{{ po.product.images.first.image.url }}" alt="{{ po.product.name }}" 
+                                                 style="width: 44px; height: 44px; object-fit: cover; border-radius: 8px;">
+                                        {% else %}
+                                            <div style="width: 44px; height: 44px; background: #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="bi bi-image text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <div class="fw-bold text-dark small" style="max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ po.product.name }}">
+                                                {{ po.product.name }}
+                                            </div>
+                                            <small class="text-muted">
+                                                <del>₹{{ po.product.price }}</del> <span class="text-success fw-bold">₹{{ po.final_price }}</span> (Save ₹{{ po.savings }})
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="mb-1">
+                                            <span class="discount-badge-lg">{{ po.discount_percentage }}% OFF</span>
+                                        </div>
+                                        <div>
+                                            <span class="badge-status {% if po.is_active %}active{% else %}inactive{% endif %}">
+                                                {% if po.is_active %}Active{% else %}Inactive{% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center py-5 text-muted">
+                                    <i class="bi bi-tags display-6 opacity-50 d-block mb-2"></i>
+                                    <p class="small mb-2">No product offers created yet.</p>
+                                    <a href="{% url 'add_product_offer' %}" class="btn btn-sm btn-outline-primary">
+                                        Add First Product Offer
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="hub-card-footer">
+                            <small class="text-muted">{{ stats.total_product_offers }} Total Product Offers</small>
+                            <a href="{% url 'product_offer_list' %}" class="btn-outline-custom btn-sm">
+                                Manage All Product Offers <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Offers Section -->
+                <div class="col-lg-6">
+                    <div class="hub-card">
+                        <div class="hub-card-header">
+                            <h3 class="hub-card-title">
+                                <i class="bi bi-collection text-info"></i> Category-Wide Campaigns
+                            </h3>
+                            <a href="{% url 'add_category_offer' %}" class="btn-outline-custom btn-sm">
+                                <i class="bi bi-plus-lg"></i> New Campaign
+                            </a>
+                        </div>
+                        <div class="hub-card-body">
+                            {% if recent_category_offers %}
+                                {% for co in recent_category_offers %}
+                                <div class="offer-row-item">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div style="width: 44px; height: 44px; background: rgba(99, 102, 241, 0.1); color: #6366f1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                            <i class="bi bi-folder-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark small">
+                                                {{ co.category.category_name }}
+                                            </div>
+                                            <small class="text-muted">
+                                                Applies across <strong>{{ co.product_count }}</strong> items in catalog
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="mb-1">
+                                            <span class="discount-badge-lg" style="background: #f5f3ff; color: #7c3aed;">
+                                                {{ co.discount_percentage }}% OFF
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="badge-status {% if co.is_active %}active{% else %}inactive{% endif %}">
+                                                {% if co.is_active %}Active{% else %}Inactive{% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center py-5 text-muted">
+                                    <i class="bi bi-collection display-6 opacity-50 d-block mb-2"></i>
+                                    <p class="small mb-2">No category offers created yet.</p>
+                                    <a href="{% url 'add_category_offer' %}" class="btn btn-sm btn-outline-primary">
+                                        Add First Category Offer
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="hub-card-footer">
+                            <small class="text-muted">{{ stats.total_category_offers }} Total Category Campaigns</small>
+                            <a href="{% url 'category_offer_list' %}" class="btn-outline-custom btn-sm">
+                                Manage All Category Offers <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SweetAlert Toast -->
+    <script>
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: "{% if message.tags == 'error' or message.tags == 'danger' %}error{% else %}success{% endif %}",
+                    title: "{{ message }}",
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
+</body>
+
+</html>

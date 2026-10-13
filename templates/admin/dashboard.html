@@ -1,0 +1,1175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Executive Admin Dashboard | Jamilah</title>
+
+    <!-- Google Fonts & Modern Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="{% static 'admin/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/vendors/css/vendor.bundle.base.css' %}">
+
+    <!-- Chart.js & SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066a63;
+            --brand-primary-light: #e6f3f2;
+            --brand-primary-subtle: rgba(8, 129, 120, 0.12);
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container-scroller {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-panel {
+            flex: 1;
+            padding: 28px 32px;
+            background-color: var(--bg-page);
+            min-width: 0;
+            overflow-y: auto;
+        }
+
+        /* Top Welcome Banner */
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .welcome-text h2 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin: 0;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-text p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 4px 0 0 0;
+        }
+
+        .quick-actions-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action-primary {
+            background-color: var(--brand-primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 9px 18px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(8, 129, 120, 0.25);
+        }
+
+        .btn-action-primary:hover {
+            background-color: var(--brand-primary-hover);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(8, 129, 120, 0.35);
+        }
+
+        .btn-action-light {
+            background-color: #ffffff;
+            color: var(--text-body);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 9px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-light:hover {
+            background-color: #f1f5f9;
+            color: var(--brand-primary);
+            border-color: #cbd5e1;
+        }
+
+        /* Control & Filter Toolbar */
+        .toolbar-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            padding: 18px 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .toolbar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .toolbar-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .active-window-pill {
+            background: var(--brand-primary-light);
+            color: var(--brand-primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-select, .form-control {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.86rem;
+            padding: 8px 12px;
+            color: var(--text-body);
+        }
+
+        .form-select:focus, .form-control:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-subtle);
+            outline: none;
+        }
+
+        /* Primary KPIs Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .kpi-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .kpi-icon-wrap {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
+
+        .kpi-icon-wrap.sales { background: #ecfdf5; color: #059669; }
+        .kpi-icon-wrap.orders { background: #eff6ff; color: #2563eb; }
+        .kpi-icon-wrap.aov { background: #fdf4ff; color: #a855f7; }
+        .kpi-icon-wrap.discount { background: #fffbeb; color: #d97706; }
+        .kpi-icon-wrap.users { background: #f0fdf4; color: #16a34a; }
+
+        .kpi-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+
+        .kpi-value {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin: 0;
+            line-height: 1.15;
+        }
+
+        .kpi-subtext {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Marketing & Operations Glance Bar */
+        .glance-strip {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .glance-item {
+            flex: 1;
+            min-width: 220px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-body);
+            transition: all 0.2s ease;
+        }
+
+        .glance-item:hover {
+            border-color: var(--brand-primary);
+            background: #fafcfc;
+            transform: translateY(-1px);
+            color: var(--brand-primary);
+        }
+
+        .glance-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .glance-badge {
+            font-size: 0.76rem;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        /* Order Lifecycle Metrics */
+        .metrics-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            padding: 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-pill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .status-metric-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .status-metric-icon.pending { background: #fef3c7; color: #d97706; }
+        .status-metric-icon.completed { background: #dcfce7; color: #16a34a; }
+        .status-metric-icon.canceled { background: #fee2e2; color: #dc2626; }
+        .status-metric-icon.returned { background: #ede9fe; color: #7c3aed; }
+        .status-metric-icon.delivered { background: #e0f2fe; color: #0284c7; }
+
+        .status-metric-val {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            line-height: 1.1;
+        }
+
+        .status-metric-lbl {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Charts Section */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-box {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            padding: 22px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chart-canvas-wrap {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        /* Two Column Content Grids */
+        .content-split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .content-split-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .data-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            padding: 22px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .data-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .data-card-header h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tables */
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .custom-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .custom-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.86rem;
+            vertical-align: middle;
+        }
+
+        .custom-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .product-thumb-small {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+            background: #f1f5f9;
+            flex-shrink: 0;
+        }
+
+        /* Badges */
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 9px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-status.completed { background: #ecfdf5; color: #059669; }
+        .badge-status.pending { background: #fffbeb; color: #d97706; }
+        .badge-status.canceled { background: #fef2f2; color: #dc2626; }
+        .badge-status.returned { background: #ede9fe; color: #7c3aed; }
+
+        .rank-medal {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .rank-medal.gold { background: #fef3c7; color: #b45309; }
+        .rank-medal.silver { background: #f1f5f9; color: #475569; }
+        .rank-medal.bronze { background: #ffedd5; color: #c2410c; }
+        .rank-medal.default { background: #f1f5f9; color: #64748b; }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+
+        <div class="main-panel">
+            <!-- Welcome Header & Action Launchpad -->
+            <div class="welcome-header">
+                <div class="welcome-text">
+                    <h2>
+                        <i class="bi bi-speedometer2 text-success"></i> Executive Overview
+                    </h2>
+                    <p>Store performance intelligence, live order tracking, and sales analytics</p>
+                </div>
+                <div class="quick-actions-bar">
+                    <a href="{% url 'create_product' %}" class="btn-action-primary">
+                        <i class="bi bi-plus-circle"></i> Add Product
+                    </a>
+                    <a href="{% url 'add_coupon' %}" class="btn-action-light">
+                        <i class="bi bi-ticket-perforated"></i> New Coupon
+                    </a>
+                    <a href="{% url 'add_product_offer' %}" class="btn-action-light">
+                        <i class="bi bi-tag"></i> New Offer
+                    </a>
+                    <a href="{% url 'order_management' %}" class="btn-action-light">
+                        <i class="bi bi-box-seam"></i> View Orders
+                    </a>
+                </div>
+            </div>
+
+            <!-- Messages Notification -->
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show border-0 shadow-sm rounded-3 py-2 px-3 small" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i> {{ message }}
+                    <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Filter Controls & Report Generation Card -->
+            <div class="toolbar-card">
+                <div class="toolbar-header">
+                    <div class="toolbar-title">
+                        <i class="bi bi-funnel-fill text-success"></i> Analytics Range & Sales Reports
+                    </div>
+                    <div class="active-window-pill">
+                        <i class="bi bi-calendar3"></i> Active Window: {{ start_date }} to {{ end_date }}
+                    </div>
+                </div>
+
+                <form method="POST" id="dashboardFilterForm" class="row g-3 align-items-end">
+                    {% csrf_token %}
+                    <input type="hidden" name="dashboard_filter" value="1">
+
+                    <div class="col-lg-3 col-md-4">
+                        <label class="form-label small fw-bold mb-1">Timeframe Preset</label>
+                        <select name="date_range" id="date_range" class="form-select">
+                            <option value="1_day" {% if date_range == '1_day' %}selected{% endif %}>Today (Last 24 Hours)</option>
+                            <option value="1_week" {% if date_range == '1_week' %}selected{% endif %}>Past 7 Days</option>
+                            <option value="1_month" {% if date_range == '1_month' or not date_range %}selected{% endif %}>Past 30 Days (Default)</option>
+                            <option value="custom" {% if date_range == 'custom' %}selected{% endif %}>Custom Date Range...</option>
+                        </select>
+                    </div>
+
+                    <!-- Custom Date Inputs (collapsible) -->
+                    <div class="col-lg-2 col-md-4" id="custom_start_group" style="{% if date_range != 'custom' %}display: none;{% endif %}">
+                        <label class="form-label small fw-bold mb-1">Start Date</label>
+                        <input type="date" name="custom_start" id="custom_start" class="form-control" value="{{ start_date }}">
+                    </div>
+
+                    <div class="col-lg-2 col-md-4" id="custom_end_group" style="{% if date_range != 'custom' %}display: none;{% endif %}">
+                        <label class="form-label small fw-bold mb-1">End Date</label>
+                        <input type="date" name="custom_end" id="custom_end" class="form-control" value="{{ end_date }}">
+                    </div>
+
+                    <div class="col-lg-2 col-md-3">
+                        <button type="submit" class="btn btn-dark w-100 rounded-3">
+                            <i class="bi bi-arrow-repeat me-1"></i> Apply Filter
+                        </button>
+                    </div>
+
+                    <!-- Export Report Block -->
+                    <div class="col-lg-3 col-md-5 d-flex gap-2 ms-auto">
+                        <select id="report_format" class="form-select" style="max-width: 120px;">
+                            <option value="pdf">PDF File</option>
+                            <option value="excel">Excel (.xlsx)</option>
+                        </select>
+                        <button type="button" onclick="generateReport()" class="btn btn-outline-success rounded-3 w-100 fw-semibold text-nowrap" style="border-color: var(--brand-primary); color: var(--brand-primary);">
+                            <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> Export Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Primary Executive KPI Grid -->
+            <div class="kpi-grid">
+                <!-- Total Sales -->
+                <div class="kpi-card">
+                    <div class="kpi-card-top">
+                        <div>
+                            <div class="kpi-label">Net Sales Revenue</div>
+                            <h3 class="kpi-value">₹{{ total_sales|floatformat:2 }}</h3>
+                        </div>
+                        <div class="kpi-icon-wrap sales">
+                            <i class="bi bi-currency-rupee"></i>
+                        </div>
+                    </div>
+                    <div class="kpi-subtext text-success">
+                        <i class="bi bi-check-circle-fill"></i> Completed orders after discounts
+                    </div>
+                </div>
+
+                <!-- Total Orders -->
+                <div class="kpi-card">
+                    <div class="kpi-card-top">
+                        <div>
+                            <div class="kpi-label">Total Orders Placed</div>
+                            <h3 class="kpi-value">{{ total_orders }}</h3>
+                        </div>
+                        <div class="kpi-icon-wrap orders">
+                            <i class="bi bi-bag-check-fill"></i>
+                        </div>
+                    </div>
+                    <div class="kpi-subtext">
+                        <i class="bi bi-calendar-range"></i> Across current filter range
+                    </div>
+                </div>
+
+                <!-- Average Order Value (AOV) -->
+                <div class="kpi-card">
+                    <div class="kpi-card-top">
+                        <div>
+                            <div class="kpi-label">Average Order Value</div>
+                            <h3 class="kpi-value">₹{{ avg_order_value|floatformat:2 }}</h3>
+                        </div>
+                        <div class="kpi-icon-wrap aov">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                    </div>
+                    <div class="kpi-subtext">
+                        <i class="bi bi-calculator"></i> Net revenue per order
+                    </div>
+                </div>
+
+                <!-- Total Discounts Given -->
+                <div class="kpi-card">
+                    <div class="kpi-card-top">
+                        <div>
+                            <div class="kpi-label">Discounts Redeemed</div>
+                            <h3 class="kpi-value">₹{{ total_discount|floatformat:2 }}</h3>
+                        </div>
+                        <div class="kpi-icon-wrap discount">
+                            <i class="bi bi-percent"></i>
+                        </div>
+                    </div>
+                    <div class="kpi-subtext text-warning">
+                        <i class="bi bi-ticket-detailed"></i> Vouchers & promotional savings
+                    </div>
+                </div>
+
+                <!-- Total Customers -->
+                <div class="kpi-card">
+                    <div class="kpi-card-top">
+                        <div>
+                            <div class="kpi-label">Registered Customers</div>
+                            <h3 class="kpi-value">{{ total_users }}</h3>
+                        </div>
+                        <div class="kpi-icon-wrap users">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+                    <div class="kpi-subtext text-success">
+                        <i class="bi bi-person-check-fill"></i> Active consumer accounts
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marketing & Operations Glance Strip -->
+            <div class="glance-strip">
+                <a href="{% url 'coupon_list' %}" class="glance-item">
+                    <div class="glance-item-info">
+                        <i class="bi bi-ticket-perforated-fill text-success fs-5"></i>
+                        <span>Promotional Vouchers</span>
+                    </div>
+                    <span class="glance-badge bg-success text-white">{{ active_coupons_count }} Active</span>
+                </a>
+
+                <a href="{% url 'offer_management' %}" class="glance-item">
+                    <div class="glance-item-info">
+                        <i class="bi bi-stars text-warning fs-5"></i>
+                        <span>Active Offers (Product & Cat)</span>
+                    </div>
+                    <span class="glance-badge bg-warning text-dark">{{ active_offers_count }} Running</span>
+                </a>
+
+                <a href="#low-stock-section" class="glance-item">
+                    <div class="glance-item-info">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-5"></i>
+                        <span>Low Stock Inventory</span>
+                    </div>
+                    <span class="glance-badge bg-danger text-white">{{ low_stock_count }} Low Variants</span>
+                </a>
+            </div>
+
+            <!-- Order Lifecycle & Fulfillment Status Cards -->
+            <div class="metrics-card">
+                <div class="section-title">
+                    <i class="bi bi-arrow-repeat text-primary"></i> Order Lifecycle & Fulfillment Metrics
+                </div>
+                <div class="status-pill-grid">
+                    <div class="status-metric-box">
+                        <div class="status-metric-icon pending"><i class="bi bi-clock-history"></i></div>
+                        <div>
+                            <div class="status-metric-val">{{ order_status_counts.pending }}</div>
+                            <div class="status-metric-lbl">Pending Orders</div>
+                        </div>
+                    </div>
+                    <div class="status-metric-box">
+                        <div class="status-metric-icon completed"><i class="bi bi-check2-circle"></i></div>
+                        <div>
+                            <div class="status-metric-val">{{ order_status_counts.completed }}</div>
+                            <div class="status-metric-lbl">Completed Orders</div>
+                        </div>
+                    </div>
+                    <div class="status-metric-box">
+                        <div class="status-metric-icon canceled"><i class="bi bi-x-circle"></i></div>
+                        <div>
+                            <div class="status-metric-val">{{ order_status_counts.canceled }}</div>
+                            <div class="status-metric-lbl">Canceled Orders</div>
+                        </div>
+                    </div>
+                    <div class="status-metric-box">
+                        <div class="status-metric-icon returned"><i class="bi bi-arrow-counterclockwise"></i></div>
+                        <div>
+                            <div class="status-metric-val">{{ order_status_counts.returned }}</div>
+                            <div class="status-metric-lbl">Returned Orders</div>
+                        </div>
+                    </div>
+                    <div class="status-metric-box">
+                        <div class="status-metric-icon delivered"><i class="bi bi-box2-heart"></i></div>
+                        <div>
+                            <div class="status-metric-val">{{ item_status_counts.delivered }}</div>
+                            <div class="status-metric-lbl">Delivered Items</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-row">
+                <!-- Sales Trend Line Chart -->
+                <div class="chart-box">
+                    <div class="chart-header">
+                        <div class="section-title m-0">
+                            <i class="bi bi-graph-up text-success"></i> Sales Trend & Daily Revenue
+                        </div>
+                        <span class="text-muted small">Window: {{ graph_start_date }} to {{ graph_end_date }}</span>
+                    </div>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Order Conversion Donut Chart -->
+                <div class="chart-box">
+                    <div class="chart-header">
+                        <div class="section-title m-0">
+                            <i class="bi bi-pie-chart-fill text-primary"></i> Order Conversion
+                        </div>
+                        <span class="text-muted small">Fulfillment Ratio</span>
+                    </div>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="orderConversionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Column Top Performers Section -->
+            <div class="content-split-grid">
+                <!-- Top Categories -->
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <h3><i class="bi bi-trophy-fill text-warning"></i> Top Selling Categories</h3>
+                        <span class="badge bg-light text-muted border">By Units Sold</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">Rank</th>
+                                    <th>Category</th>
+                                    <th class="text-end">Units Sold</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in top_selling_categories %}
+                                <tr>
+                                    <td>
+                                        <span class="rank-medal {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
+                                            {{ forloop.counter }}
+                                        </span>
+                                    </td>
+                                    <td class="fw-bold text-dark">{{ category.product__category__category_name }}</td>
+                                    <td class="text-end fw-semibold text-success">{{ category.total_sold }} pcs</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">No category sales recorded yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Top Products -->
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <h3><i class="bi bi-award-fill text-purple" style="color: #7c3aed;"></i> Top Selling Products</h3>
+                        <span class="badge bg-light text-muted border">Highest Demand</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Details</th>
+                                    <th class="text-end">Units Sold</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in top_selling_products %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            {% if product.images.first %}
+                                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="product-thumb-small">
+                                            {% else %}
+                                            <div class="product-thumb-small d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></div>
+                                            {% endif %}
+                                            <div>
+                                                <div class="fw-semibold text-dark text-truncate" style="max-width: 200px;">{{ product.name }}</div>
+                                                <small class="text-muted">₹{{ product.price|floatformat:2 }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end fw-bold text-success">{{ product.total_sold }} sold</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted py-4">No product sales recorded yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Full Width Table -->
+            <div class="data-card mb-4">
+                <div class="data-card-header">
+                    <h3><i class="bi bi-clock-history text-success"></i> Recent Orders Activity</h3>
+                    <a href="{% url 'order_management' %}" class="btn-action-light py-1 px-3 small">
+                        View All Orders <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Order Ref</th>
+                                <th>Customer</th>
+                                <th>Order Total</th>
+                                <th>Status</th>
+                                <th>Placed Date</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'admin_order_details' order.id %}" class="fw-bold text-dark text-decoration-none">
+                                        #{{ order.id }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="rank-medal default"><i class="bi bi-person"></i></div>
+                                        <span class="fw-medium text-dark">{{ order.user.username }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark">₹{{ order.total_price|floatformat:2 }}</span>
+                                </td>
+                                <td>
+                                    {% if order.status == 'completed' %}
+                                    <span class="badge-status completed"><i class="bi bi-check-circle-fill"></i> Completed</span>
+                                    {% elif order.status == 'pending' %}
+                                    <span class="badge-status pending"><i class="bi bi-clock-fill"></i> Pending</span>
+                                    {% elif order.status == 'canceled' %}
+                                    <span class="badge-status canceled"><i class="bi bi-x-circle-fill"></i> Canceled</span>
+                                    {% elif order.status == 'returned' %}
+                                    <span class="badge-status returned"><i class="bi bi-arrow-counterclockwise"></i> Returned</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted small">
+                                    {{ order.created_at|date:"M d, Y, h:i A" }}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{% url 'admin_order_details' order.id %}" class="btn btn-sm btn-light border py-1 px-2 rounded-2" title="Inspect Order Details">
+                                        <i class="bi bi-eye"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">No recent store orders found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Low Stock Inventory Section -->
+            <div class="data-card" id="low-stock-section">
+                <div class="data-card-header">
+                    <h3><i class="bi bi-exclamation-triangle-fill text-danger"></i> Low Stock Variant Alerts (&lt; 10 Units)</h3>
+                    <span class="badge bg-danger text-white">{{ low_stock_products.count }} Action Items</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Variant Spec</th>
+                                <th>Remaining Stock</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for variant in low_stock_products %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        {% if variant.product.images.first %}
+                                        <img src="{{ variant.product.images.first.image.url }}" alt="{{ variant.product.name }}" class="product-thumb-small">
+                                        {% else %}
+                                        <div class="product-thumb-small d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></div>
+                                        {% endif %}
+                                        <span class="fw-semibold text-dark">{{ variant.product.name }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        Color: {{ variant.color|default:"Default" }} | Size: {{ variant.size }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-danger text-white fw-bold px-2 py-1">
+                                        <i class="bi bi-exclamation-circle me-1"></i> Only {{ variant.stock }} Left
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <a href="{% url 'update_variant' variant.id %}" class="btn btn-sm btn-outline-danger py-1 px-2 rounded-2">
+                                        <i class="bi bi-pencil-square me-1"></i> Restock
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-success py-4">
+                                    <i class="bi bi-check-circle-fill me-1"></i> All product inventory levels are healthy!
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Vendor Scripts -->
+    <script src="{% static 'admin/vendors/js/vendor.bundle.base.js' %}"></script>
+
+    <script>
+        // Toggle Custom Date Inputs
+        const dateRangeSelect = document.getElementById('date_range');
+        const customStartGroup = document.getElementById('custom_start_group');
+        const customEndGroup = document.getElementById('custom_end_group');
+
+        dateRangeSelect.addEventListener('change', function () {
+            if (this.value === 'custom') {
+                customStartGroup.style.display = 'block';
+                customEndGroup.style.display = 'block';
+            } else {
+                customStartGroup.style.display = 'none';
+                customEndGroup.style.display = 'none';
+            }
+        });
+
+        // Generate Sales Report
+        function generateReport() {
+            const format = document.getElementById('report_format').value;
+            const startDate = "{{ start_date }}";
+            const endDate = "{{ end_date }}";
+
+            if (!startDate || !endDate) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Date Range',
+                    text: 'Please select a valid date range before exporting the sales report.',
+                    confirmButtonColor: '#088178'
+                });
+                return;
+            }
+
+            const url = `{% url 'generate_sales_report' %}?start_date=${startDate}&end_date=${endDate}&format=${format}`;
+            window.location.href = url;
+        }
+
+        // Parse JSON Chart Data
+        const salesData = JSON.parse('{{ sales_data_json|escapejs }}');
+        const salesLabels = JSON.parse('{{ sales_labels_json|escapejs }}');
+        const orderConversionData = JSON.parse('{{ order_conversion_data_json|escapejs }}');
+
+        // Render Sales Trend Chart
+        const salesCtx = document.getElementById('salesChart');
+        if (salesCtx) {
+            const ctx = salesCtx.getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+            gradient.addColorStop(0, 'rgba(8, 129, 120, 0.28)');
+            gradient.addColorStop(1, 'rgba(8, 129, 120, 0.01)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: salesLabels.length > 0 ? salesLabels : ['No Data'],
+                    datasets: [{
+                        label: 'Sales Revenue (₹)',
+                        data: salesData.length > 0 ? salesData : [0],
+                        backgroundColor: gradient,
+                        borderColor: '#088178',
+                        borderWidth: 2.5,
+                        fill: true,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#088178',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        tension: 0.35
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                            ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans', size: 11 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                            ticks: {
+                                color: '#64748b',
+                                font: { family: 'Plus Jakarta Sans', size: 11 },
+                                callback: val => '₹' + val
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Plus Jakarta Sans', weight: 'bold' },
+                            bodyFont: { family: 'Plus Jakarta Sans' },
+                            padding: 10,
+                            callbacks: {
+                                label: ctx => ` Sales: ₹${Number(ctx.parsed.y).toFixed(2)}`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Order Conversion Doughnut Chart
+        const convCtx = document.getElementById('orderConversionChart');
+        if (convCtx) {
+            const cCtx = convCtx.getContext('2d');
+            new Chart(cCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Pending', 'Canceled', 'Returned'],
+                    datasets: [{
+                        data: [
+                            orderConversionData.completed || 0,
+                            orderConversionData.pending || 0,
+                            orderConversionData.canceled || 0,
+                            orderConversionData.returned || 0
+                        ],
+                        backgroundColor: [
+                            '#10b981', // Emerald for completed
+                            '#f59e0b', // Amber for pending
+                            '#ef4444', // Red for canceled
+                            '#8b5cf6'  // Purple for returned
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { family: 'Plus Jakarta Sans', size: 11 },
+                                boxWidth: 12,
+                                padding: 14
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: 'Plus Jakarta Sans', weight: 'bold' },
+                            bodyFont: { family: 'Plus Jakarta Sans' },
+                            callbacks: {
+                                label: ctx => ` ${ctx.label}: ${ctx.raw} orders`
+                            }
+                        }
+                    },
+                    cutout: '68%'
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

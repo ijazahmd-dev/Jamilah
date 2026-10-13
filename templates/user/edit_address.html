@@ -1,0 +1,815 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Address — Jamilah | Modest Couture &amp; Prayer Wear</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans matching Shop page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Flaticon & Swiper -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <!-- Core Theme Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  <style>
+    :root {
+      --zy-primary: #088178;
+      --zy-primary-dark: #06635c;
+      --zy-primary-light: #e8f5f4;
+      --zy-primary-border: #b2dedb;
+      --zy-gold: #c59b27;
+      --zy-gold-light: #fef8e7;
+      --zy-dark: #0f172a;
+      --zy-slate: #1e293b;
+      --zy-muted: #64748b;
+      --zy-border: #e2e8f0;
+      --zy-card-bg: #ffffff;
+      --zy-surface: #f8fafc;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: var(--zy-slate);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* ── SHOP-MATCHING HERO HEADER ── */
+    .shop-hero {
+      background: linear-gradient(135deg, #091e1c 0%, #133a35 100%);
+      padding: 28px 0 24px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 20px rgba(8, 129, 120, 0.1);
+    }
+
+    .shop-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(8, 129, 120, 0.35) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.72rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-breadcrumb a {
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .hero-breadcrumb a:hover {
+      color: #ffffff;
+    }
+
+    .hero-breadcrumb .sep {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .hero-breadcrumb .current {
+      color: #5eead4;
+      font-weight: 600;
+    }
+
+    .shop-hero-title {
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      font-size: 1.75rem;
+      margin-bottom: 4px;
+    }
+
+    .shop-hero-subtitle {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      max-width: 580px;
+      margin-bottom: 0;
+    }
+
+    /* ── ACCOUNT SIDEBAR ── */
+    .account-sidebar {
+      position: sticky;
+      top: 24px;
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 20px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .user-mini-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .user-mini-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: 2px solid var(--zy-primary-border);
+      flex-shrink: 0;
+    }
+
+    .account-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .account-nav .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--zy-slate);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .account-nav .nav-link .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .account-nav .nav-link i {
+      font-size: 1.1rem;
+      color: var(--zy-muted);
+      width: 20px;
+      text-align: center;
+      transition: color 0.2s;
+    }
+
+    .account-nav .nav-link:hover {
+      background: var(--zy-primary-light);
+      color: var(--zy-primary);
+      transform: translateX(2px);
+    }
+
+    .account-nav .nav-link:hover i {
+      color: var(--zy-primary);
+    }
+
+    .account-nav .nav-link.active {
+      background: var(--zy-primary);
+      color: #ffffff;
+      box-shadow: 0 3px 12px rgba(8, 129, 120, 0.22);
+    }
+
+    .account-nav .nav-link.active i {
+      color: #ffffff;
+    }
+
+    .nav-badge-count {
+      background: rgba(0, 0, 0, 0.06);
+      padding: 1px 7px;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--zy-muted);
+    }
+
+    .account-nav .nav-link.active .nav-badge-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .logout-nav-link {
+      color: #dc2626 !important;
+      margin-top: 10px;
+      border-top: 1px dashed var(--zy-border);
+      padding-top: 14px !important;
+    }
+
+    .logout-nav-link:hover {
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
+    }
+
+    .logout-nav-link i {
+      color: #dc2626 !important;
+    }
+
+    /* ── FORM CONTAINER CARD ── */
+    .profile-card {
+      background: #ffffff;
+      border: 1px solid var(--zy-border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .card-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--zy-border);
+    }
+
+    .card-title-shop {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--zy-dark);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .card-title-shop i {
+      color: var(--zy-primary);
+      font-size: 1.25rem;
+    }
+
+    .card-subtitle-shop {
+      color: var(--zy-muted);
+      font-size: 0.81rem;
+      margin-top: 3px;
+      margin-bottom: 0;
+    }
+
+    /* Inputs matching shop filter toolbar */
+    .form-label-shop {
+      font-weight: 600;
+      font-size: 0.8125rem;
+      color: var(--zy-dark);
+      margin-bottom: 6px;
+    }
+
+    .filter-input-form {
+      border-radius: 8px;
+      border: 1.5px solid var(--zy-border);
+      padding: 9px 12px;
+      font-size: 0.84rem;
+      color: var(--zy-dark);
+      background-color: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .filter-input-form:focus {
+      border-color: var(--zy-primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.12);
+    }
+
+    .btn-apply-shop {
+      background: var(--zy-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-apply-shop:hover {
+      background: var(--zy-primary-dark);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(8, 129, 120, 0.2);
+    }
+
+    .btn-outline-shop {
+      background: #ffffff;
+      color: var(--zy-slate);
+      border: 1.5px solid var(--zy-border);
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-shop:hover {
+      border-color: var(--zy-primary);
+      color: var(--zy-primary);
+      background: var(--zy-primary-light);
+    }
+
+    /* Live Preview Card */
+    .label-preview-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 1.5px dashed var(--zy-primary-border);
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 14px rgba(8, 129, 120, 0.05);
+    }
+
+    .preview-badge-chip {
+      background: var(--zy-primary-light);
+      color: var(--zy-primary-dark);
+      border: 1px solid var(--zy-primary-border);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .field-error-msg {
+      color: #dc2626;
+      font-size: 0.76rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    @media (max-width: 991px) {
+      .account-sidebar {
+        position: static;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--=============== HEADER ===============-->
+  {% include 'header.html' %}
+
+  <!--=============== SHOP-STYLE HERO BANNER ===============-->
+  <div class="shop-hero">
+    <div class="container position-relative">
+      <div class="hero-breadcrumb">
+        <a href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+        <span class="sep">/</span>
+        <a href="{% url 'user_profile' %}">Account</a>
+        <span class="sep">/</span>
+        <a href="{% url 'addresses' %}">My Addresses</a>
+        <span class="sep">/</span>
+        <span class="current">Edit Address</span>
+      </div>
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+          <h1 class="shop-hero-title">Edit Delivery Address</h1>
+          <p class="shop-hero-subtitle">Update recipient name, street address, or phone number for accurate delivery.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--=============== MAIN CONTAINER ===============-->
+  <div class="container pb-5">
+    
+    <div class="row g-4">
+      
+      <!--================ LEFT SIDEBAR ================-->
+      <div class="col-lg-3">
+        <div class="account-sidebar">
+          
+          <div class="user-mini-badge">
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-mini-avatar" id="sidebarAvatar">
+            {% else %}
+              <div class="user-mini-avatar" id="sidebarAvatar">
+                {{ user.first_name|default:user.username|slice:":1"|upper }}
+              </div>
+            {% endif %}
+            <div class="overflow-hidden">
+              <div class="fw-bold text-truncate brand-font" style="font-size: 0.98rem; color: var(--zy-dark);">
+                {{ user.get_full_name|default:user.username }}
+              </div>
+              <small class="text-muted d-block text-truncate" style="font-size: 0.78rem;">@{{ user.username }}</small>
+            </div>
+          </div>
+
+          <nav class="account-nav">
+            <a class="nav-link" href="{% url 'user_profile' %}">
+              <span class="nav-left">
+                <i class="bi bi-person"></i> My Profile
+              </span>
+            </a>
+            
+            <a class="nav-link active" href="{% url 'addresses' %}">
+              <span class="nav-left">
+                <i class="bi bi-geo-alt-fill"></i> My Addresses
+              </span>
+            </a>
+            
+            <a class="nav-link" href="{% url 'user_orders' %}">
+              <span class="nav-left">
+                <i class="bi bi-bag-check-fill"></i> My Orders
+              </span>
+            </a>
+            
+            <a class="nav-link" href="{% url 'wallet_view' %}">
+              <span class="nav-left">
+                <i class="bi bi-wallet2"></i> My Wallet
+              </span>
+            </a>
+            
+            <a class="nav-link" href="{% url 'view_coupons' %}">
+              <span class="nav-left">
+                <i class="bi bi-ticket-perforated-fill"></i> Coupons &amp; Offers
+              </span>
+            </a>
+            
+            <a class="nav-link" href="{% url 'wishlist' %}">
+              <span class="nav-left">
+                <i class="bi bi-heart-fill"></i> Saved Wishlist
+              </span>
+            </a>
+            
+            <a class="nav-link logout-nav-link" href="{% url 'userlogout' %}">
+              <span class="nav-left">
+                <i class="bi bi-box-arrow-right"></i> Sign Out
+              </span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!--================ MAIN FORM COLUMN ================-->
+      <div class="col-lg-9">
+        <div class="profile-card">
+          
+          <div class="card-header-bar">
+            <div>
+              <h4 class="card-title-shop">
+                <i class="bi bi-pencil-square"></i> Edit Delivery Destination
+              </h4>
+              <p class="card-subtitle-shop">Update recipient name, destination, or contact details.</p>
+            </div>
+            
+            <a href="{% url 'addresses' %}" class="btn-outline-shop">
+              <i class="bi bi-arrow-left"></i> Back to Addresses
+            </a>
+          </div>
+
+          {% if errors %}
+          <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert" style="border-radius: 10px;">
+            <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> Please correct the following:</div>
+            <ul class="mb-0 ps-3 small">
+              {% for error in errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
+
+          <div class="row g-4">
+            
+            <!-- Left Form Area -->
+            <div class="col-lg-7">
+              <form action="{% url 'edit_address' address.id %}" method="post" id="addressForm" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ address.id }}">
+
+                <!-- Recipient Name -->
+                <div class="mb-3">
+                  <label for="name" class="form-label-shop">Full Name / Recipient <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-person"></i></span>
+                    <input type="text" name="name" class="form-control filter-input-form border-start-0 ps-0" id="name" value="{{ data.name|default:address.name }}" placeholder="e.g. Fatima Zahra" required maxlength="50">
+                  </div>
+                  <div class="field-error-msg" id="name-error"></div>
+                </div>
+
+                <!-- Street Address -->
+                <div class="mb-3">
+                  <label for="address" class="form-label-shop">Street Address &amp; Landmark <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-house"></i></span>
+                    <input type="text" name="address" class="form-control filter-input-form border-start-0 ps-0" id="address" value="{{ data.address|default:address.address }}" placeholder="House/Flat No., Building, Street Name" required maxlength="200">
+                  </div>
+                  <div class="field-error-msg" id="address-error"></div>
+                </div>
+
+                <!-- City & State -->
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label for="city" class="form-label-shop">City / District <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-building"></i></span>
+                      <input type="text" name="city" class="form-control filter-input-form border-start-0 ps-0" id="city" value="{{ data.city|default:address.city }}" placeholder="e.g. Kochi" required maxlength="50">
+                    </div>
+                    <div class="field-error-msg" id="city-error"></div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="state" class="form-label-shop">State <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-geo"></i></span>
+                      <input type="text" name="state" class="form-control filter-input-form border-start-0 ps-0" id="state" value="{{ data.state|default:address.state }}" placeholder="e.g. Kerala" required maxlength="50">
+                    </div>
+                    <div class="field-error-msg" id="state-error"></div>
+                  </div>
+                </div>
+
+                <!-- Country & Postcode -->
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label for="postcode" class="form-label-shop">Postal PIN Code (6 digits) <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-pin-map"></i></span>
+                      <input type="text" name="postcode" class="form-control filter-input-form border-start-0 ps-0" id="postcode" value="{{ data.postcode|default:address.postcode }}" placeholder="e.g. 682001" required maxlength="6" inputmode="numeric">
+                    </div>
+                    <div class="field-error-msg" id="postcode-error"></div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="country" class="form-label-shop">Country <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-globe"></i></span>
+                      <input type="text" name="country" class="form-control filter-input-form border-start-0 ps-0" id="country" value="{{ data.country|default:address.country }}" required maxlength="50">
+                    </div>
+                    <div class="field-error-msg" id="country-error"></div>
+                  </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="mb-3">
+                  <label for="phone" class="form-label-shop">Phone Number (for courier updates) <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0" style="border-color: var(--zy-border); color: var(--zy-muted);"><i class="bi bi-telephone"></i></span>
+                    <input type="tel" name="phone" class="form-control filter-input-form border-start-0 ps-0" id="phone" value="{{ data.phone|default:address.phone }}" placeholder="10-digit mobile number" required maxlength="15">
+                  </div>
+                  <div class="field-error-msg" id="phone-error"></div>
+                </div>
+
+                <!-- Default Checkbox -->
+                <div class="mb-4 p-3 rounded-3" style="background: var(--zy-primary-light); border: 1px solid var(--zy-primary-border);">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="is_default" id="is_default" {% if data.is_default or address.is_default %}checked{% endif %}>
+                    <label class="form-check-label fw-bold" for="is_default" style="color: var(--zy-dark); font-size: 0.86rem;">
+                      Set as my default delivery address
+                    </label>
+                  </div>
+                  <small class="text-muted d-block ps-4" style="font-size: 0.76rem;">Check this to make this address your primary shipping destination.</small>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="d-flex align-items-center gap-2">
+                  <button type="submit" class="btn-apply-shop" id="saveAddressBtn">
+                    <i class="bi bi-check2"></i> Save Changes
+                  </button>
+                  <a href="{% url 'addresses' %}" class="btn-outline-shop">
+                    Cancel
+                  </a>
+                </div>
+              </form>
+            </div>
+
+            <!-- Right Live Preview Card -->
+            <div class="col-lg-5">
+              <div class="sticky-top" style="top: 24px;">
+                <div class="label-preview-card">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="preview-badge-chip">
+                      <i class="bi bi-box-seam"></i> Live Shipping Label Preview
+                    </span>
+                    <span id="previewDefaultBadge" class="badge rounded-pill px-2 py-1" style="background: var(--zy-primary); color: #fff; font-size: 0.72rem; {% if not address.is_default and not data.is_default %}display: none;{% endif %}">
+                      <i class="bi bi-check2"></i> Default
+                    </span>
+                  </div>
+
+                  <div class="mb-3">
+                    <div class="fw-bold brand-font text-dark fs-5" id="previewName">{{ address.name }}</div>
+                    <div class="text-muted small" id="previewPhone">{{ address.phone }}</div>
+                  </div>
+
+                  <div class="border-top pt-3 mb-2">
+                    <div class="text-muted small text-uppercase fw-bold mb-1" style="font-size: 0.72rem;">Delivery Destination</div>
+                    <div class="fw-semibold text-dark" id="previewAddress">{{ address.address }}</div>
+                    <div class="text-muted small" id="previewCityState">{{ address.city }}, {{ address.state }} - {{ address.postcode }}</div>
+                    <div class="text-muted small" id="previewCountry">{{ address.country }}</div>
+                  </div>
+
+                  <div class="mt-4 pt-3 border-top d-flex align-items-center gap-2 text-muted small" style="font-size: 0.78rem;">
+                    <i class="bi bi-shield-check" style="color: var(--zy-primary); font-size: 1.15rem;"></i>
+                    <span>Address verified for standard and express courier deliveries.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--=============== FOOTER ===============-->
+  {% include 'footer.html' %}
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('addressForm');
+      const nameInput = document.getElementById('name');
+      const addressInput = document.getElementById('address');
+      const cityInput = document.getElementById('city');
+      const stateInput = document.getElementById('state');
+      const countryInput = document.getElementById('country');
+      const postcodeInput = document.getElementById('postcode');
+      const phoneInput = document.getElementById('phone');
+      const isDefaultCheckbox = document.getElementById('is_default');
+
+      // Preview Elements
+      const prevName = document.getElementById('previewName');
+      const prevPhone = document.getElementById('previewPhone');
+      const prevAddress = document.getElementById('previewAddress');
+      const prevCityState = document.getElementById('previewCityState');
+      const prevCountry = document.getElementById('previewCountry');
+      const prevDefaultBadge = document.getElementById('previewDefaultBadge');
+
+      function updatePreview() {
+        prevName.textContent = nameInput.value.trim() || 'Recipient Name';
+        prevPhone.textContent = phoneInput.value.trim() || '+91 ••••• •••••';
+        prevAddress.textContent = addressInput.value.trim() || 'Street address, landmark';
+        
+        const city = cityInput.value.trim();
+        const state = stateInput.value.trim();
+        const pin = postcodeInput.value.trim();
+        prevCityState.textContent = (city || state || pin) ? `${city}${city && state ? ', ' : ''}${state}${pin ? ' - ' + pin : ''}` : 'City, State - PIN';
+        
+        prevCountry.textContent = countryInput.value.trim() || 'India';
+        prevDefaultBadge.style.display = isDefaultCheckbox.checked ? 'inline-block' : 'none';
+      }
+
+      function showError(input, msg) {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+        const errEl = document.getElementById(`${input.id}-error`);
+        if (errEl) {
+          errEl.textContent = msg;
+          errEl.style.display = 'block';
+        }
+        return false;
+      }
+
+      function showSuccess(input) {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        const errEl = document.getElementById(`${input.id}-error`);
+        if (errEl) {
+          errEl.textContent = '';
+          errEl.style.display = 'none';
+        }
+        return true;
+      }
+
+      function validateName() {
+        const val = nameInput.value.trim();
+        if (!val) return showError(nameInput, 'Full name is required.');
+        if (val.length < 2) return showError(nameInput, 'Name must be at least 2 characters long.');
+        if (val.length > 50) return showError(nameInput, 'Name cannot exceed 50 characters.');
+        if (!/^[A-Za-z]+(?:\s[A-Za-z]+)*$/.test(val)) return showError(nameInput, 'Name must contain only letters and single spaces between words.');
+        return showSuccess(nameInput);
+      }
+
+      function validateAddress() {
+        const val = addressInput.value.trim();
+        if (!val) return showError(addressInput, 'Street address is required.');
+        if (val.length < 5) return showError(addressInput, 'Address must be at least 5 characters long.');
+        if (val.length > 200) return showError(addressInput, 'Address cannot exceed 200 characters.');
+        if (!/[A-Za-z0-9]/.test(val)) return showError(addressInput, 'Address must contain letters or numbers.');
+        if (!/^[A-Za-z0-9\s,.#\/-]+$/.test(val)) return showError(addressInput, 'Address can only contain letters, numbers, spaces, and punctuation (., #, -, /).');
+        return showSuccess(addressInput);
+      }
+
+      function validateCity() {
+        const val = cityInput.value.trim();
+        if (!val) return showError(cityInput, 'City is required.');
+        if (val.length < 2 || val.length > 50) return showError(cityInput, 'City must be between 2 and 50 characters.');
+        if (!/^[A-Za-z\s]+$/.test(val)) return showError(cityInput, 'City must contain only letters and spaces.');
+        return showSuccess(cityInput);
+      }
+
+      function validateState() {
+        const val = stateInput.value.trim();
+        if (!val) return showError(stateInput, 'State is required.');
+        if (val.length < 2 || val.length > 50) return showError(stateInput, 'State must be between 2 and 50 characters.');
+        if (!/^[A-Za-z\s]+$/.test(val)) return showError(stateInput, 'State must contain only letters and spaces.');
+        return showSuccess(stateInput);
+      }
+
+      function validateCountry() {
+        const val = countryInput.value.trim();
+        if (!val) return showError(countryInput, 'Country is required.');
+        if (val.length < 2 || val.length > 50) return showError(countryInput, 'Country must be between 2 and 50 characters.');
+        if (!/^[A-Za-z\s]+$/.test(val)) return showError(countryInput, 'Country must contain only letters and spaces.');
+        return showSuccess(countryInput);
+      }
+
+      function validatePostcode() {
+        const val = postcodeInput.value.trim();
+        if (!val) return showError(postcodeInput, 'PIN Code is required.');
+        if (!/^\d{6}$/.test(val)) return showError(postcodeInput, 'PIN Code must be exactly 6 numeric digits.');
+        return showSuccess(postcodeInput);
+      }
+
+      function validatePhone() {
+        const val = phoneInput.value.trim();
+        if (!val) return showError(phoneInput, 'Phone number is required.');
+        const clean = val.replace(/\s+/g, '').replace(/-/g, '');
+        if (!(/^(?:\+91|91)?[6-9]\d{9}$/.test(clean) || /^\+?[1-9]\d{9,14}$/.test(clean))) {
+          return showError(phoneInput, 'Please enter a valid 10-digit mobile number.');
+        }
+        return showSuccess(phoneInput);
+      }
+
+      // Real-time update listeners
+      nameInput.addEventListener('input', () => { validateName(); updatePreview(); });
+      addressInput.addEventListener('input', () => { validateAddress(); updatePreview(); });
+      cityInput.addEventListener('input', () => { validateCity(); updatePreview(); });
+      stateInput.addEventListener('input', () => { validateState(); updatePreview(); });
+      countryInput.addEventListener('input', () => { validateCountry(); updatePreview(); });
+      postcodeInput.addEventListener('input', () => { validatePostcode(); updatePreview(); });
+      phoneInput.addEventListener('input', () => { validatePhone(); updatePreview(); });
+      isDefaultCheckbox.addEventListener('change', updatePreview);
+
+      updatePreview();
+
+      form.addEventListener('submit', function (e) {
+        const v1 = validateName();
+        const v2 = validateAddress();
+        const v3 = validateCity();
+        const v4 = validateState();
+        const v5 = validateCountry();
+        const v6 = validatePostcode();
+        const v7 = validatePhone();
+
+        if (!v1 || !v2 || !v3 || !v4 || !v5 || !v6 || !v7) {
+          e.preventDefault();
+          const firstErr = form.querySelector('.is-invalid');
+          if (firstErr) firstErr.focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

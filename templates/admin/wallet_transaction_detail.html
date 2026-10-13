@@ -1,0 +1,398 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Transaction Details #{{ transaction.transaction_id|slice:":8" }} | Admin Dashboard</title>
+
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="{% static 'adminuser/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'adminuser/vendors/css/vendor.bundle.base.css' %}">
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066a63;
+            --brand-primary-light: #e6f3f2;
+            --brand-primary-subtle: rgba(8, 129, 120, 0.12);
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container-scroller {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-panel {
+            flex: 1;
+            padding: 28px 32px;
+            background-color: var(--bg-page);
+            min-width: 0;
+            overflow-y: auto;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumb-trail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb-trail a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .breadcrumb-trail a:hover {
+            color: var(--brand-primary);
+        }
+
+        /* Page Header */
+        .page-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title-group h2 {
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin: 0;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title-group p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 4px 0 0 0;
+        }
+
+        .btn-outline-back {
+            background-color: #ffffff;
+            color: var(--text-body);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 9px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-back:hover {
+            background-color: #f1f5f9;
+            color: var(--text-heading);
+            border-color: #cbd5e1;
+        }
+
+        /* Voucher Receipt Card */
+        .receipt-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .receipt-top-hero {
+            text-align: center;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .receipt-icon-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .receipt-icon-circle.credit { background: #ecfdf5; color: #059669; }
+        .receipt-icon-circle.debit { background: #fef2f2; color: #dc2626; }
+
+        .receipt-amount-display {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 6px;
+        }
+
+        .receipt-amount-display.credit { color: #059669; }
+        .receipt-amount-display.debit { color: #dc2626; }
+
+        .receipt-uuid-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.84rem;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* Section Layouts */
+        .receipt-section {
+            margin-bottom: 22px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .receipt-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-header-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .info-item .info-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .info-item .info-value {
+            font-size: 0.94rem;
+            font-weight: 600;
+            color: var(--text-heading);
+        }
+
+        .user-profile-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .user-avatar-lg {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .order-source-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+
+        <div class="main-panel">
+            <!-- Breadcrumbs -->
+            <div class="breadcrumb-trail">
+                <a href="{% url 'admin_dashboard' %}"><i class="bi bi-grid-fill"></i> Dashboard</a>
+                <span>/</span>
+                <a href="{% url 'admin_wallet_transaction_list' %}">Wallet Ledger</a>
+                <span>/</span>
+                <span class="text-dark fw-semibold">Transaction Details</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header-bar">
+                <div class="page-title-group">
+                    <h2><i class="bi bi-receipt text-success"></i> Transaction Details</h2>
+                    <p>Comprehensive audit record of the wallet ledger transaction</p>
+                </div>
+                <div>
+                    <a href="{% url 'admin_wallet_transaction_list' %}" class="btn-outline-back">
+                        <i class="bi bi-arrow-left"></i> Back to Ledger
+                    </a>
+                </div>
+            </div>
+
+            <!-- Voucher Receipt Card -->
+            <div class="receipt-card">
+                <!-- Hero Display -->
+                <div class="receipt-top-hero">
+                    <div class="receipt-icon-circle {% if transaction.transaction_type == 'credit' %}credit{% else %}debit{% endif %}">
+                        <i class="bi {% if transaction.transaction_type == 'credit' %}bi-arrow-down-left{% else %}bi-arrow-up-right{% endif %}"></i>
+                    </div>
+                    <div class="receipt-amount-display {% if transaction.transaction_type == 'credit' %}credit{% else %}debit{% endif %}">
+                        {% if transaction.transaction_type == 'credit' %}+{% else %}-{% endif %}₹{{ transaction.amount|floatformat:2 }}
+                    </div>
+                    <div>
+                        <span class="badge {% if transaction.transaction_type == 'credit' %}bg-success{% else %}bg-warning text-dark{% endif %} text-uppercase fw-bold px-3 py-1 mb-2">
+                            Wallet {{ transaction.transaction_type }}
+                        </span>
+                    </div>
+                    <div class="receipt-uuid-pill">
+                        Ref: {{ transaction.transaction_id }}
+                    </div>
+                </div>
+
+                <!-- Transaction Information -->
+                <div class="receipt-section">
+                    <div class="section-header-label">
+                        <i class="bi bi-clock-history text-primary"></i> Transaction Parameters
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Processed Date & Time</div>
+                            <div class="info-value">{{ transaction.created_at|date:"F d, Y, h:i:s A" }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Ledger Entry Type</div>
+                            <div class="info-value text-capitalize">{{ transaction.transaction_type }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Transaction Amount</div>
+                            <div class="info-value">₹{{ transaction.amount|floatformat:2 }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Description / Source Note</div>
+                            <div class="info-value">{{ transaction.description|default:"Wallet operation" }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Account -->
+                <div class="receipt-section">
+                    <div class="section-header-label">
+                        <i class="bi bi-person-fill text-success"></i> Customer Account Details
+                    </div>
+                    <div class="user-profile-box">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="user-avatar-lg">{{ user.username|slice:":1"|upper }}</div>
+                            <div>
+                                <h6 class="mb-0 fw-bold text-dark">{{ user.username }}</h6>
+                                <small class="text-muted">{{ user.email|default:"No email recorded" }}</small>
+                                <div class="small text-muted">Customer ID: #{{ user.id }}</div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="small text-muted mb-1">Current Wallet Balance</div>
+                            <h5 class="fw-bold text-success mb-2">₹{{ transaction.wallet.balance|floatformat:2 }}</h5>
+                            <a href="{% url 'admin_wallet_transaction_list' %}?user_id={{ user.id }}" class="btn btn-sm btn-outline-dark rounded-3 px-3">
+                                <i class="bi bi-funnel me-1"></i> Filter User's Ledger
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Associated Order Section -->
+                {% if transaction.order %}
+                <div class="receipt-section">
+                    <div class="section-header-label">
+                        <i class="bi bi-bag-check-fill text-primary"></i> Originating Order Reference
+                    </div>
+                    <div class="order-source-box">
+                        <div>
+                            <div class="fw-bold text-dark">Order Reference #{{ transaction.order.id }}</div>
+                            <small class="text-muted">Total: ₹{{ transaction.order.total_price|floatformat:2 }} | Status: {{ transaction.order.status|title }}</small>
+                        </div>
+                        <div>
+                            {% if order_url %}
+                            <a href="{{ order_url }}" class="btn btn-sm btn-primary rounded-3 px-3">
+                                <i class="bi bi-box-seam me-1"></i> View Order Details
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Footer Action Buttons -->
+                <div class="d-flex justify-content-between align-items-center pt-3">
+                    <a href="{% url 'admin_wallet_transaction_list' %}" class="btn-outline-back">
+                        <i class="bi bi-arrow-left me-1"></i> Return to Transactions List
+                    </a>
+                    <a href="{% url 'users' %}" class="btn-outline-back">
+                        <i class="bi bi-people me-1"></i> All Customers
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'adminuser/vendors/js/vendor.bundle.base.js' %}"></script>
+</body>
+
+</html>

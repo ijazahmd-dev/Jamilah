@@ -1,0 +1,1184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Order #{{ order.id }} - Jamilah Admin</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-primary: #088178;
+            --brand-primary-hover: #066c65;
+            --brand-dark: #1e293b;
+            --brand-light: #f8fafc;
+            --brand-border: #e2e8f0;
+            --brand-radius: 14px;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #334155;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .container-fluid.page-body-wrapper {
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-panel {
+            background-color: transparent;
+            padding: 24px;
+        }
+
+        .content-wrapper {
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Top Header & Breadcrumbs */
+        .page-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .breadcrumb-nav a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .breadcrumb-nav a:hover {
+            color: var(--brand-primary-hover);
+            text-decoration: underline;
+        }
+
+        .btn-back-orders {
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid var(--brand-border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back-orders:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* Order Header Summary Banner */
+        .order-banner-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            border-radius: 16px;
+            padding: 22px 26px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .order-banner-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .order-banner-meta {
+            color: #64748b;
+            font-size: 0.85rem;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Order Stepper */
+        .stepper-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            border-radius: 16px;
+            padding: 22px 26px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .stepper-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stepper-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+
+        .stepper-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stepper-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stepper-label {
+            margin-top: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .stepper-step.active .stepper-icon {
+            border-color: var(--brand-primary);
+            background: var(--brand-primary);
+            color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(8, 129, 120, 0.2);
+        }
+
+        .stepper-step.active .stepper-label {
+            color: var(--brand-primary);
+            font-weight: 700;
+        }
+
+        .stepper-step.completed .stepper-icon {
+            border-color: #10b981;
+            background: #ecfdf5;
+            color: #10b981;
+        }
+
+        .stepper-step.completed .stepper-label {
+            color: #10b981;
+        }
+
+        /* 3-Column Info Cards */
+        .info-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--brand-border);
+        }
+
+        .info-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(8, 129, 120, 0.1);
+            color: var(--brand-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .info-card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .info-card-body {
+            font-size: 0.875rem;
+            color: #334155;
+            flex-grow: 1;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px dashed #f1f5f9;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #64748b;
+            font-size: 0.8125rem;
+            font-weight: 500;
+        }
+
+        .info-val {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Items Table Card */
+        .card-custom {
+            background-color: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .card-custom-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--brand-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .card-custom-header h4 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .table-custom {
+            margin-bottom: 0;
+            width: 100%;
+        }
+
+        .table-custom thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--brand-border);
+            vertical-align: middle;
+        }
+
+        .table-custom tbody td {
+            padding: 16px 18px;
+            vertical-align: middle;
+            color: #334155;
+            font-size: 0.925rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .item-product-thumb {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--brand-border);
+            background: #f1f5f9;
+        }
+
+        .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid #cbd5e1;
+            vertical-align: middle;
+        }
+
+        .size-chip {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--brand-border);
+        }
+
+        /* Status Badges */
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.775rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .badge-status.processing {
+            background-color: #fffbeb;
+            color: #d97706;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-status.order_placed {
+            background-color: #f0fdf4;
+            color: #15803d;
+            border: 1px solid rgba(21, 128, 61, 0.25);
+        }
+
+        .badge-status.shipped {
+            background-color: #f0f9ff;
+            color: #0284c7;
+            border: 1px solid rgba(2, 132, 199, 0.25);
+        }
+
+        .badge-status.out_for_delivery {
+            background-color: #fdf4ff;
+            color: #a855f7;
+            border: 1px solid rgba(168, 85, 247, 0.25);
+        }
+
+        .badge-status.delivered {
+            background-color: #ecfdf5;
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .badge-status.canceled {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid rgba(220, 38, 38, 0.25);
+        }
+
+        .badge-status.return_requested {
+            background-color: #fff7ed;
+            color: #c2410c;
+            border: 1px solid rgba(194, 65, 12, 0.25);
+        }
+
+        .badge-status.returned {
+            background-color: #faf5ff;
+            color: #9333ea;
+            border: 1px solid rgba(147, 51, 234, 0.25);
+        }
+
+        .badge-status.return_denied {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid rgba(153, 27, 27, 0.25);
+        }
+
+        /* Action Buttons */
+        .btn-reason-view {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid var(--brand-border);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-reason-view:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .btn-action-update {
+            background: var(--brand-primary);
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-update:hover {
+            background: var(--brand-primary-hover);
+        }
+
+        .btn-batch-update {
+            background: linear-gradient(135deg, #088178 0%, #055e57 100%);
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-batch-update:hover {
+            background: linear-gradient(135deg, #066c65 0%, #044b45 100%);
+            color: #ffffff;
+        }
+
+        /* Modals */
+        .modal-custom .modal-content {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.2);
+            overflow: hidden;
+        }
+
+        .modal-custom .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--brand-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-custom .modal-body {
+            padding: 24px;
+        }
+
+        .modal-custom .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--brand-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Toast Container */
+        .admin-toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100500;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            pointer-events: none;
+        }
+
+        .admin-toast {
+            pointer-events: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 16px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            animation: toastSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-toast.closing {
+            animation: toastSlideOut 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideIn {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastSlideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(110%); opacity: 0; }
+        }
+
+        .admin-toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .admin-toast--success .admin-toast-icon {
+            background-color: #ecfdf5;
+            color: #10b981;
+        }
+
+        .admin-toast--error .admin-toast-icon {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+
+        .admin-toast-body {
+            flex-grow: 1;
+            padding-right: 8px;
+        }
+
+        .admin-toast-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 2px;
+            line-height: 1.25;
+        }
+
+        .admin-toast-message {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .admin-toast-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.25rem;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast notifications -->
+    <div class="admin-toast-container" id="adminToastContainer">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="admin-toast {% if message.tags == 'error' %}admin-toast--error{% else %}admin-toast--success{% endif %}" role="alert">
+                <div class="admin-toast-icon">
+                    {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill"></i>{% else %}<i class="bi bi-check-circle-fill"></i>{% endif %}
+                </div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">{% if message.tags == 'error' %}Notice{% else %}Success{% endif %}</h6>
+                    <p class="admin-toast-message">{{ message }}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="closeToast(this.closest('.admin-toast'))">&times;</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container-scroller">
+        {% include 'admin/sidebar.html' %}
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <!-- Header & Breadcrumbs -->
+                    <div class="page-header-bar">
+                        <div>
+                            <div class="breadcrumb-nav mb-2">
+                                <a href="{% url 'order_management' %}"><i class="bi bi-arrow-left me-1"></i> Orders</a>
+                                <span>/</span>
+                                <span class="text-dark fw-semibold">Order #{{ order.id }}</span>
+                            </div>
+                            <h3 class="fw-bold text-dark m-0">Order Details & Fulfillment</h3>
+                        </div>
+
+                        <div>
+                            <a href="{% url 'order_management' %}" class="btn-back-orders">
+                                <i class="bi bi-arrow-left"></i> Back to All Orders
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Top Order Banner -->
+                    <div class="order-banner-card">
+                        <div>
+                            <div class="order-banner-title">
+                                <i class="bi bi-receipt-cutoff text-primary"></i>
+                                <span>Order #{{ order.id }}</span>
+                                <span class="badge-status {{ order.status|lower }} ms-2">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="order-banner-meta">
+                                <span><i class="bi bi-calendar3 me-1"></i> Placed on {{ order.created_at|date:"M d, Y · h:i A" }}</span>
+                                <span>•</span>
+                                <span><i class="bi bi-person me-1"></i> {{ order.user.username }}</span>
+                                <span>•</span>
+                                <span><i class="bi bi-credit-card me-1"></i> {{ order.payment_method|upper }} ({{ order.payment_status }})</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" class="btn-batch-update" data-bs-toggle="modal" data-bs-target="#batchUpdateModal">
+                                <i class="bi bi-layers-fill"></i> Batch Update Items
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Order Fulfillment Stepper -->
+                    {% if order.status != 'canceled' and order.status != 'returned' %}
+                    <div class="stepper-card">
+                        <div class="stepper-steps">
+                            <div class="stepper-step completed">
+                                <div class="stepper-icon"><i class="bi bi-check-lg"></i></div>
+                                <div class="stepper-label">Order Placed</div>
+                            </div>
+                            <div class="stepper-step {% if order.status == 'completed' or 'shipped' in order.status or order.items.first.status == 'shipped' or order.items.first.status == 'out_for_delivery' or order.items.first.status == 'delivered' %}completed{% elif order.status == 'processing' or order.status == 'pending' %}active{% endif %}">
+                                <div class="stepper-icon">
+                                    {% if order.status == 'completed' or order.items.first.status == 'delivered' %}<i class="bi bi-check-lg"></i>{% else %}<i class="bi bi-box-seam"></i>{% endif %}
+                                </div>
+                                <div class="stepper-label">Shipped</div>
+                            </div>
+                            <div class="stepper-step {% if order.status == 'completed' or order.items.first.status == 'delivered' %}completed{% elif order.items.first.status == 'out_for_delivery' %}active{% endif %}">
+                                <div class="stepper-icon">
+                                    {% if order.status == 'completed' or order.items.first.status == 'delivered' %}<i class="bi bi-check-lg"></i>{% else %}<i class="bi bi-truck"></i>{% endif %}
+                                </div>
+                                <div class="stepper-label">Out For Delivery</div>
+                            </div>
+                            <div class="stepper-step {% if order.status == 'completed' or order.items.first.status == 'delivered' %}completed{% endif %}">
+                                <div class="stepper-icon">
+                                    {% if order.status == 'completed' or order.items.first.status == 'delivered' %}<i class="bi bi-check-lg"></i>{% else %}<i class="bi bi-house-check"></i>{% endif %}
+                                </div>
+                                <div class="stepper-label">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert {% if order.status == 'canceled' %}alert-danger{% else %}alert-warning{% endif %} d-flex align-items-center gap-3 p-3 rounded-4 mb-4">
+                        <i class="bi bi-exclamation-triangle-fill fs-3"></i>
+                        <div>
+                            <h6 class="fw-bold mb-1">Order Status: {{ order.get_status_display }}</h6>
+                            <p class="small mb-0">This order is marked as {{ order.status }}. Associated inventory and refunds have been reconciled with the customer's wallet.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Return Requests Action Center -->
+                    {% if has_pending_returns %}
+                    <div class="card border-warning bg-warning bg-opacity-10 rounded-4 p-4 mb-4 shadow-sm">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fs-6 fw-bold">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>Action Required: Return Request
+                                </span>
+                                <span class="text-secondary small fw-medium">
+                                    {{ pending_returns|length }} item{{ pending_returns|length|pluralize }} requested for return by customer
+                                </span>
+                            </div>
+                        </div>
+
+                        {% for ret_item in pending_returns %}
+                        <div class="bg-white border border-warning-subtle rounded-3 p-3 mb-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                {% if ret_item.product.images.first %}
+                                    <img src="{{ ret_item.product.images.first.image.url }}" class="rounded-2" style="width: 65px; height: 65px; object-fit: cover;">
+                                {% endif %}
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1">{{ ret_item.product.name }} (Qty: {{ ret_item.quantity }})</h6>
+                                    <div class="small text-muted mb-1">
+                                        {% if ret_item.product_variant %}
+                                            Color: <strong>{{ ret_item.product_variant.color }}</strong> | Size: <strong>{{ ret_item.product_variant.size }}</strong> &bull;
+                                        {% endif %}
+                                        Item Total: <strong>₹{{ ret_item.subtotal|floatformat:2 }}</strong>
+                                    </div>
+                                    <div class="p-2 bg-light rounded-2 border small text-dark mt-1">
+                                        <strong>Customer's Reason:</strong> "{{ ret_item.return_reason }}"
+                                        {% if ret_item.return_requested_at %}
+                                            <span class="text-muted ms-2">&bull; Requested on {{ ret_item.return_requested_at|date:"M d, Y · h:i A" }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end">
+                                <div class="mb-2">
+                                    <span class="text-muted small">Refund to Credit on Approval:</span>
+                                    <div class="fs-5 fw-bold text-success">₹{{ ret_item.estimated_refund }}</div>
+                                </div>
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <!-- Approve Button Form -->
+                                    <form method="POST" action="{% url 'update_order_status' order.id %}" onsubmit="return confirm('Approve return for this item?\n\n• Inventory will be restocked (+{{ ret_item.quantity }})\n• ₹{{ ret_item.estimated_refund }} will be credited immediately to the customer\'s Jamilah Wallet.');">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="item_id" value="{{ ret_item.id }}">
+                                        <input type="hidden" name="status" value="return">
+                                        <button type="submit" class="btn btn-success btn-sm px-3 fw-bold rounded-2">
+                                            <i class="bi bi-check-circle-fill me-1"></i>Approve Return & Refund
+                                        </button>
+                                    </form>
+
+                                    <!-- Deny Button Trigger -->
+                                    <button type="button" class="btn btn-outline-danger btn-sm px-3 fw-semibold rounded-2" data-bs-toggle="modal" data-bs-target="#denyReturnModal{{ ret_item.id }}">
+                                        <i class="bi bi-x-circle me-1"></i>Deny Return
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Deny Return Modal -->
+                        <div class="modal fade" id="denyReturnModal{{ ret_item.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <form method="POST" action="{% url 'update_order_status' order.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="item_id" value="{{ ret_item.id }}">
+                                        <input type="hidden" name="status" value="return_denied">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold text-danger"><i class="bi bi-x-circle-fill me-2"></i>Deny Return Request</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-start">
+                                            <p class="small text-muted mb-2">Item: <strong>{{ ret_item.product.name }}</strong></p>
+                                            <label class="form-label fw-bold small text-dark">Reason for Denial <span class="text-danger">*</span></label>
+                                            <textarea name="reason" class="form-control" rows="3" placeholder="Provide note or explanation for denial (e.g., tags missing, worn condition, outside policy window)..." required></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger fw-bold">Confirm Denial</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- 3-Column Info Cards Grid -->
+                    <div class="info-cards-grid">
+                        <!-- Customer Info -->
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <div class="info-card-icon"><i class="bi bi-person-fill"></i></div>
+                                <h5 class="info-card-title">Customer Details</h5>
+                            </div>
+                            <div class="info-card-body">
+                                <div class="info-row">
+                                    <span class="info-label">Customer Name</span>
+                                    <span class="info-val">{{ order.shipping_address.name|default:order.user.username }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Username</span>
+                                    <span class="info-val">@{{ order.user.username }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Email</span>
+                                    <span class="info-val">{{ order.user.email|default:"N/A" }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Contact Phone</span>
+                                    <span class="info-val">{{ order.shipping_address.phone|default:"N/A" }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Address -->
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <div class="info-card-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                                <h5 class="info-card-title">Shipping Address</h5>
+                            </div>
+                            <div class="info-card-body">
+                                {% if order.shipping_address %}
+                                    <div class="fw-bold text-dark mb-1">{{ order.shipping_address.name }}</div>
+                                    <div class="text-secondary small mb-1">{{ order.shipping_address.address }}</div>
+                                    <div class="text-secondary small mb-1">{{ order.shipping_address.city }}, {{ order.shipping_address.state }} - {{ order.shipping_address.postcode }}</div>
+                                    <div class="text-secondary small mb-2">{{ order.shipping_address.country }}</div>
+                                    <div class="small fw-semibold text-dark"><i class="bi bi-telephone me-1"></i> Phone: {{ order.shipping_address.phone }}</div>
+                                {% else %}
+                                    <p class="text-muted small">No delivery address specified.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Payment & Financials -->
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <div class="info-card-icon"><i class="bi bi-wallet-fill"></i></div>
+                                <h5 class="info-card-title">Billing Breakdown</h5>
+                            </div>
+                            <div class="info-card-body">
+                                <div class="info-row">
+                                    <span class="info-label">Payment Method</span>
+                                    <span class="info-val">{{ order.payment_method|upper }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Payment Status</span>
+                                    <span class="info-val">
+                                        <span class="badge {% if order.payment_status == 'Paid' %}bg-success{% elif order.payment_status == 'Refunded' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                                            {{ order.payment_status }}
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Items Subtotal</span>
+                                    <span class="info-val">₹{{ subtotal_items|floatformat:2 }}</span>
+                                </div>
+                                {% if order.discount_coupon_amount > 0 %}
+                                <div class="info-row text-success">
+                                    <span class="info-label text-success">Coupon Discount</span>
+                                    <span class="info-val text-success">-₹{{ order.discount_coupon_amount|floatformat:2 }}</span>
+                                </div>
+                                {% endif %}
+                                <div class="info-row pt-2 mt-1 border-top" style="border-top-style: solid !important;">
+                                    <span class="info-label fw-bold text-dark fs-6">Grand Total</span>
+                                    <span class="info-val fw-bold text-dark fs-6">₹{{ order.total_price|floatformat:2 }}</span>
+                                </div>
+                                {% if total_refunded > 0 %}
+                                <div class="info-row text-danger pt-2 mt-2 border-top border-danger-subtle">
+                                    <span class="info-label text-danger fw-semibold"><i class="bi bi-arrow-counterclockwise me-1"></i>Refunded to Wallet</span>
+                                    <span class="info-val text-danger fw-bold">₹{{ total_refunded|floatformat:2 }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Items Card -->
+                    <div class="card-custom">
+                        <div class="card-custom-header">
+                            <h4>
+                                <i class="bi bi-box-seam-fill text-muted"></i> Purchased Items
+                            </h4>
+                            <span class="badge bg-light text-dark px-3 py-2 border rounded-pill">
+                                {{ order_items|length }} item{{ order_items|length|pluralize }}
+                            </span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70px;">Thumbnail</th>
+                                        <th>Product Information</th>
+                                        <th>Variant</th>
+                                        <th>Qty</th>
+                                        <th>Unit Price</th>
+                                        <th>Subtotal</th>
+                                        <th>Status</th>
+                                        <th>Notes / Reasons</th>
+                                        <th style="width: 250px;">Update Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order_items %}
+                                    <tr id="item-row-{{ item.id }}">
+                                        <td>
+                                            {% with first_img=item.product.images.first %}
+                                                {% if first_img and first_img.image %}
+                                                    <img src="{{ first_img.image.url }}" class="item-product-thumb" alt="{{ item.product.name }}">
+                                                {% else %}
+                                                    <div class="item-product-thumb d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></div>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold text-dark">{{ item.product.name }}</div>
+                                            <div class="small text-muted">{{ item.product.category.category_name }}</div>
+                                        </td>
+                                        <td>
+                                            {% if item.product_variant %}
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="color-dot" style="background-color: {{ item.product_variant.color|lower }};" title="{{ item.product_variant.color }}"></span>
+                                                    <span>{{ item.product_variant.color }}</span>
+                                                    <span class="size-chip">{{ item.product_variant.size }}</span>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted small">Standard</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="fw-bold text-dark">{{ item.quantity }}</td>
+                                        <td>
+                                            <div class="fw-semibold text-dark">₹{{ item.final_price|floatformat:2 }}</div>
+                                            {% if item.final_price < item.product.price %}
+                                                <small class="text-muted text-decoration-line-through">₹{{ item.product.price|floatformat:2 }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td class="fw-bold text-dark">₹{{ item.subtotal|floatformat:2 }}</td>
+                                        <td>
+                                            <span class="badge-status {{ item.status }}">
+                                                {{ item.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if item.cancel_reason %}
+                                                <button type="button" class="btn-reason-view" data-bs-toggle="modal" data-bs-target="#cancelModal{{ item.id }}">
+                                                    <i class="bi bi-x-circle text-danger"></i> Cancel Reason
+                                                </button>
+                                            {% elif item.return_reason %}
+                                                <button type="button" class="btn-reason-view" data-bs-toggle="modal" data-bs-target="#returnModal{{ item.id }}">
+                                                    <i class="bi bi-arrow-return-left text-warning"></i> Return Reason
+                                                </button>
+                                            {% else %}
+                                                <span class="text-muted small">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if item.allowed_statuses %}
+                                                <form class="update-item-form d-flex gap-2" method="POST" action="{% url 'update_order_status' order.id %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                                                    <select name="status" class="form-select form-select-sm" style="min-width: 130px;" required>
+                                                        {% for next_val, next_lbl in item.allowed_statuses %}
+                                                            <option value="{{ next_val }}">{{ next_lbl }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <button type="submit" class="btn-action-update" title="Update Status">
+                                                        <i class="bi bi-check2"></i> Apply
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <span class="badge bg-light text-muted border px-3 py-2 rounded-pill">
+                                                    <i class="bi bi-lock-fill me-1"></i> Completed
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+
+                                    <!-- Cancel Reason Modal -->
+                                    {% if item.cancel_reason %}
+                                    <div class="modal fade modal-custom" id="cancelModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title fw-bold text-danger"><i class="bi bi-x-circle-fill me-2"></i> Cancellation Reason</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="p-3 bg-light rounded-3 border mb-2 text-dark">
+                                                        {{ item.cancel_reason }}
+                                                    </div>
+                                                    <small class="text-muted">Item: {{ item.product.name }} (Qty: {{ item.quantity }})</small>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light rounded-3 px-3" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Return Reason Modal -->
+                                    {% if item.return_reason %}
+                                    <div class="modal fade modal-custom" id="returnModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title fw-bold text-warning"><i class="bi bi-arrow-return-left me-2"></i> Return Request Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="p-3 bg-light rounded-3 border mb-2 text-dark">
+                                                        {{ item.return_reason }}
+                                                    </div>
+                                                    {% if item.return_requested_at %}
+                                                        <small class="text-muted d-block">Requested on {{ item.return_requested_at|date:"M d, Y · h:i A" }}</small>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light rounded-3 px-3" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         MODAL: BATCH UPDATE ALL ITEMS
+    ======================================================== -->
+    <div class="modal fade modal-custom" id="batchUpdateModal" tabindex="-1" aria-labelledby="batchUpdateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="POST" action="{% url 'update_order_status' order.id %}" id="batchUpdateForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" value="all">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold text-dark" id="batchUpdateModalLabel">
+                            <i class="bi bi-layers-fill text-primary me-2"></i> Batch Update All Active Items
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-secondary small mb-3">
+                            Apply a single fulfillment status transition to all eligible items in Order <strong>#{{ order.id }}</strong>.
+                        </p>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-dark">Select Target Status</label>
+                            <select name="status" class="form-select" required>
+                                <option value="shipped">Mark Eligible as Shipped</option>
+                                <option value="out_for_delivery">Mark Eligible as Out for Delivery</option>
+                                <option value="delivered">Mark Eligible as Delivered</option>
+                                <option value="canceled">Cancel Remaining Items & Refund</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small text-muted">Optional Note / Reason</label>
+                            <input type="text" name="reason" class="form-control" placeholder="e.g., Shipped via BlueDart Waybill #12345">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn-batch-update" id="btnSubmitBatch">
+                            <i class="bi bi-check2-circle"></i> Apply Batch Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function showToast(type, title, message) {
+            const container = document.getElementById('adminToastContainer');
+            const iconClass = type === 'error' ? 'bi-x-circle-fill' : 'bi-check-circle-fill';
+            const toast = document.createElement('div');
+            toast.className = `admin-toast admin-toast--${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <div class="admin-toast-icon"><i class="bi ${iconClass}"></i></div>
+                <div class="admin-toast-body">
+                    <h6 class="admin-toast-title">${title}</h6>
+                    <p class="admin-toast-message">${message}</p>
+                </div>
+                <button type="button" class="admin-toast-close" onclick="closeToast(this.closest('.admin-toast'))">&times;</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => closeToast(toast), 4500);
+        }
+
+        function closeToast(el) {
+            if (!el) return;
+            el.classList.add('closing');
+            setTimeout(() => el.remove(), 350);
+        }
+
+        // AJAX Item Update Handlers
+        document.querySelectorAll('.update-item-form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const btn = form.querySelector('button[type="submit"]');
+                const originalHtml = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
+
+                const formData = new FormData(form);
+                formData.append('ajax', 'true');
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                    if (data.success) {
+                        showToast('success', 'Status Updated', data.message);
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800);
+                    } else {
+                        showToast('error', 'Update Error', data.error || 'Failed to update status.');
+                    }
+                })
+                .catch(err => {
+                    form.submit();
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
