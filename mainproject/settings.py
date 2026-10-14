@@ -43,6 +43,9 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
     CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 
+# Tell Django to trust Render's reverse proxy for HTTPS detection
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -84,6 +87,7 @@ INSTALLED_APPS = [
 
 # Required for Django-Allauth
 SITE_ID = 1
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if (not DEBUG or os.environ.get('RENDER')) else 'http'
 
 
 AUTHENTICATION_BACKENDS = [
